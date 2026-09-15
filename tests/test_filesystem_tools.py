@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from hewn.builtin_tools.filesystem import make_read_file_tool
+import pytest
+
+from hewn.builtin_tools.filesystem import (
+    make_list_directory_tool,
+    make_read_file_tool,
+)
 from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
 from hewn.workspace import Workspace
 
@@ -10,6 +15,7 @@ def make_executor(workspace_root: Path) -> ToolExecutor:
 
     registry = ToolRegistry()
     registry.register(make_read_file_tool(workspace))
+    registry.register(make_list_directory_tool(workspace))
 
     return ToolExecutor(registry)
 
@@ -92,3 +98,123 @@ def test_read_file_rejects_workspace_escape(tmp_path: Path) -> None:
     assert result.ok is False
     assert result.error is not None
     assert "escapes workspace" in result.error
+
+def test_list_directory_returns_immediate_entries(tmp_path: Path) -> None:
+    (tmp_path / "src").mkdir()
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "README.md").write_text("hello", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
+
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="list_directory",
+            arguments={"path": "."},
+        )
+    )
+
+    assert result.ok is True
+    assert result.output == (
+        "src/\n"
+        "tests/\n"
+        "pyproject.toml\n"
+        "README.md"
+    )
+
+def test_list_directory_is_not_recursive(tmp_path: Path) -> None:
+    source = tmp_path / "src"
+    source.mkdir()
+
+    nested = source / "hewn"
+    nested.mkdir()
+
+    (nested / "agent.py").write_text("", encoding="utf-8")
+
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="list_directory",
+            arguments={"path": "."},
+        )
+    )
+
+    assert result.ok is True
+    assert result.output == "src/"
+    assert "agent.py" not in result.output
+
+def test_list_directory_rejects_workspace_escape(tmp_path: Path) -> None:
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="list_directory",
+            arguments={"path": ".."},
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+    assert "escapes workspace" in result.error
+
+
+def test_list_directory_rejects_file_path(tmp_path: Path) -> None:
+    (tmp_path / "README.md").write_text("hello", encoding="utf-8")
+
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="list_directory",
+            arguments={"path": "README.md"},
+        )
+    )
+
+    assert result.ok is False
+    assert result.error == "Not a directory: README.md"
+
+def test_list_directory_truncates_large_listing(tmp_path: Path) -> None:
+    for index in range(5):
+        (tmp_path / f"file{index}.txt").write_text("", encoding="utf-8")
+
+    workspace = Workspace(tmp_path)
+
+    registry = ToolRegistry()
+    registry.register(
+        make_list_directory_tool(
+            workspace,
+            entry_limit=3,
+        )
+    )
+
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="list_directory",
+            arguments={"path": "."},
+        )
+    )
+
+    assert result.ok is True
+    assert result.output == (
+        "file0.txt\n"
+        "file1.txt\n"
+        "file2.txt\n"
+        "... 2 more entries not shown"
+    )
+
+def test_list_directory_rejects_invalid_entry_limit(
+    tmp_path: Path,
+) -> None:
+    workspace = Workspace(tmp_path)
+
+    with pytest.raises(
+        ValueError,
+        match="entry_limit must be at least 1",
+    ):
+        make_list_directory_tool(
+            workspace,
+            entry_limit=0,
+        )
