@@ -1,0 +1,18 @@
+[project]
+name = "hewn"
+version = "0.1.0"
+description = "A local-first coding agent designed to make small models perform far above their weight."
+requires-python = ">=3.12"
+
+[project.scripts]
+hewn = "hewn.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
