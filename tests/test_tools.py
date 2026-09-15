@@ -135,3 +135,57 @@ def test_duplicate_tool_registration_is_rejected() -> None:
         assert str(exc) == "Tool already registered: echo"
     else:
         raise AssertionError("Expected duplicate registration to fail")
+
+def test_missing_required_argument_is_rejected() -> None:
+    registry = ToolRegistry()
+    registry.register(make_echo_tool())
+
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="echo",
+            arguments={},
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+    assert "value" in result.error
+
+def test_wrong_argument_type_is_rejected() -> None:
+    registry = ToolRegistry()
+    registry.register(make_echo_tool())
+
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="echo",
+            arguments={"value": 42},
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+    assert "string" in result.error
+
+def test_additional_argument_is_rejected() -> None:
+    registry = ToolRegistry()
+    registry.register(make_echo_tool())
+
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="echo",
+            arguments={
+                "value": "hello",
+                "unexpected": True,
+            },
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+    assert "unexpected" in result.error

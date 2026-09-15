@@ -5,6 +5,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from jsonschema import ValidationError, validate
+
 
 class ToolError(Exception):
     """Expected failure while executing a tool."""
@@ -66,6 +68,17 @@ class ToolExecutor:
             return ToolResult(
                 ok=False,
                 error=f"Unknown tool: {call.name}",
+            )
+
+        try:
+            validate(
+                instance=call.arguments,    # Actual Data I want to chec
+                schema=tool.input_schema,   # Check it against this contract
+            )
+        except ValidationError as exc:
+            return ToolResult(
+                ok=False,
+                error=f"Invalid tool arguments: {exc.message}",
             )
 
         try:
