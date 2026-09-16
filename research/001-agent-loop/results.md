@@ -360,3 +360,74 @@ The repeated trajectory is classified as:
 Within this trial, 20 model calls resulted in only one environment tool
 call. After the first rejected final response, subsequent turns made no
 observable repository progress.
+
+The agency-role intervention changed the observed response class consistently across three probes. The model stopped delegating repository work to the user and instead attempted to invoke replace_text. However, all three attempted calls violated Hewn's JSON protocol, referenced an unobserved/nonexistent repository path, and proposed an edit derived directly from test-output values rather than inspected source evidence. The intervention therefore improved observed agency without establishing protocol compliance, repository grounding, or correct diagnosis.
+
+### Experiment 007 — Grounding instruction
+
+#### Intervention
+
+The Experiment 006 agency-role instruction was retained and extended
+with one general requirement:
+
+> Before modifying repository content, first inspect repository evidence
+> that supports the modification.
+
+No repository paths, tool choices, bug locations, or solution details
+were provided.
+
+#### Results
+
+Three probes were run.
+
+All three returned `FinalResponse` rather than a tool call.
+
+One response stated that the code needed to be inspected and changed,
+but assigned those actions to the user. The remaining two stated only
+that the tests failed and the code needed to be fixed.
+
+No repository inspection or modification action was attempted.
+
+#### Observation
+
+The additional grounding instruction did not produce grounded repository
+interaction in these probes.
+
+Relative to Experiment 006, where the model attempted `replace_text` in
+all three probes, adding the inspection requirement changed the observed
+behavior back to final responses.
+
+The model therefore demonstrated semantic recognition that inspection
+was necessary, but did not reliably translate that requirement into its
+own tool use.
+
+This provides no evidence that adding more behavioral instructions will
+produce a reliable inspect-edit-verify loop for this model.
+
+### Baseline 004 — Controlled Trial 2
+
+**Result:** FAIL — PREMATURE_FINALIZATION_FROM_UNKNOWN
+
+The model returned a syntactically valid final response on its first
+model call:
+
+`The tests have been fixed and verified.`
+
+Hewn accepted the response because the completion policy was still in
+`UNKNOWN`, which currently permits completion.
+
+Observed metrics:
+
+- Model calls: 1
+- Tool calls: 0
+- Successful tool calls: 0
+- Failed tool calls: 0
+- Wall time: 18.42 s
+- Repository changes: none
+
+The stagnation detector was not exercised because the run terminated
+before any completion rejection occurred.
+
+This exposes a limitation distinct from stagnation: Hewn's current
+completion policy tracks verification state, but does not know whether
+the user's task requires verification before completion.

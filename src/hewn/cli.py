@@ -4,8 +4,9 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
-from hewn.agent import Agent, AgentLimitError
+from hewn.agent import Agent, AgentLimitError, AgentStagnationError
 from hewn.builtin_tools import make_builtin_tool_registry
+from hewn.completion import CompletionRequirement
 from hewn.llama_cpp import LlamaCppModel
 from hewn.models import Model
 from hewn.telemetry import AgentMetrics
@@ -70,6 +71,7 @@ def run_cli(
     argv: Sequence[str] | None,
     *,
     model: Model,
+    completion_requirement: CompletionRequirement = CompletionRequirement.NONE,
 ) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -85,8 +87,11 @@ def run_cli(
     )
 
     try:
-        result = agent.run(args.request)
-    except AgentLimitError as error:
+        result = agent.run(
+            args.request,
+            completion_requirement=completion_requirement,
+        )
+    except (AgentLimitError, AgentStagnationError) as error:
         print(str(error))
         print()
         _print_metrics(error.metrics)

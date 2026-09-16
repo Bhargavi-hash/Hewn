@@ -8,7 +8,14 @@ from hewn.tools import ToolCall
 
 
 class ModelProtocolError(ValueError):
-    """Model output does not satisfy the Hewn response protocol."""
+    def __init__(
+        self,
+        message: str,
+        *,
+        raw_response: str,
+    ) -> None:
+        super().__init__(message)
+        self.raw_response = raw_response
 
 
 def parse_model_response(text: str) -> ModelResponse:
@@ -16,40 +23,53 @@ def parse_model_response(text: str) -> ModelResponse:
         payload: Any = json.loads(text)
     except json.JSONDecodeError as exc:
         raise ModelProtocolError(
-            "Model response is not valid JSON"
+            "Model response is not valid JSON",
+            raw_response=text,
         ) from exc
 
     if not isinstance(payload, dict):
         raise ModelProtocolError(
-            "Model response must be a JSON object"
+            "Model response must be a JSON object",
+            raw_response=text,
         )
 
     response_type = payload.get("type")
 
     if response_type == "final":
-        return _parse_final_response(payload)
+        return _parse_final_response(
+            payload,
+            raw_response=text,
+        )
 
     if response_type == "tool_call":
-        return _parse_tool_call(payload)
+        return _parse_tool_call(
+            payload,
+            raw_response=text,
+        )
 
     raise ModelProtocolError(
-        f"Unknown model response type: {response_type!r}"
+        f"Unknown model response type: {response_type!r}",
+        raw_response=text,
     )
 
 
 def _parse_final_response(
     payload: dict[str, Any],
+    *,
+    raw_response: str,
 ) -> FinalResponse:
     if set(payload) != {"type", "text"}:
         raise ModelProtocolError(
-            "Final response must contain exactly 'type' and 'text'"
+            "Final response must contain exactly 'type' and 'text'",
+            raw_response=raw_response,
         )
 
     text = payload["text"]
 
     if not isinstance(text, str):
         raise ModelProtocolError(
-            "Final response 'text' must be a string"
+            "Final response 'text' must be a string",
+            raw_response=raw_response,
         )
 
     return FinalResponse(text=text)
@@ -57,11 +77,14 @@ def _parse_final_response(
 
 def _parse_tool_call(
     payload: dict[str, Any],
+    *,
+    raw_response: str,
 ) -> ToolCall:
     if set(payload) != {"type", "name", "arguments"}:
         raise ModelProtocolError(
             "Tool call must contain exactly "
-            "'type', 'name', and 'arguments'"
+            "'type', 'name', and 'arguments'",
+            raw_response=raw_response,
         )
 
     name = payload["name"]
@@ -69,12 +92,14 @@ def _parse_tool_call(
 
     if not isinstance(name, str):
         raise ModelProtocolError(
-            "Tool call 'name' must be a string"
+            "Tool call 'name' must be a string",
+            raw_response=raw_response,
         )
 
     if not isinstance(arguments, dict):
         raise ModelProtocolError(
-            "Tool call 'arguments' must be an object"
+            "Tool call 'arguments' must be an object",
+            raw_response=raw_response,
         )
 
     return ToolCall(

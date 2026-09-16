@@ -76,3 +76,23 @@ def test_extract_content_rejects_invalid_response() -> None:
         match="invalid chat response",
     ):
         model._extract_content("{}")
+
+def test_system_prompt_appends_additional_instruction() -> None:
+    model = LlamaCppModel(
+        additional_system_instruction="EXPERIMENTAL INSTRUCTION"
+    )
+
+    prompt = model._build_system_prompt([])
+
+    assert prompt.endswith("EXPERIMENTAL INSTRUCTION")
+
+def test_system_prompt_omits_extra_separator_by_default() -> None:
+    default_model = LlamaCppModel()
+    explicit_empty_model = LlamaCppModel(
+        additional_system_instruction=None
+    )
+
+    assert (
+        default_model._build_system_prompt([])
+        == explicit_empty_model._build_system_prompt([])
+    )

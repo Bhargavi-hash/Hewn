@@ -18,6 +18,8 @@ class LlamaCppModel:
     max_tokens: int = 256
     timeout_seconds: float = 120.0
 
+    additional_system_instruction: str | None = None
+
     def respond(
         self,
         messages: list[Message],
@@ -81,31 +83,39 @@ class LlamaCppModel:
         return provider_messages
 
     def _build_system_prompt(
-        self,
-        tools: list[ToolDefinition],
-    ) -> str:
-        tool_descriptions = "\n".join(
-            (
-                f"- {tool.name}: {tool.description}\n"
-                f"  arguments schema: "
-                f"{json.dumps(tool.input_schema, sort_keys=True)}"
+            self,
+            tools: list[ToolDefinition],
+        ) -> str:
+            tool_descriptions = "\n".join(
+                (
+                    f"- {tool.name}: {tool.description}\n"
+                    f"  arguments schema: "
+                    f"{json.dumps(tool.input_schema, sort_keys=True)}"
+                )
+                for tool in tools
             )
-            for tool in tools
-        )
 
-        return (
-            "You are the decision model inside Hewn, a coding agent.\n"
-            "Choose exactly one next action.\n\n"
-            "To use a tool, respond with exactly this JSON shape:\n"
-            '{"type":"tool_call","name":"TOOL_NAME",'
-            '"arguments":{...}}\n\n'
-            "To finish, respond with exactly this JSON shape:\n"
-            '{"type":"final","text":"ANSWER"}\n\n'
-            "Return exactly one JSON object and no Markdown fences, "
-            "explanation, or additional text.\n\n"
-            "Available tools:\n"
-            f"{tool_descriptions}"
-        )
+            system_prompt = (
+                "You are the decision model inside Hewn, a coding agent.\n"
+                "Choose exactly one next action.\n\n"
+                "To use a tool, respond with exactly this JSON shape:\n"
+                '{"type":"tool_call","name":"TOOL_NAME",'
+                '"arguments":{...}}\n\n'
+                "To finish, respond with exactly this JSON shape:\n"
+                '{"type":"final","text":"ANSWER"}\n\n'
+                "Return exactly one JSON object and no Markdown fences, "
+                "explanation, or additional text.\n\n"
+                "Available tools:\n"
+                f"{tool_descriptions}"
+            )
+
+            if self.additional_system_instruction is not None:
+                system_prompt += (
+                    "\n\n"
+                    + self.additional_system_instruction
+                )
+        
+            return system_prompt
 
     def _extract_content(self, body: str) -> str:
         try:

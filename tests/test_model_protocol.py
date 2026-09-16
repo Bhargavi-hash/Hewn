@@ -69,3 +69,21 @@ def test_reject_non_object_response() -> None:
         match="JSON object",
     ):
         parse_model_response('["final", "Done."]')
+
+def test_protocol_error_preserves_raw_response() -> None:
+    raw_response = "I should inspect calculator.py first."
+
+    with pytest.raises(ModelProtocolError) as exc_info:
+        parse_model_response(raw_response)
+
+    assert exc_info.value.raw_response == raw_response
+
+def test_structured_protocol_error_preserves_raw_response() -> None:
+    raw_response = (
+        '{"type":"tool_call","name":123,"arguments":{}}'
+    )
+
+    with pytest.raises(ModelProtocolError) as exc_info:
+        parse_model_response(raw_response)
+
+    assert exc_info.value.raw_response == raw_response

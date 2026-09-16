@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from time import perf_counter
 
-from hewn.completion import CompletionPolicy
+from hewn.completion import CompletionPolicy, CompletionRequirement
 from hewn.models import FinalResponse, Message, Model
 from hewn.telemetry import AgentEvent, AgentMetrics
 from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
@@ -29,6 +29,19 @@ def _format_tool_observation(
     return "\n".join(parts)
 
 
+
+class AgentStagnationError(RuntimeError):
+    def __init__(
+        self,
+        message: str,
+        *,
+        metrics: AgentMetrics,
+    ) -> None:
+        super().__init__(message)
+        self.metrics = metrics
+
+
+
 class AgentLimitError(RuntimeError):
     def __init__(
         self,
@@ -51,10 +64,19 @@ class Agent:
     registry: ToolRegistry
     executor: ToolExecutor
     max_turns: int = 20
+    max_stagnant_turns: int = 3
 
-    def run(self, user_request: str) -> AgentRunResult:
+    def run(
+        self,
+        user_request: str,
+        *,
+        completion_requirement: CompletionRequirement = CompletionRequirement.NONE,
+    ) -> AgentRunResult:
         started_at = perf_counter()
-        completion_policy = CompletionPolicy()
+        completion_policy = CompletionPolicy(
+            requirement=completion_requirement,
+        )
+        consecutive_stagnant_turns = 0
 
         messages = [
             Message(
@@ -84,27 +106,60 @@ class Agent:
             if isinstance(response, FinalResponse):
                 if not completion_policy.can_finish():
                     reason = completion_policy.rejection_reason()
+
                     metrics.events.append(
                         AgentEvent(
                             kind="completion_rejected",
                             detail=reason,
                         )
                     )
+
                     messages.append(
                         Message(
                             role="tool",
                             content=reason,
                         )
                     )
+
+                    consecutive_stagnant_turns += 1
+
+                    if consecutive_stagnant_turns >= self.max_stagnant_turns:
+                        metrics.events.append(
+                            AgentEvent(
+                                kind="stagnation_detected",
+                                detail=(
+                                    f"{consecutive_stagnant_turns} consecutive "
+                                    "non-progressing turns"
+                                ),
+                            )
+                        )
+
+                        metrics.wall_time_seconds = (
+                            perf_counter() - started_at
+                        )
+
+                        raise AgentStagnationError(
+                            (
+                                "Agent stagnated after "
+                                f"{consecutive_stagnant_turns} consecutive "
+                                "non-progressing turns"
+                            ),
+                            metrics=metrics,
+                        )
+
                     continue
                 
                 metrics.wall_time_seconds = perf_counter() - started_at
-                return AgentRunResult(text=response.text, metrics=metrics)
-
+                return AgentRunResult(
+                    text=response.text,
+                    metrics=metrics,
+                )
+            
             if isinstance(response, ToolCall):
                 metrics.tool_calls += 1
 
                 result = self.executor.execute(response)
+                consecutive_stagnant_turns = 0
 
                 if response.name == "run_check":
                     completion_policy.record_check(passed=result.ok)
