@@ -204,3 +204,93 @@ Keep `find_symbol`.
 Do not add further specialized navigation tools in Module 2. The unresolved
 conceptual-navigation problem becomes an input to Module 3, which will build
 repository structure and symbol intelligence systematically.
+
+# Conclusions
+
+## Main finding
+
+Deterministic repository structure was useful when it was placed directly
+in the model's initial context, but exposing the same structure only as a
+model-selected tool was not sufficient in this benchmark.
+
+At the current code state:
+
+| Configuration | Symbol | Concept | Overall |
+| --- | ---: | ---: | ---: |
+| semantic-symbol | 1/5 | 0/4 | 1/9 |
+| repository-map | 0/5 | 0/4 | 0/9 |
+| repository-map-grounded | 5/5 | 0/4 | 5/9 |
+
+These results apply only to this nine-task Hewn navigation benchmark and
+this local model configuration.
+
+## Finding 1 — Structural grounding changed tool behavior
+
+With `find_symbol` available but no structural grounding, the model used
+the tool successfully on only one of five exact-symbol tasks.
+
+With structural repository context supplied before the first model
+decision, all five exact-symbol tasks selected `find_symbol` and
+completed successfully.
+
+This suggests that tool availability and tool usefulness are separate
+from reliable tool selection.
+
+## Finding 2 — Availability is not reachability
+
+When `repository_map` was available only as another model-selected tool,
+it was invoked zero times and the configuration completed zero of nine
+tasks successfully.
+
+Therefore, making repository knowledge available to an agent does not
+guarantee that a small model will retrieve it when needed.
+
+## Finding 3 — Structural knowledge is not semantic retrieval
+
+Pre-grounding did not make any of the four conceptual tasks pass the
+strict evaluator.
+
+The structural map describes files, symbols and internal dependencies,
+but conceptual requests require mapping behavioral descriptions onto
+relevant implementation locations.
+
+That problem is intentionally deferred to Module 4.
+
+## Finding 4 — Some conceptual failures progressed further
+
+The aggregate 0/4 conceptual score hides different behaviors.
+
+For nav-009, the grounded model selected `read_file` on the correct
+`src/hewn/llama_cpp.py` file, but emitted the tool call inside Markdown
+fences and was rejected by the strict protocol.
+
+For nav-008, the model attempted additional evidence gathering with
+`find_symbol`, although it selected the wrong symbol.
+
+Other conceptual tasks still contained unsupported architectural
+inferences.
+
+Protocol compliance and repository reasoning therefore remain distinct
+failure dimensions.
+
+## Architectural decision
+
+Keep the deterministic `RepositoryIndex`, exact `find_symbol` lookup and
+structural `repository_map`.
+
+Do not require the model to be solely responsible for deciding when
+basic repository knowledge should enter its context.
+
+Do not implement retrieval policy in Module 3. Module 4 will investigate
+how to select relevant repository information without injecting the
+entire structural map.
+
+## Scope
+
+No claim is made that structural grounding generally improves coding
+agents or that Hewn outperforms other systems.
+
+The evidence supports a narrower conclusion: on this benchmark and model
+configuration, deterministic structural grounding substantially improved
+exact-symbol navigation and changed the model toward evidence-seeking
+behavior.
