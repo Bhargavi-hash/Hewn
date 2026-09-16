@@ -1,15 +1,20 @@
 from pathlib import Path
 
 from hewn.builtin_tools.symbols import make_find_symbol_tool
+from hewn.repository.index import RepositoryIndex
 from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
-from hewn.workspace import Workspace
+
+# from hewn.workspace import Workspace
 
 
 def make_executor(workspace_root: Path) -> ToolExecutor:
-    workspace = Workspace(workspace_root)
+    # workspace = Workspace(workspace_root)
+    repository_index = RepositoryIndex.build(workspace_root)
 
     registry = ToolRegistry()
-    registry.register(make_find_symbol_tool(workspace))
+    registry.register(
+        make_find_symbol_tool(repository_index)
+    )
 
     return ToolExecutor(registry)
 
