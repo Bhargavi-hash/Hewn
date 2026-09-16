@@ -22,4 +22,5 @@ def test_builtin_registry_contains_expected_tools(
         "replace_text",
         "search_text",
         "run_check",
+        "find_symbol",
     }

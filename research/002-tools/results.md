@@ -138,3 +138,69 @@ performance estimate.
 
 The remaining failures require separate investigation rather than additional
 changes to the search interface.
+
+## Experiment 003 — Semantic Symbol Lookup
+
+A deterministic Python AST-backed `find_symbol` tool was added alongside the
+existing primitive tools.
+
+The tool maps an exact symbol name to class or function definitions rather
+than returning every textual occurrence of that name.
+
+### Result
+
+Deterministic task success:
+
+| Configuration | Success |
+|---|---:|
+| Primitive Module 1 tools | 0/9 |
+| Scoped search | 1/9 |
+| Scoped search + `find_symbol` | 3/9 |
+
+The three successful tasks in Experiment 003 were:
+
+- nav-001 — `ToolExecutor`
+- nav-003 — `CompletionPolicy`
+- nav-005 — `LlamaCppModel`
+
+Each completed with two model calls and one tool call.
+
+Two other exact-symbol tasks, nav-002 and nav-004, failed without making any
+tool call. Therefore `find_symbol` does not by itself solve the model's
+premature-answer behavior.
+
+All four conceptual-navigation tasks also failed. Three terminated with model
+protocol errors, while nav-006 returned without using a tool.
+
+### Interpretation
+
+The experiment provides narrow engineering evidence that semantic tool design
+can reduce reasoning burden for exact-symbol repository navigation.
+
+`find_symbol` moves definition identification out of the model:
+
+    text search
+        -> many references
+        -> model identifies definition
+
+becomes:
+
+    find_symbol
+        -> deterministic AST analysis
+        -> definition locations
+
+The result does not establish a general 3x performance improvement. Each
+configuration currently has only one benchmark run, and the task set is small
+and drawn from Hewn itself.
+
+The remaining conceptual failures indicate a different problem: the model must
+first map a behavioral description to relevant repository concepts before an
+exact-symbol tool becomes useful.
+
+### Decision
+
+Keep `find_symbol`.
+
+Do not add further specialized navigation tools in Module 2. The unresolved
+conceptual-navigation problem becomes an input to Module 3, which will build
+repository structure and symbol intelligence systematically.
