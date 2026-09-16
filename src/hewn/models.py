@@ -6,6 +6,9 @@ from typing import Protocol
 from hewn.tools import ToolCall, ToolDefinition
 
 
+class ModelError(RuntimeError):
+    """Expected failure while communicating with a model provider."""
+
 @dataclass(frozen=True)
 class FinalResponse:
     text: str

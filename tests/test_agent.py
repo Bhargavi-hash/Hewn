@@ -182,3 +182,49 @@ def test_agent_records_model_and_tool_metrics(
     assert result.metrics.successful_tool_calls == 1
     assert result.metrics.failed_tool_calls == 1
     assert result.metrics.wall_time_seconds >= 0
+
+def test_agent_records_execution_trace(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "example.py").write_text(
+        "class ImportantThing:\n"
+        "    pass\n",
+        encoding="utf-8",
+    )
+
+    model = ScriptedModel(
+        responses=[
+            ToolCall(
+                name="search_text",
+                arguments={"query": "ImportantThing"},
+            ),
+            FinalResponse("Found it."),
+        ]
+    )
+
+    agent = make_agent(tmp_path, model)
+
+    result = agent.run("Find ImportantThing.")
+
+    assert len(result.metrics.events) == 3
+
+    assert result.metrics.events[0].kind == (
+        "model_response"
+    )
+    assert "search_text" in (
+        result.metrics.events[0].detail
+    )
+
+    assert result.metrics.events[1].kind == (
+        "tool_result"
+    )
+    assert "example.py" in (
+        result.metrics.events[1].detail
+    )
+
+    assert result.metrics.events[2].kind == (
+        "model_response"
+    )
+    assert "Found it." in (
+        result.metrics.events[2].detail
+    )

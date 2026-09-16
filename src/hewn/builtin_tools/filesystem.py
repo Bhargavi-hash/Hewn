@@ -111,3 +111,94 @@ def make_list_directory_tool(
         },
         handler=list_directory_handler,
     )
+
+def make_replace_text_tool(
+    workspace: Workspace,
+) -> ToolDefinition:
+    def replace_text_handler(
+        arguments: dict[str, Any],
+    ) -> ToolResult:
+        try:
+            path = workspace.resolve(arguments["path"])
+        except WorkspaceViolationError as exc:
+            raise ToolError(str(exc)) from exc
+
+        if not path.exists():
+            raise ToolError(
+                f"File not found: {arguments['path']}"
+            )
+
+        if not path.is_file():
+            raise ToolError(
+                f"Not a file: {arguments['path']}"
+            )
+
+        try:
+            contents = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            raise ToolError(
+                f"File is not valid UTF-8: {arguments['path']}"
+            ) from exc
+
+        old = arguments["old"]
+        new = arguments["new"]
+
+        occurrence_count = contents.count(old)
+
+        if occurrence_count == 0:
+            raise ToolError(
+                "Text to replace was not found"
+            )
+
+        if occurrence_count > 1:
+            raise ToolError(
+                "Text to replace occurs more than once"
+            )
+
+        updated = contents.replace(
+            old,
+            new,
+            1,
+        )
+
+        path.write_text(
+            updated,
+            encoding="utf-8",
+        )
+
+        return ToolResult(
+            ok=True,
+            output=f"Updated {arguments['path']}",
+        )
+
+    return ToolDefinition(
+        name="replace_text",
+        description=(
+            "Replace exactly one occurrence of text in a UTF-8 "
+            "file inside the workspace. The old text must occur "
+            "exactly once."
+        ),
+        input_schema={
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "old": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "new": {
+                    "type": "string",
+                },
+            },
+            "required": [
+                "path",
+                "old",
+                "new",
+            ],
+            "additionalProperties": False,
+        },
+        handler=replace_text_handler,
+    )

@@ -5,6 +5,7 @@ import pytest
 from hewn.builtin_tools.filesystem import (
     make_list_directory_tool,
     make_read_file_tool,
+    make_replace_text_tool,
 )
 from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
 from hewn.workspace import Workspace
@@ -218,3 +219,107 @@ def test_list_directory_rejects_invalid_entry_limit(
             workspace,
             entry_limit=0,
         )
+
+def test_replace_text_updates_unique_match(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "example.py"
+    path.write_text(
+        "def add(a, b):\n"
+        "    return a - b\n",
+        encoding="utf-8",
+    )
+
+    workspace = Workspace(tmp_path)
+    registry = ToolRegistry()
+    registry.register(
+        make_replace_text_tool(workspace)
+    )
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="replace_text",
+            arguments={
+                "path": "example.py",
+                "old": "return a - b",
+                "new": "return a + b",
+            },
+        )
+    )
+
+    assert result.ok
+    assert path.read_text(encoding="utf-8") == (
+        "def add(a, b):\n"
+        "    return a + b\n"
+    )
+
+def test_replace_text_rejects_missing_match(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "example.py"
+    path.write_text(
+        "return a + b\n",
+        encoding="utf-8",
+    )
+
+    workspace = Workspace(tmp_path)
+    registry = ToolRegistry()
+    registry.register(
+        make_replace_text_tool(workspace)
+    )
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="replace_text",
+            arguments={
+                "path": "example.py",
+                "old": "return a - b",
+                "new": "return a + b",
+            },
+        )
+    )
+
+    assert not result.ok
+    assert result.error == (
+        "Text to replace was not found"
+    )
+
+def test_replace_text_rejects_multiple_matches(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "example.py"
+    path.write_text(
+        "return None\n"
+        "return None\n",
+        encoding="utf-8",
+    )
+
+    workspace = Workspace(tmp_path)
+    registry = ToolRegistry()
+    registry.register(
+        make_replace_text_tool(workspace)
+    )
+    executor = ToolExecutor(registry)
+
+    result = executor.execute(
+        ToolCall(
+            name="replace_text",
+            arguments={
+                "path": "example.py",
+                "old": "return None",
+                "new": "return result",
+            },
+        )
+    )
+
+    assert not result.ok
+    assert result.error == (
+        "Text to replace occurs more than once"
+    )
+
+    assert path.read_text(encoding="utf-8") == (
+        "return None\n"
+        "return None\n"
+    )

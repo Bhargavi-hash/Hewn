@@ -19,5 +19,7 @@ def test_builtin_registry_contains_expected_tools(
     assert names == {
         "list_directory",
         "read_file",
+        "replace_text",
         "search_text",
+        "run_check",
     }
