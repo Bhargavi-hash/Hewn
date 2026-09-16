@@ -5,7 +5,7 @@ import subprocess
 from typing import Any
 
 from hewn.tools import ToolDefinition, ToolError, ToolResult
-from hewn.workspace import Workspace
+from hewn.workspace import Workspace, WorkspaceViolationError
 
 DEFAULT_SEARCH_RESULT_LIMIT = 100
 
@@ -20,6 +20,18 @@ def make_search_text_tool(
 
     def search_text_handler(arguments: dict[str, Any]) -> ToolResult:
         query = arguments["query"]
+        requested_path = arguments.get("path", ".")
+
+        try:
+            search_root = workspace.resolve(requested_path)
+        except WorkspaceViolationError as exc:
+            raise ToolError(str(exc)) from exc
+
+        if not search_root.exists():
+            raise ToolError(f"Search path not found: {requested_path}")
+
+        if not search_root.is_dir():
+            raise ToolError(f"Search path is not a directory: {requested_path}")
 
         try:
             completed = subprocess.run(
@@ -32,7 +44,7 @@ def make_search_text_tool(
                     query,
                     ".",
                 ],
-                cwd=workspace.root,
+                cwd=search_root,
                 capture_output=True,
                 text=True,
                 check=False,
@@ -64,13 +76,19 @@ def make_search_text_tool(
     return ToolDefinition(
         name="search_text",
         description=(
-            "Search workspace text files for an exact text string. "
-            "Returns matching file paths, line numbers, and matching lines."
+            "Search for an exact text string within a workspace directory. "
+            "The optional path selects a workspace-relative directory and "
+            "defaults to the workspace root. Returns matching file paths, "
+            "line numbers, and matching lines."
         ),
         input_schema={
             "type": "object",
             "properties": {
                 "query": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "path": {
                     "type": "string",
                     "minLength": 1,
                 },

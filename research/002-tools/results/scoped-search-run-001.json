@@ -1,0 +1,189 @@
+[
+  {
+    "id": "nav-001",
+    "category": "symbol",
+    "task": "Find where ToolExecutor is defined in this repository.",
+    "expected_file": "src/hewn/tools.py",
+    "expected_symbol": "ToolExecutor",
+    "success": false,
+    "status": "completed",
+    "answer": "The `ToolExecutor` class is defined in the `src` directory of the repository.",
+    "metrics": {
+      "model_calls": 1,
+      "tool_calls": 0,
+      "successful_tool_calls": 0,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 9.83488139200199,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='The `ToolExecutor` class is defined in the `src` directory of the repository.')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-002",
+    "category": "symbol",
+    "task": "Find where Workspace is defined in this repository.",
+    "expected_file": "src/hewn/workspace.py",
+    "expected_symbol": "Workspace",
+    "success": false,
+    "status": "completed",
+    "answer": "The Workspace is defined in the `workspace.py` file located in the root directory of the repository.",
+    "metrics": {
+      "model_calls": 1,
+      "tool_calls": 0,
+      "successful_tool_calls": 0,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 2.9529493930022,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='The Workspace is defined in the `workspace.py` file located in the root directory of the repository.')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-003",
+    "category": "symbol",
+    "task": "Find where CompletionPolicy is defined in this repository.",
+    "expected_file": "src/hewn/completion.py",
+    "expected_symbol": "CompletionPolicy",
+    "success": false,
+    "status": "completed",
+    "answer": "The CompletionPolicy is defined in the hewn/completion.py file under the CompletionPolicy class.",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 6.898709160996077,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='search_text', arguments={'path': 'src', 'query': 'CompletionPolicy'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "./hewn/agent.py:6:from hewn.completion import CompletionPolicy, CompletionRequirement\n./hewn/agent.py:76:        completion_policy = CompletionPolicy(\n./hewn/completion.py:19:class CompletionPolicy:"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='The CompletionPolicy is defined in the hewn/completion.py file under the CompletionPolicy class.')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-004",
+    "category": "symbol",
+    "task": "Find where AgentMetrics is defined in this repository.",
+    "expected_file": "src/hewn/telemetry.py",
+    "expected_symbol": "AgentMetrics",
+    "success": false,
+    "status": "completed",
+    "answer": "Error: Search path not found: AgentMetrics",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 0,
+      "failed_tool_calls": 1,
+      "wall_time_seconds": 5.309922114000074,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='search_text', arguments={'path': 'AgentMetrics', 'query': 'AgentMetrics'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "Error: Search path not found: AgentMetrics"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='Error: Search path not found: AgentMetrics')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-005",
+    "category": "symbol",
+    "task": "Find where LlamaCppModel is defined in this repository.",
+    "expected_file": "src/hewn/llama_cpp.py",
+    "expected_symbol": "LlamaCppModel",
+    "success": true,
+    "status": "completed",
+    "answer": "The LlamaCppModel class is defined in the following files: ./src/hewn/llama_cpp.py, ./src/hewn/cli.py, ./research/001-agent-loop/probe_failed_check.py, ./research/001-agent-loop/probe_failed_check_with_instruction.py, ./research/001-agent-loop/probe_recovery.py, ./research/001-agent-loop/probe_grounded_action.py, ./research/001-agent-loop/run_baseline_004.py, ./research/002-tools/tasks.json, ./research/002-tools/run_navigation_baseline.py, ./research/002-tools/results/primitive-run-001.json, ./tests/test_llama_cpp.py.",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 39.13980135300517,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='search_text', arguments={'query': 'LlamaCppModel', 'path': '.'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "./src/hewn/llama_cpp.py:15:class LlamaCppModel:\n./src/hewn/cli.py:10:from hewn.llama_cpp import LlamaCppModel\n./src/hewn/cli.py:119:        model=LlamaCppModel(),\n./research/001-agent-loop/probe_failed_check.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/probe_failed_check.py:44:    model = LlamaCppModel()\n./research/001-agent-loop/probe_agent_role.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/probe_agent_role.py:44:    model = LlamaCppModel(\n./research/001-agent-loop/probe_failed_check_with_instruction.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/probe_failed_check_with_instruction.py:47:    model = LlamaCppModel()\n./research/001-agent-loop/probe_recovery.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/probe_recovery.py:43:    model = LlamaCppModel()\n./research/001-agent-loop/probe_grounded_action.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/probe_grounded_action.py:44:    model = LlamaCppModel(\n./research/001-agent-loop/run_baseline_004.py:4:from hewn.llama_cpp import LlamaCppModel\n./research/001-agent-loop/run_baseline_004.py:20:    model = LlamaCppModel(\n./research/002-tools/tasks.json:33:        \"task\": \"Find where LlamaCppModel is defined in this repository.\",\n./research/002-tools/tasks.json:35:        \"expected_symbol\": \"LlamaCppModel\"\n./research/002-tools/tasks.json:63:        \"expected_symbol\": \"LlamaCppModel\"\n./research/002-tools/run_navigation_baseline.py:12:from hewn.llama_cpp import LlamaCppModel\n./research/002-tools/run_navigation_baseline.py:70:        model = LlamaCppModel()\n./research/002-tools/results/primitive-run-001.json:110:    \"task\": \"Find where LlamaCppModel is defined in this repository.\",\n./research/002-tools/results/primitive-run-001.json:112:    \"expected_symbol\": \"LlamaCppModel\",\n./research/002-tools/results/primitive-run-001.json:125:          \"detail\": \"ToolCall(name='search_text', arguments={'query': 'LlamaCppModel', 'path': '.'})\"\n./research/002-tools/results/primitive-run-001.json:179:    \"expected_symbol\": \"LlamaCppModel\",\n./tests/test_llama_cpp.py:5:from hewn.llama_cpp import LlamaCppModel\n./tests/test_llama_cpp.py:32:    model = LlamaCppModel()\n./tests/test_llama_cpp.py:50:    model = LlamaCppModel()\n./tests/test_llama_cpp.py:72:    model = LlamaCppModel()\n./tests/test_llama_cpp.py:81:    model = LlamaCppModel(\n./tests/test_llama_cpp.py:90:    default_model = LlamaCppModel()\n./tests/test_llama_cpp.py:91:    explicit_empty_model = LlamaCppModel("
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='The LlamaCppModel class is defined in the following files: ./src/hewn/llama_cpp.py, ./src/hewn/cli.py, ./research/001-agent-loop/probe_failed_check.py, ./research/001-agent-loop/probe_failed_check_with_instruction.py, ./research/001-agent-loop/probe_recovery.py, ./research/001-agent-loop/probe_grounded_action.py, ./research/001-agent-loop/run_baseline_004.py, ./research/002-tools/tasks.json, ./research/002-tools/run_navigation_baseline.py, ./research/002-tools/results/primitive-run-001.json, ./tests/test_llama_cpp.py.')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-006",
+    "category": "concept",
+    "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace.",
+    "expected_file": "src/hewn/workspace.py",
+    "expected_symbol": "Workspace",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "{\"type\":\"final\",\"text\":\"The code responsible for preventing repository file operations from escaping the configured workspace is typically found in the repository's configuration file, such as `.gitignore` or `package.json`. These files specify which files and directories should be ignored or included in the repository, respectively. The configuration file is read by the repository's version control system, such as Git, and it determines which files and directories are allowed to be modified or deleted. If a file or directory is not listed in the configuration file, it will not be allowed to be modified or deleted, thus preventing repository file operations from escaping the configured workspace.",
+    "metrics": null
+  },
+  {
+    "id": "nav-007",
+    "category": "concept",
+    "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer.",
+    "expected_file": "src/hewn/completion.py",
+    "expected_symbol": "CompletionPolicy",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"final\",\n  \"text\": \"The code responsible for deciding whether the agent is allowed to return its final answer is in the `is_final_answer_allowed` function within the `Hewn` class. This function checks if the agent has reached a point where it can confidently provide a final answer based on the current state of the workspace and the available tools.\"\n}\n```",
+    "metrics": null
+  },
+  {
+    "id": "nav-008",
+    "category": "concept",
+    "task": "Find the code responsible for converting a model's requested action into an actual tool execution.",
+    "expected_file": "src/hewn/tools.py",
+    "expected_symbol": "ToolExecutor",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"final\",\n  \"text\": \"The code responsible for converting a model's requested action into an actual tool execution is located in the `execute_action` function within the `Hewn` class. This function takes the model's action as input and calls the appropriate tool based on the action type. The function uses a dictionary to map action types to their corresponding tool names and arguments. The function then calls the appropriate tool with the provided arguments and returns the result.\"\n}\n```",
+    "metrics": null
+  },
+  {
+    "id": "nav-009",
+    "category": "concept",
+    "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response.",
+    "expected_file": "src/hewn/llama_cpp.py",
+    "expected_symbol": "LlamaCppModel",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"final\",\n  \"text\": \"The code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response is not provided in the given text. The text only describes the available tools and their arguments.\"\n}\n```",
+    "metrics": null
+  }
+]

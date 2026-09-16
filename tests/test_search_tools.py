@@ -148,3 +148,80 @@ def test_search_text_respects_gitignore(tmp_path: Path) -> None:
     assert result.output is not None
     assert "visible.txt" in result.output
     assert "ignored.txt" not in result.output
+
+def test_search_text_supports_scoped_directory(
+    tmp_path: Path,
+) -> None:
+    src = tmp_path / "src"
+    src.mkdir()
+
+    (src / "inside.py").write_text(
+        "class Workspace:\n"
+        "    pass\n",
+        encoding="utf-8",
+    )
+
+    (tmp_path / "outside.py").write_text(
+        "class Workspace:\n"
+        "    pass\n",
+        encoding="utf-8",
+    )
+
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="search_text",
+            arguments={
+                "query": "Workspace",
+                "path": "src",
+            },
+        )
+    )
+
+    assert result.ok is True
+    assert result.output is not None
+    assert "inside.py" in result.output
+    assert "outside.py" not in result.output
+
+def test_search_text_rejects_workspace_escape(
+    tmp_path: Path,
+) -> None:
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="search_text",
+            arguments={
+                "query": "secret",
+                "path": "..",
+            },
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+
+def test_search_text_rejects_file_scope(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "example.py").write_text(
+        "needle\n",
+        encoding="utf-8",
+    )
+
+    executor = make_executor(tmp_path)
+
+    result = executor.execute(
+        ToolCall(
+            name="search_text",
+            arguments={
+                "query": "needle",
+                "path": "example.py",
+            },
+        )
+    )
+
+    assert result.ok is False
+    assert result.error is not None
+    assert "not a directory" in result.error
