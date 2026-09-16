@@ -269,3 +269,94 @@ Four trials are insufficient for a general statistical claim about the
 model. They do, however, provide enough repeated evidence to motivate
 testing whether Hewn's control layer can prevent premature completion when
 environmental evidence contradicts completion.
+
+### Baseline 003 — Deterministic completion policy
+
+#### Intervention
+
+Baseline 003 retained the Baseline 002 model, task, tool vocabulary,
+behavioral prompt, and 20-turn limit.
+
+The agent added a deterministic completion policy:
+
+- failed verification moves the policy to `FAILED`;
+- successful repository modification moves it to `STALE`;
+- successful verification moves it to `PASSED`;
+- final responses are rejected while verification is `FAILED` or `STALE`.
+
+The purpose was to test whether Hewn could prevent premature completion
+without changing the underlying model.
+
+#### Trial 1
+
+Result: **FAIL**
+
+- Reached the 20-turn limit.
+- Final repository remained unchanged.
+- Independent verification: 2 tests failed.
+- Detailed trajectory was unavailable because turn-limit failures did not
+  preserve/expose telemetry.
+
+This trial exposed an observability limitation in the experimental harness.
+The harness was updated so turn-limit failures preserve and expose run
+metrics and trace information.
+
+During regression testing of that change, rapid Python source edits also
+exposed stale bytecode during immediate re-verification. The Python test
+check was changed to execute through the current interpreter with bytecode
+caching disabled so verification reflects the current source state.
+
+These changes affected observability and verification correctness rather
+than the model's action policy.
+
+#### Trial 2
+
+Result: **FAIL**
+
+Run metrics:
+
+- Model calls: 20
+- Tool calls: 1
+- Successful tool calls: 0
+- Failed tool calls: 1
+- Wall time: 70.46 seconds
+- Final independent verification: 2 tests failed
+- Repository modification: none
+
+Observed trajectory:
+
+1. The model invoked `run_check("tests")`.
+2. Verification reported both calculator tests failing.
+3. The model proposed a final response telling the user that the tests
+   failed and that the code should be fixed.
+4. Hewn rejected finalization because the latest verification had failed.
+5. On subsequent turns, the model repeatedly returned the completion-policy
+   rejection text itself as a `FinalResponse`.
+6. Hewn rejected each attempted finalization.
+7. The run exhausted the 20-turn budget without another tool call.
+
+#### Observation
+
+The completion policy changed the failure mode but did not solve the task.
+
+Without the policy, the model terminated immediately after observing failed
+verification. With the policy, Hewn correctly prevented that termination,
+but the model did not recover into further repository interaction.
+
+This separates two capabilities:
+
+1. **Completion correctness:** whether the harness permits an unsupported
+   claim of completion.
+2. **Recovery capability:** whether the model can choose a productive next
+   action after completion is rejected.
+
+Baseline 003 improved the first but provided no evidence of improvement in
+the second.
+
+The repeated trajectory is classified as:
+
+`COMPLETION_REJECTION_LOOP`
+
+Within this trial, 20 model calls resulted in only one environment tool
+call. After the first rejected final response, subsequent turns made no
+observable repository progress.

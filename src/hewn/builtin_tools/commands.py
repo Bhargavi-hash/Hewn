@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from typing import Any
 
 from hewn.tools import ToolDefinition, ToolError, ToolResult
@@ -10,12 +11,11 @@ DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
 DEFAULT_COMMAND_OUTPUT_LIMIT = 12_000
 
 
-CHECK_COMMANDS: dict[str, list[str]] = {
-    "tests": ["pytest", "-q"],
+CHECK_COMMANDS = {
+    "tests": [sys.executable, "-B", "-m", "pytest", "-q"],
     "lint": ["ruff", "check", "."],
     "types": ["mypy", "src", "tests"],
 }
-
 
 def make_run_check_tool(
     workspace: Workspace,

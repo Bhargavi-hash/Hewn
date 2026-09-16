@@ -4,10 +4,11 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
-from hewn.agent import Agent
+from hewn.agent import Agent, AgentLimitError
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.llama_cpp import LlamaCppModel
 from hewn.models import Model
+from hewn.telemetry import AgentMetrics
 from hewn.tools import ToolExecutor
 from hewn.workspace import Workspace
 
@@ -42,6 +43,29 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _print_metrics(metrics: AgentMetrics) -> None:
+    print(
+        "Run metrics: "
+        f"{metrics.model_calls} model calls, "
+        f"{metrics.tool_calls} tool calls, "
+        f"{metrics.successful_tool_calls} successful, "
+        f"{metrics.failed_tool_calls} failed, "
+        f"{metrics.wall_time_seconds:.2f}s"
+    )
+
+
+def _print_trace(metrics: AgentMetrics) -> None:
+    print("Trace:")
+
+    for index, event in enumerate(
+        metrics.events,
+        start=1,
+    ):
+        print(
+            f"{index}. {event.kind}: {event.detail}"
+        )
+
+
 def run_cli(
     argv: Sequence[str] | None,
     *,
@@ -60,30 +84,26 @@ def run_cli(
         executor=executor,
     )
 
-    result = agent.run(args.request)
+    try:
+        result = agent.run(args.request)
+    except AgentLimitError as error:
+        print(str(error))
+        print()
+        _print_metrics(error.metrics)
+
+        if args.trace:
+            print()
+            _print_trace(error.metrics)
+
+        return 1
 
     print(result.text)
     print()
-    print(
-        "Run metrics: "
-        f"{result.metrics.model_calls} model calls, "
-        f"{result.metrics.tool_calls} tool calls, "
-        f"{result.metrics.successful_tool_calls} successful, "
-        f"{result.metrics.failed_tool_calls} failed, "
-        f"{result.metrics.wall_time_seconds:.2f}s"
-    )
+    _print_metrics(result.metrics)
 
     if args.trace:
         print()
-        print("Trace:")
-
-        for index, event in enumerate(
-            result.metrics.events,
-            start=1,
-        ):
-            print(
-                f"{index}. {event.kind}: {event.detail}"
-            )
+        _print_trace(result.metrics)
 
     return 0
 

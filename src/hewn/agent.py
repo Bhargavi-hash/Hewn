@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from time import perf_counter
 
+from hewn.completion import CompletionPolicy
 from hewn.models import FinalResponse, Message, Model
 from hewn.telemetry import AgentEvent, AgentMetrics
 from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
@@ -29,8 +30,14 @@ def _format_tool_observation(
 
 
 class AgentLimitError(RuntimeError):
-    """The agent exceeded its allowed number of model turns."""
-
+    def __init__(
+        self,
+        message: str,
+        *,
+        metrics: AgentMetrics,
+    ) -> None:
+        super().__init__(message)
+        self.metrics = metrics
 
 @dataclass(frozen=True)
 class AgentRunResult:
@@ -47,6 +54,7 @@ class Agent:
 
     def run(self, user_request: str) -> AgentRunResult:
         started_at = perf_counter()
+        completion_policy = CompletionPolicy()
 
         messages = [
             Message(
@@ -74,19 +82,35 @@ class Agent:
             )
 
             if isinstance(response, FinalResponse):
-                metrics.wall_time_seconds = (
-                    perf_counter() - started_at
-                )
-
-                return AgentRunResult(
-                    text=response.text,
-                    metrics=metrics,
-                )
+                if not completion_policy.can_finish():
+                    reason = completion_policy.rejection_reason()
+                    metrics.events.append(
+                        AgentEvent(
+                            kind="completion_rejected",
+                            detail=reason,
+                        )
+                    )
+                    messages.append(
+                        Message(
+                            role="tool",
+                            content=reason,
+                        )
+                    )
+                    continue
+                
+                metrics.wall_time_seconds = perf_counter() - started_at
+                return AgentRunResult(text=response.text, metrics=metrics)
 
             if isinstance(response, ToolCall):
                 metrics.tool_calls += 1
 
                 result = self.executor.execute(response)
+
+                if response.name == "run_check":
+                    completion_policy.record_check(passed=result.ok)
+
+                if response.name == "replace_text" and result.ok:
+                    completion_policy.record_repository_change()
 
                 observation = _format_tool_observation(
                     ok=result.ok,
@@ -130,6 +154,9 @@ class Agent:
                 f"{type(response).__name__}"
             )
 
+        metrics.wall_time_seconds = perf_counter() - started_at
+
         raise AgentLimitError(
-            f"Agent exceeded maximum turns: {self.max_turns}"
+            f"Agent exceeded maximum turns: {self.max_turns}",
+            metrics=metrics,
         )

@@ -145,8 +145,17 @@ def test_agent_stops_at_turn_limit(
     with pytest.raises(
         AgentLimitError,
         match="Agent exceeded maximum turns: 2",
-    ):
+    ) as exc_info:
         agent.run("Keep looking.")
+
+    error = exc_info.value
+
+    assert error.metrics.model_calls == 2
+    assert error.metrics.tool_calls == 2
+    assert error.metrics.successful_tool_calls == 2
+    assert error.metrics.failed_tool_calls == 0
+    assert error.metrics.wall_time_seconds >= 0
+    assert len(error.metrics.events) == 4
 
 def test_agent_records_model_and_tool_metrics(
     tmp_path: Path,
@@ -228,3 +237,152 @@ def test_agent_records_execution_trace(
     assert "Found it." in (
         result.metrics.events[2].detail
     )
+
+def test_rejects_final_response_after_failed_check(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "test_failure.py").write_text(
+        "def test_failure() -> None:\n"
+        "    assert False\n",
+        encoding="utf-8",
+    )
+
+    model = ScriptedModel(
+        responses=[
+            ToolCall(
+                name="run_check",
+                arguments={"check": "tests"},
+            ),
+            FinalResponse(text="The tests failed."),
+            FinalResponse(text="Unable to continue."),
+        ]
+    )
+
+    agent = make_agent(
+        tmp_path,
+        model,
+        max_turns=3,
+    )
+
+    with pytest.raises(
+        AgentLimitError,
+        match="Agent exceeded maximum turns: 3",
+    ):
+        agent.run("Fix the failing tests.")
+
+    assert len(model.calls) == 3
+
+    third_call_messages = model.calls[2]
+
+    assert any(
+        message.role == "tool"
+        and "Cannot finish because the latest verification check failed."
+        in message.content
+        for message in third_call_messages
+    )
+
+def test_rejects_final_response_after_repository_change(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "example.py").write_text(
+        "value = 1\n",
+        encoding="utf-8",
+    )
+
+    model = ScriptedModel(
+        responses=[
+            ToolCall(
+                name="replace_text",
+                arguments={
+                    "path": "example.py",
+                    "old": "value = 1",
+                    "new": "value = 2",
+                },
+            ),
+            FinalResponse(text="Done."),
+            FinalResponse(text="Still done."),
+        ]
+    )
+
+    agent = make_agent(
+        tmp_path,
+        model,
+        max_turns=3,
+    )
+
+    with pytest.raises(
+        AgentLimitError,
+        match="Agent exceeded maximum turns: 3",
+    ):
+        agent.run("Change the value.")
+
+    assert (tmp_path / "example.py").read_text(
+        encoding="utf-8"
+    ) == "value = 2\n"
+
+    third_call_messages = model.calls[2]
+
+    assert any(
+        message.role == "tool"
+        and "repository changed" in message.content
+        and "verification" in message.content
+        for message in third_call_messages
+    )
+
+def test_accepts_final_response_after_edit_and_successful_check(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "calculator.py").write_text(
+        "def add(a: int, b: int) -> int:\n"
+        "    return a - b\n",
+        encoding="utf-8",
+    )
+
+    (tmp_path / "test_calculator.py").write_text(
+        "from calculator import add\n\n"
+        "def test_add() -> None:\n"
+        "    assert add(2, 3) == 5\n",
+        encoding="utf-8",
+    )
+
+    model = ScriptedModel(
+        responses=[
+            ToolCall(
+                name="run_check",
+                arguments={"check": "tests"},
+            ),
+            ToolCall(
+                name="replace_text",
+                arguments={
+                    "path": "calculator.py",
+                    "old": "return a - b",
+                    "new": "return a + b",
+                },
+            ),
+            ToolCall(
+                name="run_check",
+                arguments={"check": "tests"},
+            ),
+            FinalResponse(text="Fixed and verified."),
+        ]
+    )
+
+    agent = make_agent(
+        tmp_path,
+        model,
+        max_turns=4,
+    )
+
+    result = agent.run("Fix the failing tests.")
+
+    assert result.text == "Fixed and verified."
+
+    assert (tmp_path / "calculator.py").read_text(
+        encoding="utf-8"
+    ) == (
+        "def add(a: int, b: int) -> int:\n"
+        "    return a + b\n"
+    )
+
+    assert result.metrics.model_calls == 4
+    assert result.metrics.tool_calls == 3
