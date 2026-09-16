@@ -67,7 +67,7 @@ def make_list_directory_tool(
 
         if not path.exists():
             raise ToolError(f"Directory not found: {requested_path}")
-
+        
         if not path.is_dir():
             raise ToolError(f"Not a directory: {requested_path}")
 
