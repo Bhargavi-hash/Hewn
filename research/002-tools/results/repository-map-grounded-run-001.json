@@ -1,0 +1,214 @@
+[
+  {
+    "id": "nav-001",
+    "category": "symbol",
+    "task": "Find where ToolExecutor is defined in this repository.",
+    "expected_file": "src/hewn/tools.py",
+    "expected_symbol": "ToolExecutor",
+    "tool_set": "repository-map-grounded",
+    "success": true,
+    "status": "completed",
+    "answer": "src/hewn/tools.py:60:class ToolExecutor",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 35.16386845400848,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='find_symbol', arguments={'name': 'ToolExecutor'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "src/hewn/tools.py:60:class ToolExecutor"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='src/hewn/tools.py:60:class ToolExecutor')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-002",
+    "category": "symbol",
+    "task": "Find where Workspace is defined in this repository.",
+    "expected_file": "src/hewn/workspace.py",
+    "expected_symbol": "Workspace",
+    "tool_set": "repository-map-grounded",
+    "success": true,
+    "status": "completed",
+    "answer": "src/hewn/workspace.py:12:class Workspace",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 5.120910215002368,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='find_symbol', arguments={'name': 'Workspace'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "src/hewn/workspace.py:12:class Workspace"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='src/hewn/workspace.py:12:class Workspace')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-003",
+    "category": "symbol",
+    "task": "Find where CompletionPolicy is defined in this repository.",
+    "expected_file": "src/hewn/completion.py",
+    "expected_symbol": "CompletionPolicy",
+    "tool_set": "repository-map-grounded",
+    "success": true,
+    "status": "completed",
+    "answer": "src/hewn/completion.py:19:class CompletionPolicy",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 5.525654607001343,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='find_symbol', arguments={'name': 'CompletionPolicy'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "src/hewn/completion.py:19:class CompletionPolicy"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='src/hewn/completion.py:19:class CompletionPolicy')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-004",
+    "category": "symbol",
+    "task": "Find where AgentMetrics is defined in this repository.",
+    "expected_file": "src/hewn/telemetry.py",
+    "expected_symbol": "AgentMetrics",
+    "tool_set": "repository-map-grounded",
+    "success": true,
+    "status": "completed",
+    "answer": "src/hewn/telemetry.py:13:class AgentMetrics",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 5.731212693994166,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='find_symbol', arguments={'name': 'AgentMetrics'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "src/hewn/telemetry.py:13:class AgentMetrics"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='src/hewn/telemetry.py:13:class AgentMetrics')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-005",
+    "category": "symbol",
+    "task": "Find where LlamaCppModel is defined in this repository.",
+    "expected_file": "src/hewn/llama_cpp.py",
+    "expected_symbol": "LlamaCppModel",
+    "tool_set": "repository-map-grounded",
+    "success": true,
+    "status": "completed",
+    "answer": "src/hewn/llama_cpp.py:15:class LlamaCppModel",
+    "metrics": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "successful_tool_calls": 1,
+      "failed_tool_calls": 0,
+      "wall_time_seconds": 6.495541404001415,
+      "events": [
+        {
+          "kind": "model_response",
+          "detail": "ToolCall(name='find_symbol', arguments={'name': 'LlamaCppModel'})"
+        },
+        {
+          "kind": "tool_result",
+          "detail": "src/hewn/llama_cpp.py:15:class LlamaCppModel"
+        },
+        {
+          "kind": "model_response",
+          "detail": "FinalResponse(text='src/hewn/llama_cpp.py:15:class LlamaCppModel')"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nav-006",
+    "category": "concept",
+    "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace.",
+    "expected_file": "src/hewn/workspace.py",
+    "expected_symbol": "Workspace",
+    "tool_set": "repository-map-grounded",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "{\"type\":\"final\",\"text\":\"The code responsible for preventing repository file operations from escaping the configured workspace is located in the `repository_index.py` file within the `src/hewn/repository` directory. This file contains the `RepositoryIndex` class, which is responsible for managing the internal dependencies of a repository and ensuring that all file operations are within the configured workspace. The `RepositoryIndex` class uses a set of internal dependencies to track the files that are currently being used by the repository, and it ensures that any file operations that attempt to access files outside of the configured workspace are rejected.",
+    "metrics": null
+  },
+  {
+    "id": "nav-007",
+    "category": "concept",
+    "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer.",
+    "expected_file": "src/hewn/completion.py",
+    "expected_symbol": "CompletionPolicy",
+    "tool_set": "repository-map-grounded",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"final\",\n  \"text\": \"The code responsible for deciding whether the agent is allowed to return its final answer is in the `Agent` class, specifically in the `can_finish` method. This method checks if the agent has reached a state where it can provide a final answer based on its current state and the available checks.\"\n}\n```",
+    "metrics": null
+  },
+  {
+    "id": "nav-008",
+    "category": "concept",
+    "task": "Find the code responsible for converting a model's requested action into an actual tool execution.",
+    "expected_file": "src/hewn/tools.py",
+    "expected_symbol": "ToolExecutor",
+    "tool_set": "repository-map-grounded",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"tool_call\",\n  \"name\": \"find_symbol\",\n  \"arguments\": {\n    \"name\": \"Agent.run\"\n  }\n}\n```",
+    "metrics": null
+  },
+  {
+    "id": "nav-009",
+    "category": "concept",
+    "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response.",
+    "expected_file": "src/hewn/llama_cpp.py",
+    "expected_symbol": "LlamaCppModel",
+    "tool_set": "repository-map-grounded",
+    "success": false,
+    "status": "ModelProtocolError",
+    "answer": null,
+    "raw_model_response": "```json\n{\n  \"type\": \"tool_call\",\n  \"name\": \"read_file\",\n  \"arguments\": {\n    \"path\": \"src/hewn/llama_cpp.py\"\n  }\n}\n```",
+    "metrics": null
+  }
+]

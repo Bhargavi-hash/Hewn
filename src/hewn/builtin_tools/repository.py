@@ -14,38 +14,13 @@ def make_repository_map_tool(
         arguments: dict[str, Any],
     ) -> ToolResult:
         path_prefix = arguments.get("path")
-
-        lines: list[str] = []
-
-        for path, source_file in sorted(
-            repository_index.files.items(),
-            key=lambda item: str(item[0]),
-        ):
-            if path_prefix is not None and not _matches_prefix(
-                path,
-                path_prefix,
-            ):
-                continue
-
-            lines.append(str(path))
-
-            if source_file.symbols:
-                symbols = ", ".join(
-                    symbol.qualified_name
-                    for symbol in source_file.symbols
-                )
-                lines.append(f"  symbols: {symbols}")
-
-            dependencies = repository_index.dependencies_from(path)
-
-            if dependencies:
-                lines.append("  imports:")
-                for dependency in dependencies:
-                    lines.append(f"    -> {dependency.target}")
-
+    
         return ToolResult(
             ok=True,
-            output="\n".join(lines),
+            output=format_repository_map(
+                repository_index,
+                path_prefix=path_prefix,
+            ),
         )
 
     return ToolDefinition(
@@ -89,3 +64,38 @@ def _matches_prefix(
         path_text == normalized
         or path_text.startswith(f"{normalized}/")
     )
+
+def format_repository_map(
+    repository_index: RepositoryIndex,
+    *,
+    path_prefix: str | None = None,
+) -> str:
+    lines: list[str] = []
+
+    for path, source_file in sorted(
+        repository_index.files.items(),
+        key=lambda item: str(item[0]),
+    ):
+        if path_prefix is not None and not _matches_prefix(
+            path,
+            path_prefix,
+        ):
+            continue
+
+        lines.append(str(path))
+
+        if source_file.symbols:
+            symbols = ", ".join(
+                symbol.qualified_name
+                for symbol in source_file.symbols
+            )
+            lines.append(f"  symbols: {symbols}")
+
+        dependencies = repository_index.dependencies_from(path)
+
+        if dependencies:
+            lines.append("  imports:")
+            for dependency in dependencies:
+                lines.append(f"    -> {dependency.target}")
+
+    return "\n".join(lines)

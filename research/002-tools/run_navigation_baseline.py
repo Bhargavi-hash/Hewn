@@ -8,10 +8,12 @@ from typing import Any
 
 from hewn.agent import Agent, AgentLimitError, AgentStagnationError
 from hewn.builtin_tools import make_builtin_tool_registry
+from hewn.builtin_tools.repository import format_repository_map
 from hewn.completion import CompletionRequirement
 from hewn.llama_cpp import LlamaCppModel
 from hewn.model_protocol import ModelProtocolError
-from hewn.tools import ToolExecutor
+from hewn.repository.index import RepositoryIndex
+from hewn.tools import ToolExecutor, ToolRegistry
 from hewn.workspace import Workspace
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -39,6 +41,7 @@ def evaluate_answer(
         and expected_symbol in answer
     )
 
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run the Hewn repository-navigation benchmark."
@@ -48,7 +51,77 @@ def parse_args() -> argparse.Namespace:
         default="primitive-run-001.json",
         help="Result filename written inside research/002-tools/results/.",
     )
+    parser.add_argument(
+        "--tool-set",
+        choices=[
+            "primitive",
+            "semantic-symbol",
+            "repository-map",
+            "repository-map-grounded",
+        ],
+        default="primitive",
+        help="Tool configuration used for the benchmark.",
+    )
+
     return parser.parse_args()
+
+
+def build_registry(
+    *,
+    workspace: Workspace,
+    repository_index: RepositoryIndex,
+    tool_set: str,
+) -> ToolRegistry:
+    if tool_set == "primitive":
+        return make_builtin_tool_registry(
+            workspace,
+            repository_index=None,
+        )
+
+    if tool_set == "semantic-symbol":
+        return make_builtin_tool_registry(
+            workspace,
+            repository_index=repository_index,
+            include_find_symbol=True,
+            include_repository_map=False,
+        )
+
+    if tool_set in {
+        "repository-map",
+        "repository-map-grounded",
+    }:
+        return make_builtin_tool_registry(
+            workspace,
+            repository_index=repository_index,
+            include_find_symbol=True,
+            include_repository_map=True,
+        )
+
+    raise ValueError(
+        f"Unknown tool set: {tool_set}"
+    )
+
+
+def build_user_request(
+    *,
+    task: str,
+    tool_set: str,
+    repository_index: RepositoryIndex,
+) -> str:
+    if tool_set != "repository-map-grounded":
+        return task
+
+    repository_map = format_repository_map(
+        repository_index,
+        path_prefix="src/hewn",
+    )
+
+    return (
+        "Repository structural context:\n\n"
+        f"{repository_map}\n\n"
+        "Task:\n"
+        f"{task}"
+    )
 
 
 def main() -> int:
@@ -58,8 +131,16 @@ def main() -> int:
 
     workspace = Workspace(REPO_ROOT)
 
-    # Use the same primitive tool vocabulary established in Module 1.
-    registry = make_builtin_tool_registry(workspace)
+    # Build repository intelligence once for the benchmark run.
+    repository_index = RepositoryIndex.build(
+        workspace.root
+    )
+
+    registry = build_registry(
+        workspace=workspace,
+        repository_index=repository_index,
+        tool_set=args.tool_set,
+    )
     executor = ToolExecutor(registry)
 
     results: list[dict[str, Any]] = []
@@ -75,9 +156,15 @@ def main() -> int:
             executor=executor,
         )
 
+        user_request = build_user_request(
+            task=task["task"],
+            tool_set=args.tool_set,
+            repository_index=repository_index,
+        )
+
         try:
             run = agent.run(
-                task["task"],
+                user_request,
                 completion_requirement=CompletionRequirement.NONE,
             )
 
@@ -94,6 +181,7 @@ def main() -> int:
                     "task": task["task"],
                     "expected_file": task["expected_file"],
                     "expected_symbol": task["expected_symbol"],
+                    "tool_set": args.tool_set,
                     "success": success,
                     "status": "completed",
                     "answer": run.text,
@@ -115,6 +203,7 @@ def main() -> int:
                     "task": task["task"],
                     "expected_file": task["expected_file"],
                     "expected_symbol": task["expected_symbol"],
+                    "tool_set": args.tool_set,
                     "success": False,
                     "status": type(error).__name__,
                     "answer": None,
@@ -132,6 +221,7 @@ def main() -> int:
                     "task": task["task"],
                     "expected_file": task["expected_file"],
                     "expected_symbol": task["expected_symbol"],
+                    "tool_set": args.tool_set,
                     "success": False,
                     "status": "ModelProtocolError",
                     "answer": None,
@@ -151,6 +241,7 @@ def main() -> int:
     passed = sum(result["success"] for result in results)
 
     print()
+    print(f"Tool set: {args.tool_set}")
     print(f"Completed: {passed}/{len(results)} tasks passed")
     print(f"Results: {output_path}")
 

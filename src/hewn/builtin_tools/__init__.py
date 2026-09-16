@@ -17,6 +17,9 @@ from hewn.workspace import Workspace
 def make_builtin_tool_registry(
     workspace: Workspace,
     repository_index: RepositoryIndex | None = None,
+    *,
+    include_find_symbol: bool = True,
+    include_repository_map: bool = True,
 ) -> ToolRegistry:
     registry = ToolRegistry()
 
@@ -25,10 +28,11 @@ def make_builtin_tool_registry(
     registry.register(make_search_text_tool(workspace))
     registry.register(make_replace_text_tool(workspace))
     registry.register(make_run_check_tool(workspace))
-    if repository_index is not None:
+    if repository_index is not None and include_find_symbol:
         registry.register(
             make_find_symbol_tool(repository_index)
         )
+    if repository_index is not None and include_repository_map:
         registry.register(
             make_repository_map_tool(repository_index)
         )
