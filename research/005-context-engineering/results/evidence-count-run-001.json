@@ -1,0 +1,1295 @@
+{
+  "configuration": {
+    "document_count": 133,
+    "embedding_dimension": 384,
+    "fixed_limits": [
+      1,
+      3,
+      5
+    ],
+    "indexing_seconds": 3.732897891999528,
+    "model": "BAAI/bge-small-en-v1.5",
+    "model_load_seconds": 3.041198003000318,
+    "representation": "symbol",
+    "routing": "exact-symbol-or-semantic"
+  },
+  "summary": {
+    "1": {
+      "average_characters": 90.66666666666667,
+      "average_evidence_items": 1.0,
+      "average_unique_files": 1.0,
+      "coverage": 0.8888888888888888,
+      "coverage_hits": 8
+    },
+    "3": {
+      "average_characters": 213.66666666666666,
+      "average_evidence_items": 1.8888888888888888,
+      "average_unique_files": 1.8888888888888888,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    },
+    "5": {
+      "average_characters": 361.8888888888889,
+      "average_evidence_items": 2.7777777777777777,
+      "average_unique_files": 2.7777777777777777,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    },
+    "all": {
+      "average_characters": 2007.4444444444443,
+      "average_evidence_items": 13.444444444444445,
+      "average_unique_files": 13.444444444444445,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    }
+  },
+  "tasks": [
+    {
+      "available_unique_files": 1,
+      "budgets": {
+        "1": {
+          "character_count": 56,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 1.0,
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 56,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 1.0,
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "5": {
+          "character_count": 56,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 1.0,
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "all": {
+          "character_count": 56,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 1.0,
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        }
+      },
+      "category": "symbol",
+      "expected_file": "src/hewn/tools.py",
+      "id": "nav-001",
+      "matched_symbol": "ToolExecutor",
+      "route": "exact_symbol",
+      "task": "Find where ToolExecutor is defined in this repository."
+    },
+    {
+      "available_unique_files": 1,
+      "budgets": {
+        "1": {
+          "character_count": 57,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 1.0,
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 57,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 1.0,
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "5": {
+          "character_count": 57,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 1.0,
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "all": {
+          "character_count": 57,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 1.0,
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        }
+      },
+      "category": "symbol",
+      "expected_file": "src/hewn/workspace.py",
+      "id": "nav-002",
+      "matched_symbol": "Workspace",
+      "route": "exact_symbol",
+      "task": "Find where Workspace is defined in this repository."
+    },
+    {
+      "available_unique_files": 1,
+      "budgets": {
+        "1": {
+          "character_count": 65,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/completion.py",
+              "score": 1.0,
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 65,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/completion.py",
+              "score": 1.0,
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "5": {
+          "character_count": 65,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/completion.py",
+              "score": 1.0,
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "all": {
+          "character_count": 65,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/completion.py",
+              "score": 1.0,
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        }
+      },
+      "category": "symbol",
+      "expected_file": "src/hewn/completion.py",
+      "id": "nav-003",
+      "matched_symbol": "CompletionPolicy",
+      "route": "exact_symbol",
+      "task": "Find where CompletionPolicy is defined in this repository."
+    },
+    {
+      "available_unique_files": 1,
+      "budgets": {
+        "1": {
+          "character_count": 60,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 1.0,
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 60,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 1.0,
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "5": {
+          "character_count": 60,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 1.0,
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "all": {
+          "character_count": 60,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 1.0,
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        }
+      },
+      "category": "symbol",
+      "expected_file": "src/hewn/telemetry.py",
+      "id": "nav-004",
+      "matched_symbol": "AgentMetrics",
+      "route": "exact_symbol",
+      "task": "Find where AgentMetrics is defined in this repository."
+    },
+    {
+      "available_unique_files": 1,
+      "budgets": {
+        "1": {
+          "character_count": 61,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 1.0,
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 61,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 1.0,
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "5": {
+          "character_count": 61,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 1.0,
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "all": {
+          "character_count": 61,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 1.0,
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        }
+      },
+      "category": "symbol",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "id": "nav-005",
+      "matched_symbol": "LlamaCppModel",
+      "route": "exact_symbol",
+      "task": "Find where LlamaCppModel is defined in this repository."
+    },
+    {
+      "available_unique_files": 29,
+      "budgets": {
+        "1": {
+          "character_count": 57,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.7188390493392944,
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 343,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.7188390493392944,
+              "symbol": "Workspace"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.6655219793319702,
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.660209059715271,
+              "symbol": "make_read_file_tool"
+            }
+          ],
+          "evidence_count": 3,
+          "unique_file_count": 3
+        },
+        "5": {
+          "character_count": 821,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.7188390493392944,
+              "symbol": "Workspace"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.6655219793319702,
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.660209059715271,
+              "symbol": "make_read_file_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/__init__.py",
+              "score": 0.6560620069503784,
+              "symbol": "make_builtin_tool_registry"
+            },
+            {
+              "path": "src/hewn/builtin_tools/repository.py",
+              "score": 0.6531857252120972,
+              "symbol": "format_repository_map"
+            }
+          ],
+          "evidence_count": 5,
+          "unique_file_count": 5
+        },
+        "all": {
+          "character_count": 4495,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.7188390493392944,
+              "symbol": "Workspace"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.6655219793319702,
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.660209059715271,
+              "symbol": "make_read_file_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/__init__.py",
+              "score": 0.6560620069503784,
+              "symbol": "make_builtin_tool_registry"
+            },
+            {
+              "path": "src/hewn/builtin_tools/repository.py",
+              "score": 0.6531857252120972,
+              "symbol": "format_repository_map"
+            },
+            {
+              "path": "src/hewn/repository/models.py",
+              "score": 0.6507299542427063,
+              "symbol": "FileDependency"
+            },
+            {
+              "path": "src/hewn/retrieval/models.py",
+              "score": 0.6498626470565796,
+              "symbol": "RepositoryDocument"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6383464336395264,
+              "symbol": "CompletionPolicy.record_repository_change"
+            },
+            {
+              "path": "src/hewn/builtin_tools/commands.py",
+              "score": 0.6353282928466797,
+              "symbol": "make_run_check_tool"
+            },
+            {
+              "path": "src/hewn/retrieval/documents.py",
+              "score": 0.6334276795387268,
+              "symbol": "build_repository_documents"
+            },
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.6315650939941406,
+              "symbol": "ToolExecutor"
+            },
+            {
+              "path": "src/hewn/builtin_tools/search.py",
+              "score": 0.6215690970420837,
+              "symbol": "make_search_text_tool"
+            },
+            {
+              "path": "src/hewn/repository/python_parser.py",
+              "score": 0.6211527585983276,
+              "symbol": "_collect_statements"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6194217205047607,
+              "symbol": "AgentRunResult"
+            },
+            {
+              "path": "src/hewn/context/models.py",
+              "score": 0.6160645484924316,
+              "symbol": "ContextBundle.unique_file_count"
+            },
+            {
+              "path": "src/hewn/cli.py",
+              "score": 0.6147335767745972,
+              "symbol": "run_cli"
+            },
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.6132587194442749,
+              "symbol": "LlamaCppModel._build_system_prompt"
+            },
+            {
+              "path": "src/hewn/context/budget.py",
+              "score": 0.6132423877716064,
+              "symbol": "select_by_evidence_count"
+            },
+            {
+              "path": "src/hewn/retrieval/router.py",
+              "score": 0.6077459454536438,
+              "symbol": "find_explicit_symbol"
+            },
+            {
+              "path": "src/hewn/builtin_tools/symbols.py",
+              "score": 0.6067904233932495,
+              "symbol": "make_find_symbol_tool"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic_index.py",
+              "score": 0.6022495627403259,
+              "symbol": "SemanticIndex.__init__"
+            },
+            {
+              "path": "src/hewn/retrieval/symbol_documents.py",
+              "score": 0.600525975227356,
+              "symbol": "build_symbol_documents"
+            },
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 0.5998209714889526,
+              "symbol": "AgentEvent"
+            },
+            {
+              "path": "src/hewn/retrieval/bm25.py",
+              "score": 0.597480833530426,
+              "symbol": "retrieve_bm25"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.5943183898925781,
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.5931410193443298,
+              "symbol": "FinalResponse"
+            },
+            {
+              "path": "src/hewn/retrieval/sentence_transformer.py",
+              "score": 0.5826840400695801,
+              "symbol": "SentenceTransformerEmbeddingModel"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic.py",
+              "score": 0.575507402420044,
+              "symbol": "EmbeddingModel"
+            },
+            {
+              "path": "src/hewn/retrieval/lexical.py",
+              "score": 0.5706639289855957,
+              "symbol": "retrieve_lexical"
+            }
+          ],
+          "evidence_count": 29,
+          "unique_file_count": 29
+        }
+      },
+      "category": "concept",
+      "expected_file": "src/hewn/workspace.py",
+      "id": "nav-006",
+      "matched_symbol": null,
+      "route": "semantic",
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace."
+    },
+    {
+      "available_unique_files": 29,
+      "budgets": {
+        "1": {
+          "character_count": 174,
+          "covered": false,
+          "evidence": [
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.6366456747055054,
+              "symbol": "_parse_final_response"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 487,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.6366456747055054,
+              "symbol": "_parse_final_response"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6325703263282776,
+              "symbol": "Agent.run"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6120434999465942,
+              "symbol": "CompletionPolicy.rejection_reason"
+            }
+          ],
+          "evidence_count": 3,
+          "unique_file_count": 3
+        },
+        "5": {
+          "character_count": 772,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.6366456747055054,
+              "symbol": "_parse_final_response"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6325703263282776,
+              "symbol": "Agent.run"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6120434999465942,
+              "symbol": "CompletionPolicy.rejection_reason"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.5995837450027466,
+              "symbol": "FinalResponse"
+            },
+            {
+              "path": "src/hewn/retrieval/bm25.py",
+              "score": 0.5880694389343262,
+              "symbol": "retrieve_bm25"
+            }
+          ],
+          "evidence_count": 5,
+          "unique_file_count": 5
+        },
+        "all": {
+          "character_count": 4807,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.6366456747055054,
+              "symbol": "_parse_final_response"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6325703263282776,
+              "symbol": "Agent.run"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6120434999465942,
+              "symbol": "CompletionPolicy.rejection_reason"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.5995837450027466,
+              "symbol": "FinalResponse"
+            },
+            {
+              "path": "src/hewn/retrieval/bm25.py",
+              "score": 0.5880694389343262,
+              "symbol": "retrieve_bm25"
+            },
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.5745004415512085,
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "path": "src/hewn/retrieval/models.py",
+              "score": 0.5702304840087891,
+              "symbol": "RetrievalResult"
+            },
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 0.5698764324188232,
+              "symbol": "AgentEvent"
+            },
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.5620132684707642,
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "path": "src/hewn/retrieval/sentence_transformer.py",
+              "score": 0.5565521717071533,
+              "symbol": "SentenceTransformerEmbeddingModel.encode"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.5550335645675659,
+              "symbol": "RepositoryIndex.find_qualified_symbol"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic_index.py",
+              "score": 0.5550249814987183,
+              "symbol": "SemanticIndex.retrieve"
+            },
+            {
+              "path": "src/hewn/cli.py",
+              "score": 0.5538626313209534,
+              "symbol": "run_cli"
+            },
+            {
+              "path": "src/hewn/retrieval/router.py",
+              "score": 0.5518068075180054,
+              "symbol": "retrieve_routed"
+            },
+            {
+              "path": "src/hewn/context/budget.py",
+              "score": 0.5464838743209839,
+              "symbol": "select_by_evidence_count"
+            },
+            {
+              "path": "src/hewn/retrieval/lexical.py",
+              "score": 0.545933723449707,
+              "symbol": "retrieve_lexical"
+            },
+            {
+              "path": "src/hewn/context/models.py",
+              "score": 0.5419238805770874,
+              "symbol": "ContextBundle.evidence_count"
+            },
+            {
+              "path": "src/hewn/repository/python_parser.py",
+              "score": 0.541726291179657,
+              "symbol": "_collect_statements"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic.py",
+              "score": 0.5383532643318176,
+              "symbol": "EmbeddingModel.encode"
+            },
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.538212776184082,
+              "symbol": "Workspace.resolve"
+            },
+            {
+              "path": "src/hewn/retrieval/documents.py",
+              "score": 0.5295884013175964,
+              "symbol": "_matches_prefix"
+            },
+            {
+              "path": "src/hewn/retrieval/symbol_documents.py",
+              "score": 0.5220263004302979,
+              "symbol": "_matches_prefix"
+            },
+            {
+              "path": "src/hewn/builtin_tools/search.py",
+              "score": 0.5213994979858398,
+              "symbol": "make_search_text_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/commands.py",
+              "score": 0.5076670050621033,
+              "symbol": "make_run_check_tool"
+            },
+            {
+              "path": "src/hewn/repository/models.py",
+              "score": 0.505081832408905,
+              "symbol": "Symbol.__post_init__"
+            },
+            {
+              "path": "src/hewn/builtin_tools/repository.py",
+              "score": 0.5044190883636475,
+              "symbol": "_matches_prefix"
+            },
+            {
+              "path": "src/hewn/builtin_tools/__init__.py",
+              "score": 0.4871053695678711,
+              "symbol": "make_builtin_tool_registry"
+            },
+            {
+              "path": "src/hewn/builtin_tools/symbols.py",
+              "score": 0.4857136607170105,
+              "symbol": "make_find_symbol_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.47640761733055115,
+              "symbol": "make_replace_text_tool"
+            }
+          ],
+          "evidence_count": 29,
+          "unique_file_count": 29
+        }
+      },
+      "category": "concept",
+      "expected_file": "src/hewn/completion.py",
+      "id": "nav-007",
+      "matched_symbol": null,
+      "route": "semantic",
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer."
+    },
+    {
+      "available_unique_files": 29,
+      "budgets": {
+        "1": {
+          "character_count": 120,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.7427173256874084,
+              "symbol": "ToolExecutor.execute"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 434,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.7427173256874084,
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.7359634041786194,
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7162284851074219,
+              "symbol": "Model.respond"
+            }
+          ],
+          "evidence_count": 3,
+          "unique_file_count": 3
+        },
+        "5": {
+          "character_count": 762,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.7427173256874084,
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.7359634041786194,
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7162284851074219,
+              "symbol": "Model.respond"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.6784552335739136,
+              "symbol": "make_replace_text_tool"
+            },
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.6724201440811157,
+              "symbol": "LlamaCppModel.respond"
+            }
+          ],
+          "evidence_count": 5,
+          "unique_file_count": 5
+        },
+        "all": {
+          "character_count": 4637,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.7427173256874084,
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.7359634041786194,
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7162284851074219,
+              "symbol": "Model.respond"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.6784552335739136,
+              "symbol": "make_replace_text_tool"
+            },
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.6724201440811157,
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6723858714103699,
+              "symbol": "_format_tool_observation"
+            },
+            {
+              "path": "src/hewn/builtin_tools/commands.py",
+              "score": 0.6625076532363892,
+              "symbol": "make_run_check_tool"
+            },
+            {
+              "path": "src/hewn/retrieval/sentence_transformer.py",
+              "score": 0.6616576313972473,
+              "symbol": "SentenceTransformerEmbeddingModel.__init__"
+            },
+            {
+              "path": "src/hewn/builtin_tools/__init__.py",
+              "score": 0.6610032320022583,
+              "symbol": "make_builtin_tool_registry"
+            },
+            {
+              "path": "src/hewn/context/models.py",
+              "score": 0.660932183265686,
+              "symbol": "ContextEvidence.text"
+            },
+            {
+              "path": "src/hewn/builtin_tools/repository.py",
+              "score": 0.655873715877533,
+              "symbol": "make_repository_map_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/search.py",
+              "score": 0.6520929932594299,
+              "symbol": "make_search_text_tool"
+            },
+            {
+              "path": "src/hewn/cli.py",
+              "score": 0.6444879770278931,
+              "symbol": "run_cli"
+            },
+            {
+              "path": "src/hewn/repository/models.py",
+              "score": 0.6433568000793457,
+              "symbol": "Symbol"
+            },
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.6426504254341125,
+              "symbol": "Workspace.resolve"
+            },
+            {
+              "path": "src/hewn/builtin_tools/symbols.py",
+              "score": 0.6408489346504211,
+              "symbol": "make_find_symbol_tool"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6331344842910767,
+              "symbol": "VerificationState"
+            },
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 0.632590115070343,
+              "symbol": "AgentEvent"
+            },
+            {
+              "path": "src/hewn/retrieval/models.py",
+              "score": 0.6325751543045044,
+              "symbol": "RetrievalResult"
+            },
+            {
+              "path": "src/hewn/repository/python_parser.py",
+              "score": 0.6114946603775024,
+              "symbol": "_collect_statements"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic.py",
+              "score": 0.6111048460006714,
+              "symbol": "EmbeddingModel"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.6096155643463135,
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic_index.py",
+              "score": 0.595789909362793,
+              "symbol": "SemanticIndex.build"
+            },
+            {
+              "path": "src/hewn/retrieval/router.py",
+              "score": 0.5911660194396973,
+              "symbol": "extract_identifier_candidates"
+            },
+            {
+              "path": "src/hewn/context/budget.py",
+              "score": 0.5846333503723145,
+              "symbol": "select_by_evidence_count"
+            },
+            {
+              "path": "src/hewn/retrieval/bm25.py",
+              "score": 0.5738075375556946,
+              "symbol": "retrieve_bm25"
+            },
+            {
+              "path": "src/hewn/retrieval/lexical.py",
+              "score": 0.547848641872406,
+              "symbol": "tokenize"
+            },
+            {
+              "path": "src/hewn/retrieval/documents.py",
+              "score": 0.5465858578681946,
+              "symbol": "build_repository_documents"
+            },
+            {
+              "path": "src/hewn/retrieval/symbol_documents.py",
+              "score": 0.5449571013450623,
+              "symbol": "build_symbol_documents"
+            }
+          ],
+          "evidence_count": 29,
+          "unique_file_count": 29
+        }
+      },
+      "category": "concept",
+      "expected_file": "src/hewn/tools.py",
+      "id": "nav-008",
+      "matched_symbol": null,
+      "route": "semantic",
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution."
+    },
+    {
+      "available_unique_files": 29,
+      "budgets": {
+        "1": {
+          "character_count": 166,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.806454062461853,
+              "symbol": "LlamaCppModel.respond"
+            }
+          ],
+          "evidence_count": 1,
+          "unique_file_count": 1
+        },
+        "3": {
+          "character_count": 360,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.806454062461853,
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.738562285900116,
+              "symbol": "parse_model_response"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7191426753997803,
+              "symbol": "FinalResponse"
+            }
+          ],
+          "evidence_count": 3,
+          "unique_file_count": 3
+        },
+        "5": {
+          "character_count": 603,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.806454062461853,
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.738562285900116,
+              "symbol": "parse_model_response"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7191426753997803,
+              "symbol": "FinalResponse"
+            },
+            {
+              "path": "src/hewn/retrieval/models.py",
+              "score": 0.6815683841705322,
+              "symbol": "RepositoryDocument.__post_init__"
+            },
+            {
+              "path": "src/hewn/repository/models.py",
+              "score": 0.6733496785163879,
+              "symbol": "Import.__post_init__"
+            }
+          ],
+          "evidence_count": 5,
+          "unique_file_count": 5
+        },
+        "all": {
+          "character_count": 3829,
+          "covered": true,
+          "evidence": [
+            {
+              "path": "src/hewn/llama_cpp.py",
+              "score": 0.806454062461853,
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "path": "src/hewn/model_protocol.py",
+              "score": 0.738562285900116,
+              "symbol": "parse_model_response"
+            },
+            {
+              "path": "src/hewn/models.py",
+              "score": 0.7191426753997803,
+              "symbol": "FinalResponse"
+            },
+            {
+              "path": "src/hewn/retrieval/models.py",
+              "score": 0.6815683841705322,
+              "symbol": "RepositoryDocument.__post_init__"
+            },
+            {
+              "path": "src/hewn/repository/models.py",
+              "score": 0.6733496785163879,
+              "symbol": "Import.__post_init__"
+            },
+            {
+              "path": "src/hewn/workspace.py",
+              "score": 0.66707843542099,
+              "symbol": "Workspace.__post_init__"
+            },
+            {
+              "path": "src/hewn/retrieval/sentence_transformer.py",
+              "score": 0.6578608751296997,
+              "symbol": "SentenceTransformerEmbeddingModel.__init__"
+            },
+            {
+              "path": "src/hewn/context/models.py",
+              "score": 0.6542454957962036,
+              "symbol": "ContextBundle"
+            },
+            {
+              "path": "src/hewn/agent.py",
+              "score": 0.6534743905067444,
+              "symbol": "AgentRunResult"
+            },
+            {
+              "path": "src/hewn/completion.py",
+              "score": 0.6533519625663757,
+              "symbol": "VerificationState"
+            },
+            {
+              "path": "src/hewn/tools.py",
+              "score": 0.65250164270401,
+              "symbol": "ToolResult"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic.py",
+              "score": 0.6524308323860168,
+              "symbol": "EmbeddingModel"
+            },
+            {
+              "path": "src/hewn/telemetry.py",
+              "score": 0.6521797776222229,
+              "symbol": "AgentEvent"
+            },
+            {
+              "path": "src/hewn/retrieval/router.py",
+              "score": 0.6520308256149292,
+              "symbol": "RetrievalRoute"
+            },
+            {
+              "path": "src/hewn/cli.py",
+              "score": 0.6497144103050232,
+              "symbol": "main"
+            },
+            {
+              "path": "src/hewn/repository/index.py",
+              "score": 0.6288420557975769,
+              "symbol": "RepositoryIndex"
+            },
+            {
+              "path": "src/hewn/repository/python_parser.py",
+              "score": 0.6287434101104736,
+              "symbol": "_function_signature"
+            },
+            {
+              "path": "src/hewn/context/budget.py",
+              "score": 0.6256390810012817,
+              "symbol": "select_by_evidence_count"
+            },
+            {
+              "path": "src/hewn/builtin_tools/__init__.py",
+              "score": 0.6091821193695068,
+              "symbol": "make_builtin_tool_registry"
+            },
+            {
+              "path": "src/hewn/retrieval/semantic_index.py",
+              "score": 0.6039143800735474,
+              "symbol": "SemanticIndex.build"
+            },
+            {
+              "path": "src/hewn/retrieval/documents.py",
+              "score": 0.6026585102081299,
+              "symbol": "_matches_prefix"
+            },
+            {
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "score": 0.5999228358268738,
+              "symbol": "make_replace_text_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/repository.py",
+              "score": 0.5969095826148987,
+              "symbol": "make_repository_map_tool"
+            },
+            {
+              "path": "src/hewn/retrieval/bm25.py",
+              "score": 0.5953684449195862,
+              "symbol": "retrieve_bm25"
+            },
+            {
+              "path": "src/hewn/builtin_tools/search.py",
+              "score": 0.59332674741745,
+              "symbol": "make_search_text_tool"
+            },
+            {
+              "path": "src/hewn/builtin_tools/commands.py",
+              "score": 0.5922105312347412,
+              "symbol": "_combine_output"
+            },
+            {
+              "path": "src/hewn/retrieval/symbol_documents.py",
+              "score": 0.5827386379241943,
+              "symbol": "_matches_prefix"
+            },
+            {
+              "path": "src/hewn/builtin_tools/symbols.py",
+              "score": 0.5778895020484924,
+              "symbol": "make_find_symbol_tool"
+            },
+            {
+              "path": "src/hewn/retrieval/lexical.py",
+              "score": 0.5697355270385742,
+              "symbol": "lexical_score"
+            }
+          ],
+          "evidence_count": 29,
+          "unique_file_count": 29
+        }
+      },
+      "category": "concept",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "id": "nav-009",
+      "matched_symbol": null,
+      "route": "semantic",
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response."
+    }
+  ]
+}
