@@ -1,0 +1,427 @@
+{
+  "configuration": {
+    "bounded_source_limit": 800,
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "evidence_limit": 3,
+    "label_aware_conditions": [
+      "relevant_first",
+      "relevant_last"
+    ],
+    "max_tokens": 256,
+    "orderings": [
+      "retrieval_order",
+      "relevant_first",
+      "relevant_last"
+    ],
+    "planned_model_calls": 12,
+    "representation": "bounded_source",
+    "retrieval": "module-4-hybrid",
+    "scoring": "final response contains expected file and canonical symbol",
+    "task_count": 4,
+    "task_ids": [
+      "nav-006",
+      "nav-007",
+      "nav-008",
+      "nav-009"
+    ],
+    "temperature": 0.0,
+    "tools_exposed": 0,
+    "unique_file_evidence": true
+  },
+  "summary": {
+    "relevant_first": {
+      "average_context_characters": 1747.25,
+      "average_response_seconds": 9.578659682500074,
+      "correct": 3,
+      "final_responses": 3,
+      "model_errors": 0,
+      "protocol_errors": 1,
+      "success_rate": 0.75
+    },
+    "relevant_last": {
+      "average_context_characters": 1747.25,
+      "average_response_seconds": 14.082753193000826,
+      "correct": 1,
+      "final_responses": 3,
+      "model_errors": 0,
+      "protocol_errors": 1,
+      "success_rate": 0.25
+    },
+    "retrieval_order": {
+      "average_context_characters": 1747.25,
+      "average_response_seconds": 7.200667532750231,
+      "correct": 3,
+      "final_responses": 4,
+      "model_errors": 0,
+      "protocol_errors": 0,
+      "success_rate": 0.75
+    }
+  },
+  "tasks": [
+    {
+      "category": "concept",
+      "conditions": {
+        "relevant_first": {
+          "context_characters": 1910,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/workspace.py",
+            "src/hewn/context/source.py",
+            "src/hewn/repository/index.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 7.2392879519975395,
+          "response_text": "The code responsible for preventing repository file operations from escaping the configured workspace is located in the `Workspace` class within the `src/hewn/workspace.py` file. The `resolve` method of the `Workspace` class checks if the candidate path is within the root path of the workspace. If it is not, a `WorkspaceViolationError` is raised. This ensures that all file operations within the workspace are confined to the specified directory structure.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "relevant_last": {
+          "context_characters": 1910,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/context/source.py",
+            "src/hewn/repository/index.py",
+            "src/hewn/workspace.py"
+          ],
+          "relevant_position": 3,
+          "response_seconds": 15.691441122002288,
+          "response_text": "The code responsible for preventing repository file operations from escaping the configured workspace is located in the `Workspace` class within the `src/hewn/workspace.py` file. The `resolve` method of the `Workspace` class checks if the provided path is within the configured workspace boundary by using the `is_relative_to` method. If the path escapes the boundary, a `WorkspaceViolationError` is raised.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "retrieval_order": {
+          "context_characters": 1910,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/workspace.py",
+            "src/hewn/context/source.py",
+            "src/hewn/repository/index.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 8.002421588000288,
+          "response_text": "The code responsible for preventing repository file operations from escaping the configured workspace is located in the `Workspace` class within the `src/hewn/workspace.py` file. The `resolve` method checks if the candidate path is within the root directory of the workspace and raises a `WorkspaceViolationError` if it is not.",
+          "response_type": "final",
+          "tool_name": null
+        }
+      },
+      "expected_file": "src/hewn/workspace.py",
+      "expected_symbol": "Workspace",
+      "id": "nav-006",
+      "original_paths": [
+        "src/hewn/workspace.py",
+        "src/hewn/context/source.py",
+        "src/hewn/repository/index.py"
+      ],
+      "original_relevant_position": 1,
+      "retrieval_covered": true,
+      "route": "semantic",
+      "selected_evidence": [
+        {
+          "path": "src/hewn/workspace.py",
+          "score": 0.7188390493392944,
+          "symbol": "Workspace"
+        },
+        {
+          "path": "src/hewn/context/source.py",
+          "score": 0.6717725396156311,
+          "symbol": "build_bounded_source_document"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 0.6655219793319702,
+          "symbol": "RepositoryIndex.build"
+        }
+      ],
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace."
+    },
+    {
+      "category": "concept",
+      "conditions": {
+        "relevant_first": {
+          "context_characters": 1820,
+          "correct": false,
+          "error_type": "protocol",
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "final_response": false,
+          "model_error": "ModelProtocolError: Model response is not valid JSON",
+          "ordered_paths": [
+            "src/hewn/completion.py",
+            "src/hewn/model_protocol.py",
+            "src/hewn/agent.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 17.205989874000807,
+          "response_text": null,
+          "response_type": null,
+          "tool_name": null
+        },
+        "relevant_last": {
+          "context_characters": 1820,
+          "correct": false,
+          "error_type": null,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/model_protocol.py",
+            "src/hewn/agent.py",
+            "src/hewn/completion.py"
+          ],
+          "relevant_position": 3,
+          "response_seconds": 6.802117316001386,
+          "response_text": "The code responsible for deciding whether the agent is allowed to return its final answer is in the `src/hewn/model_protocol.py` file, specifically in the `_parse_final_response` function. This function checks if the payload contains exactly 'type' and 'text' and raises an error if it does not. The function then extracts the 'text' from the payload and returns a `FinalResponse` object with the extracted text.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "retrieval_order": {
+          "context_characters": 1820,
+          "correct": false,
+          "error_type": null,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/model_protocol.py",
+            "src/hewn/agent.py",
+            "src/hewn/completion.py"
+          ],
+          "relevant_position": 3,
+          "response_seconds": 7.016356170999643,
+          "response_text": "The code responsible for deciding whether the agent is allowed to return its final answer is in the `src/hewn/model_protocol.py` file, specifically in the `_parse_final_response` function. This function checks if the payload contains exactly 'type' and 'text' and raises an error if it does not. The function then extracts the 'text' from the payload and returns a `FinalResponse` object with the extracted text.",
+          "response_type": "final",
+          "tool_name": null
+        }
+      },
+      "expected_file": "src/hewn/completion.py",
+      "expected_symbol": "CompletionPolicy",
+      "id": "nav-007",
+      "original_paths": [
+        "src/hewn/model_protocol.py",
+        "src/hewn/agent.py",
+        "src/hewn/completion.py"
+      ],
+      "original_relevant_position": 3,
+      "retrieval_covered": true,
+      "route": "semantic",
+      "selected_evidence": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.6366456747055054,
+          "symbol": "_parse_final_response"
+        },
+        {
+          "path": "src/hewn/agent.py",
+          "score": 0.6325703263282776,
+          "symbol": "Agent.run"
+        },
+        {
+          "path": "src/hewn/completion.py",
+          "score": 0.6120434999465942,
+          "symbol": "CompletionPolicy.rejection_reason"
+        }
+      ],
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer."
+    },
+    {
+      "category": "concept",
+      "conditions": {
+        "relevant_first": {
+          "context_characters": 1771,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/tools.py",
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 4.901740433000668,
+          "response_text": "The code responsible for converting a model's requested action into an actual tool execution is located in the `ToolExecutor.execute` method within the `src/hewn/tools.py` file. This method takes a `ToolCall` object as input and executes the corresponding tool based on the provided arguments.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "relevant_last": {
+          "context_characters": 1771,
+          "correct": false,
+          "error_type": "protocol",
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "final_response": false,
+          "model_error": "ModelProtocolError: Model response is not valid JSON",
+          "ordered_paths": [
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py",
+            "src/hewn/tools.py"
+          ],
+          "relevant_position": 3,
+          "response_seconds": 19.638181376998546,
+          "response_text": null,
+          "response_type": null,
+          "tool_name": null
+        },
+        "retrieval_order": {
+          "context_characters": 1771,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/tools.py",
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 4.817043619001197,
+          "response_text": "The code responsible for converting a model's requested action into an actual tool execution is located in the `ToolExecutor.execute` method within the `src/hewn/tools.py` file. This method takes a `ToolCall` object as input and executes the corresponding tool based on the provided arguments.",
+          "response_type": "final",
+          "tool_name": null
+        }
+      },
+      "expected_file": "src/hewn/tools.py",
+      "expected_symbol": "ToolExecutor",
+      "id": "nav-008",
+      "original_paths": [
+        "src/hewn/tools.py",
+        "src/hewn/model_protocol.py",
+        "src/hewn/models.py"
+      ],
+      "original_relevant_position": 1,
+      "retrieval_covered": true,
+      "route": "semantic",
+      "selected_evidence": [
+        {
+          "path": "src/hewn/tools.py",
+          "score": 0.7427173256874084,
+          "symbol": "ToolExecutor.execute"
+        },
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.7359634041786194,
+          "symbol": "_parse_tool_call"
+        },
+        {
+          "path": "src/hewn/models.py",
+          "score": 0.7162284851074219,
+          "symbol": "Model.respond"
+        }
+      ],
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution."
+    },
+    {
+      "category": "concept",
+      "conditions": {
+        "relevant_first": {
+          "context_characters": 1488,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/llama_cpp.py",
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 8.967620471001283,
+          "response_text": "The code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response is in the `src/hewn/llama_cpp.py` file, specifically in the `LlamaCppModel.respond` method. This method constructs a payload with the necessary information and sends it to the Hewn API using the `Request` class from the `src/hewn/model_protocol.py` file. The response from the API is then parsed using the `parse_model_response` method from the same file, which returns a `FinalResponse` object containing the text of the response.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "relevant_last": {
+          "context_characters": 1488,
+          "correct": false,
+          "error_type": null,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py",
+            "src/hewn/llama_cpp.py"
+          ],
+          "relevant_position": 3,
+          "response_seconds": 14.199272957001085,
+          "response_text": "The code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response is located in the `src/hewn/model_protocol.py` file, specifically in the `parse_model_response` function. This function takes a string `text` as input, which is expected to be a JSON response from the llama.cpp model. It then parses this JSON response into a `ModelResponse` object, which is returned as the final result.",
+          "response_type": "final",
+          "tool_name": null
+        },
+        "retrieval_order": {
+          "context_characters": 1488,
+          "correct": true,
+          "error_type": null,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "final_response": true,
+          "model_error": null,
+          "ordered_paths": [
+            "src/hewn/llama_cpp.py",
+            "src/hewn/model_protocol.py",
+            "src/hewn/models.py"
+          ],
+          "relevant_position": 1,
+          "response_seconds": 8.966848752999795,
+          "response_text": "The code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response is in the `src/hewn/llama_cpp.py` file, specifically in the `LlamaCppModel.respond` method. This method constructs a payload with the necessary information and sends it to the Hewn API using the `Request` class from the `src/hewn/model_protocol.py` file. The response from the API is then parsed using the `parse_model_response` method from the same file, which returns a `FinalResponse` object containing the text of the response.",
+          "response_type": "final",
+          "tool_name": null
+        }
+      },
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_symbol": "LlamaCppModel",
+      "id": "nav-009",
+      "original_paths": [
+        "src/hewn/llama_cpp.py",
+        "src/hewn/model_protocol.py",
+        "src/hewn/models.py"
+      ],
+      "original_relevant_position": 1,
+      "retrieval_covered": true,
+      "route": "semantic",
+      "selected_evidence": [
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 0.806454062461853,
+          "symbol": "LlamaCppModel.respond"
+        },
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.738562285900116,
+          "symbol": "parse_model_response"
+        },
+        {
+          "path": "src/hewn/models.py",
+          "score": 0.7191426753997803,
+          "symbol": "FinalResponse"
+        }
+      ],
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response."
+    }
+  ]
+}
