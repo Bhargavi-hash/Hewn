@@ -137,3 +137,197 @@ context policy.
 
 Preserving high-ranked evidence and controlling representation size
 should be investigated before selecting a final budget policy.
+
+## Experiment 003 — Evidence representation
+
+### Question
+
+Given the same retrieved repository evidence identities, how much context
+does Hewn require when representing that evidence as structural metadata,
+source code, or both?
+
+### Configuration
+
+- Repository: Hewn
+- Retrieval architecture: Module 4 hybrid router
+- Semantic model: BAAI/bge-small-en-v1.5
+- Retrieval representation: symbol documents
+- Symbol documents: 138
+- Context evidence limit: Top-3 unique files
+- Context representations:
+  - structure
+  - exact symbol source
+  - structure + exact symbol source
+- Tasks: unchanged nine-task Hewn self-navigation benchmark
+
+Retrieval ranking was held fixed. Representation was applied only after
+evidence selection so that this experiment changed context representation,
+not retrieval behavior.
+
+### Results
+
+| Representation | Coverage | Avg characters | Avg evidence items |
+|---|---:|---:|---:|
+| structure | 9/9 (100.0%) | 213.7 | 1.89 |
+| source | 9/9 (100.0%) | 2355.4 | 1.89 |
+| mixed | 9/9 (100.0%) | 2588.0 | 1.89 |
+
+Relative to structural evidence, whole-symbol source required about
+11.0 times as many characters on average. Mixed evidence required about
+12.1 times as many.
+
+Expected-file coverage was identical by construction because all three
+representations used the same retrieved evidence identities.
+
+### Per-task observation
+
+nav-007 required:
+
+- structure: 487 characters
+- source: 6226 characters
+- mixed: 6743 characters
+
+This is approximately 12.8 times more text for source and 13.8 times
+more for mixed representation compared with structure.
+
+Large source expansion also occurred for exact-symbol retrieval. For
+LlamaCppModel, structural evidence required 61 characters while the
+whole-symbol source representation required 3855 characters.
+
+### Interpretation
+
+Whole-symbol source code is substantially more expensive than compact
+structural evidence in this benchmark.
+
+This does not establish that structural evidence is superior for model
+reasoning. Source code contains behavioral information absent from the
+structural representation and may justify some or all of its additional
+cost.
+
+The result instead shows that whole-symbol source should not be treated
+as a free enrichment step, particularly for small-model contexts.
+
+The large variation in symbol body size also suggests that the useful
+unit of source context may be smaller than an entire class or other
+large symbol body.
+
+### Decision
+
+Retain structural evidence as the compact baseline.
+
+Do not adopt unconditional whole-symbol source or mixed evidence.
+
+Investigate selective source enrichment and smaller source excerpts
+before deciding how source code should enter production context.
+
+## Experiment 004 — Model representation ablation
+
+### Question
+
+For the same retrieved repository evidence, does exposing source code instead
+of compact structural evidence improve the ability of a small coding model to
+answer repository questions enough to justify the additional context?
+
+### Configuration
+
+- Coding model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- Inference: llama.cpp
+- Temperature: 0.0
+- Context window: 4096 tokens
+- CPU threads: 4
+- Tools exposed: 0
+- Retrieval: Module 4 hybrid router
+- Evidence limit: top 3 unique files
+- Embedding model: BAAI/bge-small-en-v1.5
+- Tasks: 9 Hewn self-navigation tasks
+- Representations:
+  - `structure`: compact structural symbol document
+  - `source`: complete source span of the retrieved symbol
+  - `mixed`: structural document plus complete source span
+- Planned model calls: 27
+- Scoring: final response must contain both the expected file and canonical
+  symbol.
+- Protocol failures are recorded separately from model/infrastructure errors.
+
+### Results
+
+| Representation | Correct | Final responses | Protocol errors | Model errors | Avg context chars | Avg response time |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Structure | 3/9 (33.3%) | 5/9 | 4 | 0 | 343.0 | 6.75 s |
+| Source | 4/9 (44.4%) | 6/9 | 3 | 0 | 2484.8 | 15.23 s |
+| Mixed | 5/9 (55.6%) | 9/9 | 0 | 0 | 2717.3 | 15.76 s |
+
+### Per-task results
+
+| Task | Route | Structure | Source | Mixed |
+| --- | --- | --- | --- | --- |
+| nav-001 | exact symbol | PASS | FAIL | FAIL |
+| nav-002 | exact symbol | FAIL | PASS | FAIL |
+| nav-003 | exact symbol | PASS | PASS | PASS |
+| nav-004 | exact symbol | PASS | PASS | PASS |
+| nav-005 | exact symbol | FAIL | FAIL | FAIL |
+| nav-006 | semantic | protocol error | PASS | PASS |
+| nav-007 | semantic | protocol error | protocol error | FAIL |
+| nav-008 | semantic | protocol error | protocol error | PASS |
+| nav-009 | semantic | protocol error | protocol error | PASS |
+
+### Exact-symbol subset
+
+For the five exact-symbol tasks:
+
+- Structure: 3/5
+- Source: 3/5
+- Mixed: 2/5
+
+Additional source was therefore not uniformly useful when deterministic
+retrieval had already resolved the relevant symbol.
+
+For example, nav-001 changed from a correct structural answer with 114
+characters of context to incorrect source and mixed answers with 987 and
+1053 characters respectively.
+
+nav-005 failed under all three representations even though source and mixed
+expanded the context from 124 characters to approximately 4000 characters.
+
+### Conceptual subset
+
+For the four semantic/conceptual tasks:
+
+- Structure: 0/4, with 4 protocol errors
+- Source: 1/4, with 3 protocol errors
+- Mixed: 3/4, with 0 protocol errors
+
+The conceptual subset therefore showed a different pattern from the
+exact-symbol subset. Richer evidence was associated with both greater task
+success and better protocol adherence in this run.
+
+nav-007 remained unresolved. Structure and source produced protocol errors,
+while mixed produced a valid final response but selected the wrong file and
+symbol.
+
+### Interpretation
+
+This experiment separates retrieval success from evidence usability.
+
+Retrieval covered the expected file for every task, but the coding model's
+ability to use that evidence depended on its representation. Correct
+retrieval therefore did not guarantee correct repository reasoning.
+
+Compact structural evidence was cheapest, but in this run it did not solve
+any of the four conceptual tasks. Whole-symbol source increased context
+substantially and solved one conceptual task. Mixed evidence solved three of
+four conceptual tasks and produced protocol-valid final responses on all nine
+tasks.
+
+However, richer evidence did not improve the exact-symbol subset. This
+suggests that a single representation policy may be inappropriate for all
+retrieval routes.
+
+Experiment 003 established that whole-symbol source is expensive.
+Experiment 004 provides evidence that source information can nevertheless be
+useful for conceptual questions. This motivates testing whether the useful
+source information can be represented more compactly.
+
+These results apply only to this nine-task Hewn self-navigation benchmark,
+model, prompt, retrieval configuration, and single deterministic run. They do
+not establish that mixed representation is generally superior.
