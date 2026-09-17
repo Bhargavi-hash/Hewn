@@ -1,0 +1,44 @@
+[
+  {
+    "id": "edit-001",
+    "category": "unique_expression",
+    "task": "Fix add so it returns the sum of its two arguments.",
+    "source_files": ["calculator.py"],
+    "test_file": "test_calculator.py"
+  },
+  {
+    "id": "edit-002",
+    "category": "repeated_expression",
+    "task": "user_status(True) should return \"active\". Preserve the other status behavior.",
+    "source_files": ["status.py"],
+    "test_file": "test_status.py"
+  },
+  {
+    "id": "edit-003",
+    "category": "insertion",
+    "task": "Reject discounts below 0 or above 1 by raising ValueError. Preserve valid discount behavior.",
+    "source_files": ["pricing.py"],
+    "test_file": "test_pricing.py"
+  },
+  {
+    "id": "edit-004",
+    "category": "conditional",
+    "task": "Authenticated administrators should also be allowed to edit. Unauthenticated users must remain denied.",
+    "source_files": ["access.py"],
+    "test_file": "test_access.py"
+  },
+  {
+    "id": "edit-005",
+    "category": "multiple_same_file",
+    "task": "Change the supported retry range to 2 through 5. Values below the range should normalize to 2 and values above it should normalize to 5.",
+    "source_files": ["limits.py"],
+    "test_file": "test_limits.py"
+  },
+  {
+    "id": "edit-006",
+    "category": "multiple_files",
+    "task": "Rename the timeout constant to REQUEST_TIMEOUT while preserving the value and behavior.",
+    "source_files": ["config.py", "client.py"],
+    "test_file": "test_client.py"
+  }
+]
