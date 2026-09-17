@@ -1,0 +1,543 @@
+{
+  "configuration": {
+    "context_representations": [
+      "structure",
+      "source",
+      "mixed"
+    ],
+    "document_count": 138,
+    "evidence_limit": 3,
+    "model": "BAAI/bge-small-en-v1.5",
+    "ranking_policy": "module-4-hybrid-frozen",
+    "retrieval_representation": "symbol"
+  },
+  "summary": {
+    "mixed": {
+      "average_characters": 2588.0,
+      "average_evidence_items": 1.8888888888888888,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    },
+    "source": {
+      "average_characters": 2355.4444444444443,
+      "average_evidence_items": 1.8888888888888888,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    },
+    "structure": {
+      "average_characters": 213.66666666666666,
+      "average_evidence_items": 1.8888888888888888,
+      "coverage": 1.0,
+      "coverage_hits": 9
+    }
+  },
+  "tasks": [
+    {
+      "category": "symbol",
+      "expected_covered": true,
+      "expected_file": "src/hewn/tools.py",
+      "id": "nav-001",
+      "representations": {
+        "mixed": {
+          "character_count": 995,
+          "evidence": [
+            {
+              "characters": 995,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "source": {
+          "character_count": 929,
+          "evidence": [
+            {
+              "characters": 929,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "structure": {
+          "character_count": 56,
+          "evidence": [
+            {
+              "characters": 56,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor"
+            }
+          ],
+          "evidence_count": 1
+        }
+      },
+      "route": "exact_symbol",
+      "task": "Find where ToolExecutor is defined in this repository."
+    },
+    {
+      "category": "symbol",
+      "expected_covered": true,
+      "expected_file": "src/hewn/workspace.py",
+      "id": "nav-002",
+      "representations": {
+        "mixed": {
+          "character_count": 759,
+          "evidence": [
+            {
+              "characters": 759,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "source": {
+          "character_count": 692,
+          "evidence": [
+            {
+              "characters": 692,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "structure": {
+          "character_count": 57,
+          "evidence": [
+            {
+              "characters": 57,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            }
+          ],
+          "evidence_count": 1
+        }
+      },
+      "route": "exact_symbol",
+      "task": "Find where Workspace is defined in this repository."
+    },
+    {
+      "category": "symbol",
+      "expected_covered": true,
+      "expected_file": "src/hewn/completion.py",
+      "id": "nav-003",
+      "representations": {
+        "mixed": {
+          "character_count": 1801,
+          "evidence": [
+            {
+              "characters": 1801,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "source": {
+          "character_count": 1726,
+          "evidence": [
+            {
+              "characters": 1726,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "structure": {
+          "character_count": 65,
+          "evidence": [
+            {
+              "characters": 65,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy"
+            }
+          ],
+          "evidence_count": 1
+        }
+      },
+      "route": "exact_symbol",
+      "task": "Find where CompletionPolicy is defined in this repository."
+    },
+    {
+      "category": "symbol",
+      "expected_covered": true,
+      "expected_file": "src/hewn/telemetry.py",
+      "id": "nav-004",
+      "representations": {
+        "mixed": {
+          "character_count": 298,
+          "evidence": [
+            {
+              "characters": 298,
+              "path": "src/hewn/telemetry.py",
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "source": {
+          "character_count": 228,
+          "evidence": [
+            {
+              "characters": 228,
+              "path": "src/hewn/telemetry.py",
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "structure": {
+          "character_count": 60,
+          "evidence": [
+            {
+              "characters": 60,
+              "path": "src/hewn/telemetry.py",
+              "symbol": "AgentMetrics"
+            }
+          ],
+          "evidence_count": 1
+        }
+      },
+      "route": "exact_symbol",
+      "task": "Find where AgentMetrics is defined in this repository."
+    },
+    {
+      "category": "symbol",
+      "expected_covered": true,
+      "expected_file": "src/hewn/llama_cpp.py",
+      "id": "nav-005",
+      "representations": {
+        "mixed": {
+          "character_count": 3926,
+          "evidence": [
+            {
+              "characters": 3926,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "source": {
+          "character_count": 3855,
+          "evidence": [
+            {
+              "characters": 3855,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1
+        },
+        "structure": {
+          "character_count": 61,
+          "evidence": [
+            {
+              "characters": 61,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel"
+            }
+          ],
+          "evidence_count": 1
+        }
+      },
+      "route": "exact_symbol",
+      "task": "Find where LlamaCppModel is defined in this repository."
+    },
+    {
+      "category": "concept",
+      "expected_covered": true,
+      "expected_file": "src/hewn/workspace.py",
+      "id": "nav-006",
+      "representations": {
+        "mixed": {
+          "character_count": 4097,
+          "evidence": [
+            {
+              "characters": 759,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            },
+            {
+              "characters": 1876,
+              "path": "src/hewn/repository/index.py",
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "characters": 1462,
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "symbol": "make_read_file_tool"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "source": {
+          "character_count": 3724,
+          "evidence": [
+            {
+              "characters": 692,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            },
+            {
+              "characters": 1736,
+              "path": "src/hewn/repository/index.py",
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "characters": 1296,
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "symbol": "make_read_file_tool"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "structure": {
+          "character_count": 343,
+          "evidence": [
+            {
+              "characters": 57,
+              "path": "src/hewn/workspace.py",
+              "symbol": "Workspace"
+            },
+            {
+              "characters": 130,
+              "path": "src/hewn/repository/index.py",
+              "symbol": "RepositoryIndex.build"
+            },
+            {
+              "characters": 156,
+              "path": "src/hewn/builtin_tools/filesystem.py",
+              "symbol": "make_read_file_tool"
+            }
+          ],
+          "evidence_count": 3
+        }
+      },
+      "route": "semantic",
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace."
+    },
+    {
+      "category": "concept",
+      "expected_covered": true,
+      "expected_file": "src/hewn/completion.py",
+      "id": "nav-007",
+      "representations": {
+        "mixed": {
+          "character_count": 6743,
+          "evidence": [
+            {
+              "characters": 719,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_final_response"
+            },
+            {
+              "characters": 4936,
+              "path": "src/hewn/agent.py",
+              "symbol": "Agent.run"
+            },
+            {
+              "characters": 1088,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy.rejection_reason"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "source": {
+          "character_count": 6226,
+          "evidence": [
+            {
+              "characters": 535,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_final_response"
+            },
+            {
+              "characters": 4737,
+              "path": "src/hewn/agent.py",
+              "symbol": "Agent.run"
+            },
+            {
+              "characters": 954,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy.rejection_reason"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "structure": {
+          "character_count": 487,
+          "evidence": [
+            {
+              "characters": 174,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_final_response"
+            },
+            {
+              "characters": 189,
+              "path": "src/hewn/agent.py",
+              "symbol": "Agent.run"
+            },
+            {
+              "characters": 124,
+              "path": "src/hewn/completion.py",
+              "symbol": "CompletionPolicy.rejection_reason"
+            }
+          ],
+          "evidence_count": 3
+        }
+      },
+      "route": "semantic",
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer."
+    },
+    {
+      "category": "concept",
+      "expected_covered": true,
+      "expected_file": "src/hewn/tools.py",
+      "id": "nav-008",
+      "representations": {
+        "mixed": {
+          "character_count": 2230,
+          "evidence": [
+            {
+              "characters": 948,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "characters": 981,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "characters": 301,
+              "path": "src/hewn/models.py",
+              "symbol": "Model.respond"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "source": {
+          "character_count": 1766,
+          "evidence": [
+            {
+              "characters": 818,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "characters": 812,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "characters": 136,
+              "path": "src/hewn/models.py",
+              "symbol": "Model.respond"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "structure": {
+          "character_count": 434,
+          "evidence": [
+            {
+              "characters": 120,
+              "path": "src/hewn/tools.py",
+              "symbol": "ToolExecutor.execute"
+            },
+            {
+              "characters": 159,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "_parse_tool_call"
+            },
+            {
+              "characters": 155,
+              "path": "src/hewn/models.py",
+              "symbol": "Model.respond"
+            }
+          ],
+          "evidence_count": 3
+        }
+      },
+      "route": "semantic",
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution."
+    },
+    {
+      "category": "concept",
+      "expected_covered": true,
+      "expected_file": "src/hewn/llama_cpp.py",
+      "id": "nav-009",
+      "representations": {
+        "mixed": {
+          "character_count": 2443,
+          "evidence": [
+            {
+              "characters": 1324,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "characters": 1017,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "parse_model_response"
+            },
+            {
+              "characters": 102,
+              "path": "src/hewn/models.py",
+              "symbol": "FinalResponse"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "source": {
+          "character_count": 2053,
+          "evidence": [
+            {
+              "characters": 1148,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "characters": 871,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "parse_model_response"
+            },
+            {
+              "characters": 34,
+              "path": "src/hewn/models.py",
+              "symbol": "FinalResponse"
+            }
+          ],
+          "evidence_count": 3
+        },
+        "structure": {
+          "character_count": 360,
+          "evidence": [
+            {
+              "characters": 166,
+              "path": "src/hewn/llama_cpp.py",
+              "symbol": "LlamaCppModel.respond"
+            },
+            {
+              "characters": 136,
+              "path": "src/hewn/model_protocol.py",
+              "symbol": "parse_model_response"
+            },
+            {
+              "characters": 58,
+              "path": "src/hewn/models.py",
+              "symbol": "FinalResponse"
+            }
+          ],
+          "evidence_count": 3
+        }
+      },
+      "route": "semantic",
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response."
+    }
+  ]
+}
