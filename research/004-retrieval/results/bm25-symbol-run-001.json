@@ -1,0 +1,349 @@
+{
+  "results": [
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/tools.py",
+      "expected_rank": 3,
+      "expected_score": 4.3766380468316335,
+      "expected_symbol": "ToolExecutor",
+      "id": "nav-001",
+      "task": "Find where ToolExecutor is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        }
+      ],
+      "top_1_characters": 145,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 5.032621566539661,
+          "symbol": "make_find_symbol_tool"
+        },
+        {
+          "path": "src/hewn/tools.py",
+          "score": 4.3766380468316335,
+          "symbol": "ToolExecutor"
+        }
+      ],
+      "top_3_characters": 371,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_rank": 4,
+      "expected_score": 3.9470955122438207,
+      "expected_symbol": "Workspace",
+      "id": "nav-002",
+      "task": "Find where Workspace is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/builtin_tools/__init__.py",
+          "score": 5.649515058463164,
+          "symbol": "make_builtin_tool_registry"
+        }
+      ],
+      "top_1_characters": 283,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/builtin_tools/__init__.py",
+          "score": 5.649515058463164,
+          "symbol": "make_builtin_tool_registry"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 5.032621566539661,
+          "symbol": "make_find_symbol_tool"
+        }
+      ],
+      "top_3_characters": 598,
+      "top_3_success": false
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/completion.py",
+      "expected_rank": 3,
+      "expected_score": 4.425622149669319,
+      "expected_symbol": "CompletionPolicy.record_repository_change",
+      "id": "nav-003",
+      "task": "Find where CompletionPolicy is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        }
+      ],
+      "top_1_characters": 145,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 5.032621566539661,
+          "symbol": "make_find_symbol_tool"
+        },
+        {
+          "path": "src/hewn/completion.py",
+          "score": 4.425622149669319,
+          "symbol": "CompletionPolicy.record_repository_change"
+        }
+      ],
+      "top_3_characters": 456,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/telemetry.py",
+      "expected_rank": 3,
+      "expected_score": 3.801350439050043,
+      "expected_symbol": "AgentMetrics",
+      "id": "nav-004",
+      "task": "Find where AgentMetrics is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        }
+      ],
+      "top_1_characters": 145,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 5.032621566539661,
+          "symbol": "make_find_symbol_tool"
+        },
+        {
+          "path": "src/hewn/telemetry.py",
+          "score": 3.801350439050043,
+          "symbol": "AgentMetrics"
+        }
+      ],
+      "top_3_characters": 375,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_rank": 3,
+      "expected_score": 3.6787425074480837,
+      "expected_symbol": "LlamaCppModel",
+      "id": "nav-005",
+      "task": "Find where LlamaCppModel is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        }
+      ],
+      "top_1_characters": 145,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.3192747706085,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 5.032621566539661,
+          "symbol": "make_find_symbol_tool"
+        },
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 3.6787425074480837,
+          "symbol": "LlamaCppModel"
+        }
+      ],
+      "top_3_characters": 376,
+      "top_3_success": true
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_rank": 5,
+      "expected_score": 3.9470955122438207,
+      "expected_symbol": "Workspace",
+      "id": "nav-006",
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace.",
+      "top_1": [
+        {
+          "path": "src/hewn/builtin_tools/filesystem.py",
+          "score": 8.014048342875821,
+          "symbol": "make_read_file_tool"
+        }
+      ],
+      "top_1_characters": 156,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/builtin_tools/filesystem.py",
+          "score": 8.014048342875821,
+          "symbol": "make_read_file_tool"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 6.810225639113919,
+          "symbol": "RepositoryIndex.dependencies_from"
+        },
+        {
+          "path": "src/hewn/builtin_tools/__init__.py",
+          "score": 5.649515058463164,
+          "symbol": "make_builtin_tool_registry"
+        }
+      ],
+      "top_3_characters": 614,
+      "top_3_success": false
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/completion.py",
+      "expected_rank": 11,
+      "expected_score": 0.0,
+      "expected_symbol": "VerificationState",
+      "id": "nav-007",
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer.",
+      "top_1": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 5.430501385014022,
+          "symbol": "_parse_final_response"
+        }
+      ],
+      "top_1_characters": 174,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 5.430501385014022,
+          "symbol": "_parse_final_response"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 4.325514785756454,
+          "symbol": "RepositoryIndex.find_symbol"
+        },
+        {
+          "path": "src/hewn/agent.py",
+          "score": 4.3035343724149895,
+          "symbol": "Agent"
+        }
+      ],
+      "top_3_characters": 368,
+      "top_3_success": false
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/tools.py",
+      "expected_rank": 12,
+      "expected_score": 2.321032902453318,
+      "expected_symbol": "ToolRegistry.register",
+      "id": "nav-008",
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution.",
+      "top_1": [
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 7.0043176624592665,
+          "symbol": "make_find_symbol_tool"
+        }
+      ],
+      "top_1_characters": 170,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/builtin_tools/symbols.py",
+          "score": 7.0043176624592665,
+          "symbol": "make_find_symbol_tool"
+        },
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 5.014585257909026,
+          "symbol": "_parse_tool_call"
+        },
+        {
+          "path": "src/hewn/builtin_tools/__init__.py",
+          "score": 4.442569184277177,
+          "symbol": "make_builtin_tool_registry"
+        }
+      ],
+      "top_3_characters": 612,
+      "top_3_success": false
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_rank": 2,
+      "expected_score": 7.363148240516991,
+      "expected_symbol": "LlamaCppModel",
+      "id": "nav-009",
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response.",
+      "top_1": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 12.95467758044212,
+          "symbol": "parse_model_response"
+        }
+      ],
+      "top_1_characters": 136,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 12.95467758044212,
+          "symbol": "parse_model_response"
+        },
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 7.363148240516991,
+          "symbol": "LlamaCppModel"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 5.620943857469313,
+          "symbol": "_build_internal_dependencies"
+        }
+      ],
+      "top_3_characters": 393,
+      "top_3_success": true
+    }
+  ],
+  "summary": {
+    "average_top_1_characters": 166.55555555555554,
+    "average_top_3_characters": 462.55555555555554,
+    "document_count": 108,
+    "representation": "symbol",
+    "retriever": "bm25",
+    "task_count": 9,
+    "top_1_accuracy": 0.0,
+    "top_1_hits": 0,
+    "top_3_accuracy": 0.5555555555555556,
+    "top_3_hits": 5
+  }
+}

@@ -10,9 +10,13 @@ class SymbolKind(StrEnum):
     FUNCTION = "function"
     METHOD = "method"
 
+
 def _validate_repository_path(path: PurePosixPath) -> None:
     if path.is_absolute() or ".." in path.parts:
-        raise ValueError("Repository path must remain repository-relative")
+        raise ValueError(
+            "Repository path must remain repository-relative"
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class SourceLocation:
@@ -27,7 +31,9 @@ class SourceLocation:
             raise ValueError("start_line must be at least 1")
 
         if self.end_line < self.start_line:
-            raise ValueError("end_line must not precede start_line")
+            raise ValueError(
+                "end_line must not precede start_line"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -36,14 +42,26 @@ class Symbol:
     kind: SymbolKind
     location: SourceLocation
     qualified_name: str
+    signature: str | None = None
 
     def __post_init__(self) -> None:
         if not self.name:
-            raise ValueError("Symbol name must not be empty")
+            raise ValueError(
+                "Symbol name must not be empty"
+            )
 
         if not self.qualified_name:
-            raise ValueError("Symbol qualified_name must not be empty")
+            raise ValueError(
+                "Symbol qualified_name must not be empty"
+            )
 
+        if (
+            self.kind is SymbolKind.CLASS
+            and self.signature is not None
+        ):
+            raise ValueError(
+                "Class symbols must not have signatures"
+            )
 
 @dataclass(frozen=True, slots=True)
 class Import:
@@ -54,7 +72,9 @@ class Import:
 
     def __post_init__(self) -> None:
         if not self.module and self.name is None:
-            raise ValueError("Import must identify a module or imported name")
+            raise ValueError(
+                "Import must identify a module or imported name"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,7 +88,10 @@ class SourceFile:
         _validate_repository_path(self.path)
 
         if not self.language:
-            raise ValueError("Source file language must not be empty")
+            raise ValueError(
+                "Source file language must not be empty"
+            )
+
 
 @dataclass(frozen=True, slots=True)
 class FileDependency:

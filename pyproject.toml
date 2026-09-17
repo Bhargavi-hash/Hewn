@@ -12,6 +12,7 @@ dev = [
     "mypy",
     "pytest",
     "ruff",
+    "sentence-transformers>=6.0.1",
     "types-jsonschema",
 ]
 

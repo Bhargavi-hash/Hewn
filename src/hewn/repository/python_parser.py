@@ -21,7 +21,10 @@ def parse_python_source(
     source: str,
 ) -> SourceFile:
     try:
-        tree = ast.parse(source, filename=str(path))
+        tree = ast.parse(
+            source,
+            filename=str(path),
+        )
     except SyntaxError as exc:
         raise PythonParseError(
             f"Could not parse Python source: {path}"
@@ -66,7 +69,10 @@ def _collect_statements(
                     name=statement.name,
                     kind=SymbolKind.CLASS,
                     qualified_name=qualified_name,
-                    location=_location(path, statement),
+                    location=_location(
+                        path,
+                        statement,
+                    ),
                 )
             )
 
@@ -80,7 +86,10 @@ def _collect_statements(
 
         elif isinstance(
             statement,
-            (ast.FunctionDef, ast.AsyncFunctionDef),
+            (
+                ast.FunctionDef,
+                ast.AsyncFunctionDef,
+            ),
         ):
             qualified_name = _qualified_name(
                 parent_symbol,
@@ -98,7 +107,13 @@ def _collect_statements(
                     name=statement.name,
                     kind=kind,
                     qualified_name=qualified_name,
-                    location=_location(path, statement),
+                    signature=_function_signature(
+                        statement
+                    ),
+                    location=_location(
+                        path,
+                        statement,
+                    ),
                 )
             )
 
@@ -109,13 +124,17 @@ def _collect_statements(
                         module=alias.name,
                         name=None,
                         alias=alias.asname,
-                        location=_location(path, statement),
+                        location=_location(
+                            path,
+                            statement,
+                        ),
                     )
                 )
 
         elif isinstance(statement, ast.ImportFrom):
-            module = "." * statement.level + (
-                statement.module or ""
+            module = (
+                "." * statement.level
+                + (statement.module or "")
             )
 
             for alias in statement.names:
@@ -124,9 +143,29 @@ def _collect_statements(
                         module=module,
                         name=alias.name,
                         alias=alias.asname,
-                        location=_location(path, statement),
+                        location=_location(
+                            path,
+                            statement,
+                        ),
                     )
                 )
+
+
+def _function_signature(
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
+) -> str:
+    arguments = ast.unparse(node.args)
+
+    signature = (
+        f"{node.name}({arguments})"
+    )
+
+    if node.returns is not None:
+        signature += (
+            f" -> {ast.unparse(node.returns)}"
+        )
+
+    return signature
 
 
 def _qualified_name(
@@ -143,8 +182,16 @@ def _location(
     path: PurePosixPath,
     node: ast.AST,
 ) -> SourceLocation:
-    start_line = getattr(node, "lineno", None)
-    end_line = getattr(node, "end_lineno", None)
+    start_line = getattr(
+        node,
+        "lineno",
+        None,
+    )
+    end_line = getattr(
+        node,
+        "end_lineno",
+        None,
+    )
 
     if start_line is None:
         raise PythonParseError(
