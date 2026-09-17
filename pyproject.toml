@@ -28,3 +28,6 @@ line-length = 100
 [tool.mypy]
 python_version = "3.12"
 strict = true
+
+[tool.ruff.lint.per-file-ignores]
+"research/006-code-editing/fixtures/**/*.py" = ["ALL"]
