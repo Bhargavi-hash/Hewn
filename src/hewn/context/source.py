@@ -1,21 +1,25 @@
 from __future__ import annotations
 
+import ast
+import textwrap
 from pathlib import Path
 
 from hewn.repository.index import RepositoryIndex
 from hewn.repository.models import Symbol
 from hewn.retrieval.models import RepositoryDocument
 
+SourceNode = ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
+
 
 class SourceEvidenceError(ValueError):
     """Raised when source evidence cannot be constructed safely."""
 
 
-def build_source_document(
+def _read_symbol_source(
     *,
     repository_root: Path,
     symbol: Symbol,
-) -> RepositoryDocument:
+) -> str:
     source_path = (
         repository_root
         / Path(*symbol.location.path.parts)
@@ -67,10 +71,293 @@ def build_source_document(
             "Symbol source evidence is empty"
         )
 
+    return source
+
+
+def _dedent_symbol_source(
+    source: str,
+) -> str:
+    dedented = textwrap.dedent(
+        source
+    ).rstrip()
+
+    if not dedented.strip():
+        raise SourceEvidenceError(
+            "Dedented symbol source is empty"
+        )
+
+    return dedented
+
+
+def _parse_single_symbol(
+    source: str,
+) -> SourceNode:
+    try:
+        module = ast.parse(
+            source
+        )
+    except SyntaxError as exc:
+        raise SourceEvidenceError(
+            "Symbol source could not be parsed"
+        ) from exc
+
+    if len(module.body) != 1:
+        raise SourceEvidenceError(
+            "Expected exactly one top-level symbol"
+        )
+
+    node = module.body[0]
+
+    if not isinstance(
+        node,
+        (
+            ast.ClassDef,
+            ast.FunctionDef,
+            ast.AsyncFunctionDef,
+        ),
+    ):
+        raise SourceEvidenceError(
+            "Source evidence does not describe "
+            "a class or function"
+        )
+
+    return node
+
+
+def _line_offsets(
+    source: str,
+) -> tuple[int, ...]:
+    offsets = [0]
+
+    for index, character in enumerate(source):
+        if character == "\n":
+            offsets.append(index + 1)
+
+    return tuple(offsets)
+
+
+def _node_end_offset(
+    *,
+    source: str,
+    node: ast.stmt,
+) -> int:
+    end_lineno = node.end_lineno
+    end_col_offset = node.end_col_offset
+
+    if (
+        end_lineno is None
+        or end_col_offset is None
+    ):
+        raise SourceEvidenceError(
+            "AST node has no source end position"
+        )
+
+    lines = source.splitlines(
+        keepends=True
+    )
+    offsets = _line_offsets(source)
+
+    if (
+        end_lineno < 1
+        or end_lineno > len(lines)
+        or end_lineno > len(offsets)
+    ):
+        raise SourceEvidenceError(
+            "AST source position exceeds symbol source"
+        )
+
+    line_start = offsets[
+        end_lineno - 1
+    ]
+
+    line = lines[
+        end_lineno - 1
+    ]
+
+    encoded_line = line.encode(
+        "utf-8"
+    )
+
+    if end_col_offset > len(encoded_line):
+        raise SourceEvidenceError(
+            "AST column position exceeds source line"
+        )
+
+    decoded_prefix = encoded_line[
+        :end_col_offset
+    ].decode(
+        "utf-8"
+    )
+
+    return (
+        line_start
+        + len(decoded_prefix)
+    )
+
+
+def _signature_text(
+    *,
+    source: str,
+    node: SourceNode,
+) -> str:
+    if not node.body:
+        raise SourceEvidenceError(
+            "Symbol has no body"
+        )
+
+    body_start_line = node.body[0].lineno
+
+    lines = source.splitlines()
+
+    signature = "\n".join(
+        lines[
+            : max(
+                1,
+                body_start_line - 1,
+            )
+        ]
+    ).rstrip()
+
+    if not signature:
+        raise SourceEvidenceError(
+            "Symbol signature evidence is empty"
+        )
+
+    return signature
+
+
+def build_source_document(
+    *,
+    repository_root: Path,
+    symbol: Symbol,
+) -> RepositoryDocument:
+    source = _read_symbol_source(
+        repository_root=repository_root,
+        symbol=symbol,
+    )
+
     return RepositoryDocument(
         path=symbol.location.path,
         symbol=symbol.qualified_name,
         text=source,
+    )
+
+
+def build_signature_document(
+    *,
+    repository_root: Path,
+    symbol: Symbol,
+) -> RepositoryDocument:
+    source = _read_symbol_source(
+        repository_root=repository_root,
+        symbol=symbol,
+    )
+
+    dedented_source = (
+        _dedent_symbol_source(
+            source
+        )
+    )
+
+    node = _parse_single_symbol(
+        dedented_source
+    )
+
+    signature = _signature_text(
+        source=dedented_source,
+        node=node,
+    )
+
+    return RepositoryDocument(
+        path=symbol.location.path,
+        symbol=symbol.qualified_name,
+        text=signature,
+    )
+
+
+def build_bounded_source_document(
+    *,
+    repository_root: Path,
+    symbol: Symbol,
+    character_limit: int,
+) -> RepositoryDocument:
+    if character_limit < 1:
+        raise ValueError(
+            "Character limit must be at least 1"
+        )
+
+    source = _read_symbol_source(
+        repository_root=repository_root,
+        symbol=symbol,
+    )
+
+    dedented_source = (
+        _dedent_symbol_source(
+            source
+        )
+    )
+
+    if (
+        len(dedented_source)
+        <= character_limit
+    ):
+        return RepositoryDocument(
+            path=symbol.location.path,
+            symbol=symbol.qualified_name,
+            text=dedented_source,
+        )
+
+    node = _parse_single_symbol(
+        dedented_source
+    )
+
+    signature = _signature_text(
+        source=dedented_source,
+        node=node,
+    )
+
+    if len(signature) > character_limit:
+        return RepositoryDocument(
+            path=symbol.location.path,
+            symbol=symbol.qualified_name,
+            text=signature,
+        )
+
+    candidates: list[str] = [
+        signature
+    ]
+
+    for body_node in node.body:
+        end_offset = _node_end_offset(
+            source=dedented_source,
+            node=body_node,
+        )
+
+        candidate = dedented_source[
+            :end_offset
+        ].rstrip()
+
+        if len(candidate) > character_limit:
+            break
+
+        candidates.append(
+            candidate
+        )
+
+    bounded = max(
+        candidates,
+        key=len,
+    )
+
+    if not bounded.strip():
+        raise SourceEvidenceError(
+            "Bounded source evidence is empty"
+        )
+
+    return RepositoryDocument(
+        path=symbol.location.path,
+        symbol=symbol.qualified_name,
+        text=bounded,
     )
 
 

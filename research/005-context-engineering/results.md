@@ -331,3 +331,95 @@ source information can be represented more compactly.
 These results apply only to this nine-task Hewn self-navigation benchmark,
 model, prompt, retrieval configuration, and single deterministic run. They do
 not establish that mixed representation is generally superior.
+
+## Experiment 005 — Source granularity
+
+### Question
+
+Can Hewn preserve the observed usefulness of source-aware context for
+conceptual repository questions while exposing substantially less source
+code?
+
+### Design
+
+Experiment 004 showed that source-aware representations were most useful
+on the conceptual subset of the navigation benchmark. Experiment 005
+therefore restricted evaluation to those four tasks:
+
+- nav-006
+- nav-007
+- nav-008
+- nav-009
+
+The following variables were held fixed:
+
+- retrieval: Module 4 hybrid retrieval
+- embedding model: `BAAI/bge-small-en-v1.5`
+- coding model: `Qwen2.5-Coder-1.5B-Instruct Q4_K_M`
+- evidence selection: top 3 unique files
+- temperature: 0
+- tools exposed: none
+- prompt and scoring procedure
+- repository and task definitions
+
+Three source representations were compared:
+
+1. `signature` — symbol signature only
+2. `bounded_source` — signature plus complete AST statements, with an
+   800-character per-symbol target
+3. `whole_source` — the complete retrieved symbol source
+
+The bounded representation preserved complete AST statement boundaries
+rather than truncating source at an arbitrary character position.
+
+Total model calls: 12.
+
+### Results
+
+| Representation | Success | Final responses | Protocol errors | Avg context chars | Avg response time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Signature | 0/4 | 0/4 | 4 | 442.0 | 11.07 s |
+| Bounded source | 2/4 | 2/4 | 2 | 1747.2 | 16.22 s |
+| Whole source | 2/4 | 2/4 | 2 | 3770.8 | 11.42 s |
+
+All four tasks had the expected file represented in the selected
+retrieval evidence.
+
+Per-task behavior differed despite the aggregate tie:
+
+- nav-006: bounded source and whole source both succeeded.
+- nav-007: all three representations produced protocol failures.
+- nav-008: whole source succeeded while bounded source produced a
+  protocol failure.
+- nav-009: bounded source succeeded while whole source produced a
+  protocol failure.
+
+Bounded source used approximately 53.7% fewer context characters than
+whole source on average while matching its aggregate 2/4 success count.
+
+The context reduction did not translate into lower measured response
+latency: bounded source averaged 16.22 seconds compared with 11.42
+seconds for whole source.
+
+### Interpretation
+
+This four-task follow-up does not establish that bounded source is
+equivalent or superior to whole source.
+
+It does show that the full source volume was not necessary to obtain the
+same aggregate success count in this run. However, bounded and whole
+source succeeded on different tasks, showing that source selection can
+change model behavior rather than merely reduce prompt size.
+
+Signature-only evidence produced protocol failures on all four
+conceptual tasks in this configuration. This suggests that signatures
+alone were insufficient for reliable conceptual reasoning by this
+1.5B-parameter model on this subset.
+
+The opposing outcomes on nav-008 and nav-009 also argue against treating
+source volume as a monotonic quality control: additional source may help
+one query while hurting another.
+
+The next context-engineering question should therefore focus on which
+evidence is presented and how it is organized, rather than tuning the
+800-character threshold against this small benchmark.
