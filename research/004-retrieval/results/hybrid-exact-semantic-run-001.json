@@ -1,0 +1,340 @@
+{
+  "results": [
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/tools.py",
+      "expected_rank": 1,
+      "expected_score": 1.0,
+      "expected_symbol": "ToolExecutor",
+      "id": "nav-001",
+      "matched_symbol": "ToolExecutor",
+      "retrieval_seconds": 0.00015482100025110412,
+      "route": "exact_symbol",
+      "task": "Find where ToolExecutor is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/tools.py",
+          "score": 1.0,
+          "symbol": "ToolExecutor"
+        }
+      ],
+      "top_1_characters": 56,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/tools.py",
+          "score": 1.0,
+          "symbol": "ToolExecutor"
+        }
+      ],
+      "top_3_characters": 56,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_rank": 1,
+      "expected_score": 1.0,
+      "expected_symbol": "Workspace",
+      "id": "nav-002",
+      "matched_symbol": "Workspace",
+      "retrieval_seconds": 8.415699994657189e-05,
+      "route": "exact_symbol",
+      "task": "Find where Workspace is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/workspace.py",
+          "score": 1.0,
+          "symbol": "Workspace"
+        }
+      ],
+      "top_1_characters": 57,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/workspace.py",
+          "score": 1.0,
+          "symbol": "Workspace"
+        }
+      ],
+      "top_3_characters": 57,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/completion.py",
+      "expected_rank": 1,
+      "expected_score": 1.0,
+      "expected_symbol": "CompletionPolicy",
+      "id": "nav-003",
+      "matched_symbol": "CompletionPolicy",
+      "retrieval_seconds": 6.492300053650979e-05,
+      "route": "exact_symbol",
+      "task": "Find where CompletionPolicy is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/completion.py",
+          "score": 1.0,
+          "symbol": "CompletionPolicy"
+        }
+      ],
+      "top_1_characters": 65,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/completion.py",
+          "score": 1.0,
+          "symbol": "CompletionPolicy"
+        }
+      ],
+      "top_3_characters": 65,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/telemetry.py",
+      "expected_rank": 1,
+      "expected_score": 1.0,
+      "expected_symbol": "AgentMetrics",
+      "id": "nav-004",
+      "matched_symbol": "AgentMetrics",
+      "retrieval_seconds": 6.187899998622015e-05,
+      "route": "exact_symbol",
+      "task": "Find where AgentMetrics is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/telemetry.py",
+          "score": 1.0,
+          "symbol": "AgentMetrics"
+        }
+      ],
+      "top_1_characters": 60,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/telemetry.py",
+          "score": 1.0,
+          "symbol": "AgentMetrics"
+        }
+      ],
+      "top_3_characters": 60,
+      "top_3_success": true
+    },
+    {
+      "category": "symbol",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_rank": 1,
+      "expected_score": 1.0,
+      "expected_symbol": "LlamaCppModel",
+      "id": "nav-005",
+      "matched_symbol": "LlamaCppModel",
+      "retrieval_seconds": 6.314900019788183e-05,
+      "route": "exact_symbol",
+      "task": "Find where LlamaCppModel is defined in this repository.",
+      "top_1": [
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 1.0,
+          "symbol": "LlamaCppModel"
+        }
+      ],
+      "top_1_characters": 61,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 1.0,
+          "symbol": "LlamaCppModel"
+        }
+      ],
+      "top_3_characters": 61,
+      "top_3_success": true
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_rank": 1,
+      "expected_score": 0.7188390493392944,
+      "expected_symbol": "Workspace",
+      "id": "nav-006",
+      "matched_symbol": null,
+      "retrieval_seconds": 0.035759954998866306,
+      "route": "semantic",
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace.",
+      "top_1": [
+        {
+          "path": "src/hewn/workspace.py",
+          "score": 0.7188390493392944,
+          "symbol": "Workspace"
+        }
+      ],
+      "top_1_characters": 57,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/workspace.py",
+          "score": 0.7188390493392944,
+          "symbol": "Workspace"
+        },
+        {
+          "path": "src/hewn/repository/index.py",
+          "score": 0.6655219793319702,
+          "symbol": "RepositoryIndex.build"
+        },
+        {
+          "path": "src/hewn/builtin_tools/filesystem.py",
+          "score": 0.660209059715271,
+          "symbol": "make_read_file_tool"
+        }
+      ],
+      "top_3_characters": 343,
+      "top_3_success": true
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/completion.py",
+      "expected_rank": 3,
+      "expected_score": 0.6120434999465942,
+      "expected_symbol": "CompletionPolicy.rejection_reason",
+      "id": "nav-007",
+      "matched_symbol": null,
+      "retrieval_seconds": 0.041041541000595316,
+      "route": "semantic",
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer.",
+      "top_1": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.6366456747055054,
+          "symbol": "_parse_final_response"
+        }
+      ],
+      "top_1_characters": 174,
+      "top_1_success": false,
+      "top_3": [
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.6366456747055054,
+          "symbol": "_parse_final_response"
+        },
+        {
+          "path": "src/hewn/agent.py",
+          "score": 0.6325703263282776,
+          "symbol": "Agent.run"
+        },
+        {
+          "path": "src/hewn/completion.py",
+          "score": 0.6120434999465942,
+          "symbol": "CompletionPolicy.rejection_reason"
+        }
+      ],
+      "top_3_characters": 487,
+      "top_3_success": true
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/tools.py",
+      "expected_rank": 1,
+      "expected_score": 0.7427173256874084,
+      "expected_symbol": "ToolExecutor.execute",
+      "id": "nav-008",
+      "matched_symbol": null,
+      "retrieval_seconds": 0.04273380599988741,
+      "route": "semantic",
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution.",
+      "top_1": [
+        {
+          "path": "src/hewn/tools.py",
+          "score": 0.7427173256874084,
+          "symbol": "ToolExecutor.execute"
+        }
+      ],
+      "top_1_characters": 120,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/tools.py",
+          "score": 0.7427173256874084,
+          "symbol": "ToolExecutor.execute"
+        },
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.7359634041786194,
+          "symbol": "_parse_tool_call"
+        },
+        {
+          "path": "src/hewn/models.py",
+          "score": 0.7162284851074219,
+          "symbol": "Model.respond"
+        }
+      ],
+      "top_3_characters": 434,
+      "top_3_success": true
+    },
+    {
+      "category": "concept",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_rank": 1,
+      "expected_score": 0.806454062461853,
+      "expected_symbol": "LlamaCppModel.respond",
+      "id": "nav-009",
+      "matched_symbol": null,
+      "retrieval_seconds": 0.04681932699895697,
+      "route": "semantic",
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response.",
+      "top_1": [
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 0.806454062461853,
+          "symbol": "LlamaCppModel.respond"
+        }
+      ],
+      "top_1_characters": 166,
+      "top_1_success": true,
+      "top_3": [
+        {
+          "path": "src/hewn/llama_cpp.py",
+          "score": 0.806454062461853,
+          "symbol": "LlamaCppModel.respond"
+        },
+        {
+          "path": "src/hewn/model_protocol.py",
+          "score": 0.738562285900116,
+          "symbol": "parse_model_response"
+        },
+        {
+          "path": "src/hewn/models.py",
+          "score": 0.7191426753997803,
+          "symbol": "FinalResponse"
+        }
+      ],
+      "top_3_characters": 360,
+      "top_3_success": true
+    }
+  ],
+  "summary": {
+    "average_exact_seconds": 8.578580018365755e-05,
+    "average_retrieval_seconds": 0.018531506444358255,
+    "average_semantic_seconds": 0.0415886572495765,
+    "average_top_1_characters": 90.66666666666667,
+    "average_top_3_characters": 213.66666666666666,
+    "document_count": 126,
+    "embedding_dimension": 384,
+    "exact_route_count": 5,
+    "exact_top_1_accuracy": 1.0,
+    "exact_top_1_hits": 5,
+    "indexing_seconds": 3.136023089000446,
+    "model": "BAAI/bge-small-en-v1.5",
+    "model_load_seconds": 2.7841779499995027,
+    "representation": "symbol",
+    "routing": "exact-symbol-or-semantic",
+    "semantic_avoidance_rate": 0.5555555555555556,
+    "semantic_route_count": 4,
+    "semantic_top_1_accuracy": 0.75,
+    "semantic_top_1_hits": 3,
+    "task_count": 9,
+    "top_1_accuracy": 0.8888888888888888,
+    "top_1_hits": 8,
+    "top_3_accuracy": 1.0,
+    "top_3_hits": 9
+  }
+}

@@ -298,3 +298,104 @@ Do not tune the representation specifically for nav-007.
 Next evaluate a hybrid retrieval policy that uses deterministic symbol
 resolution for explicit identifiers and semantic retrieval for
 conceptual queries.
+
+## Experiment 006 — Deterministic + semantic routing
+
+### Question
+
+Can Hewn avoid semantic retrieval when a query explicitly identifies a
+known repository symbol while preserving retrieval quality for
+conceptual queries?
+
+### Routing policy
+
+The routing policy was defined and inspected before benchmark accuracy
+was measured.
+
+Identifier-like tokens are extracted mechanically from the query. If
+exactly one token resolves to exactly one repository symbol, retrieval
+uses the deterministic RepositoryIndex.
+
+Otherwise, the query falls back to semantic symbol retrieval.
+
+No benchmark-specific symbol names or task rules are encoded in the
+router.
+
+The frozen routing partition was:
+
+| Tasks | Route |
+|---|---|
+| nav-001 through nav-005 | exact symbol |
+| nav-006 through nav-009 | semantic |
+
+### Configuration
+
+- Semantic model: BAAI/bge-small-en-v1.5
+- Embedding dimension: 384
+- Symbol documents: 126
+- Exact retrieval: RepositoryIndex
+- Conceptual retrieval: semantic symbol index
+- Tasks: unchanged nine-task Hewn self-navigation benchmark
+
+### Results
+
+| Metric | Result |
+|---|---:|
+| Top-1 | 8/9 (88.9%) |
+| Top-3 | 9/9 (100.0%) |
+| Exact route | 5/9 |
+| Semantic route | 4/9 |
+| Semantic search avoided | 55.6% |
+| Exact-route Top-1 | 5/5 (100.0%) |
+| Semantic-route Top-1 | 3/4 (75.0%) |
+| Average retrieval time | 0.0185 s |
+| Average exact-route time | 0.000086 s |
+| Average semantic-route time | 0.0416 s |
+| Average Top-1 context | 90.7 chars |
+| Average Top-3 context | 213.7 chars |
+
+### Comparison with pure semantic retrieval
+
+Pure semantic symbol retrieval achieved:
+
+- Top-1: 8/9
+- Top-3: 9/9
+- Average query time: 0.0448 s
+- Average Top-3 context: 421.9 chars
+
+The hybrid router preserved the measured Top-1 and Top-3 accuracy while
+routing five of nine queries through deterministic symbol lookup.
+
+In this benchmark configuration, average measured retrieval time
+decreased from 0.0448 seconds to 0.0185 seconds, and average Top-3
+context decreased from 421.9 to 213.7 characters.
+
+These measurements do not include elimination of semantic model startup
+cost. The experimental runner still loads the embedding model and builds
+the semantic index before processing any queries.
+
+### Remaining failure
+
+nav-007 remained rank 3:
+
+1. _parse_final_response
+2. Agent.run
+3. CompletionPolicy.rejection_reason
+
+This failure was not tuned away. It remains evidence that the current
+symbol representation and embedding similarity do not always distinguish
+parsing, orchestration, and authorization responsibilities.
+
+### Decision
+
+Adopt deterministic exact-symbol resolution plus semantic fallback as
+the current Module 4 retrieval architecture.
+
+Do not add benchmark-specific rules to obtain 9/9.
+
+Do not implement weighted BM25/embedding fusion without a new failure
+case demonstrating a need for it.
+
+Persistent embedding indexes and lazy semantic initialization are
+deferred because they concern repository memory and runtime lifecycle
+rather than the retrieval-quality question tested here.
