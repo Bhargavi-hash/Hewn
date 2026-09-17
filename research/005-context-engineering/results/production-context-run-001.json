@@ -1,0 +1,679 @@
+{
+  "experiment": "module_5_production_context_integration",
+  "configuration": {
+    "repository": "Hewn",
+    "tasks_path": "research/002-tools/tasks.json",
+    "task_count": 9,
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "temperature": 0.0,
+    "agent_tools": "builtin Hewn tools",
+    "semantic_candidate_limit": 12,
+    "semantic_evidence_limit": 3,
+    "bounded_source_limit": 800,
+    "conditions": [
+      "no_context",
+      "production_context"
+    ],
+    "condition_order": "alternated by task",
+    "repeated_trials": false
+  },
+  "semantic_index": {
+    "document_count": 163,
+    "embedding_dimension": 384,
+    "indexing_seconds": 16.33099104199937
+  },
+  "totals": {
+    "no_context": {
+      "correct": 1,
+      "final_responses": 3,
+      "model_errors": 2,
+      "protocol_errors": 4,
+      "agent_limit_errors": 0,
+      "agent_stagnation_errors": 0,
+      "context_characters": 0,
+      "context_evidence_count": 0,
+      "context_unique_file_count": 0,
+      "response_seconds": 144.02077653699962,
+      "model_calls": 5,
+      "tool_calls": 2,
+      "successful_tool_calls": 2,
+      "failed_tool_calls": 0,
+      "runs_with_metrics": 3
+    },
+    "production_context": {
+      "correct": 3,
+      "final_responses": 6,
+      "model_errors": 0,
+      "protocol_errors": 3,
+      "agent_limit_errors": 0,
+      "agent_stagnation_errors": 0,
+      "context_characters": 6652,
+      "context_evidence_count": 17,
+      "context_unique_file_count": 17,
+      "response_seconds": 103.9929398130007,
+      "model_calls": 7,
+      "tool_calls": 1,
+      "successful_tool_calls": 0,
+      "failed_tool_calls": 1,
+      "runs_with_metrics": 6
+    }
+  },
+  "records": [
+    {
+      "task_id": "nav-001",
+      "category": "symbol",
+      "task": "Find where ToolExecutor is defined in this repository.",
+      "expected_file": "src/hewn/tools.py",
+      "expected_symbol": "ToolExecutor",
+      "retrieval": {
+        "route": "exact_symbol",
+        "matched_symbol": "ToolExecutor",
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/tools.py",
+            "symbol": "ToolExecutor",
+            "score": 1.0,
+            "characters": 56
+          }
+        ],
+        "context_characters": 56,
+        "context_evidence_count": 1,
+        "context_unique_file_count": 1
+      },
+      "condition_order": [
+        "no_context",
+        "production_context"
+      ],
+      "conditions": {
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 9.717466609999974,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": false,
+          "expected_symbol_present": true,
+          "correct": false,
+          "response_text": "The `ToolExecutor` class is defined in the `src` directory of the repository.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        },
+        "production_context": {
+          "context_characters": 56,
+          "context_evidence_count": 1,
+          "context_unique_file_count": 1,
+          "response_seconds": 3.8526433990009537,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "correct": true,
+          "response_text": "The `ToolExecutor` class is defined in the `src/hewn/tools.py` file.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        }
+      }
+    },
+    {
+      "task_id": "nav-002",
+      "category": "symbol",
+      "task": "Find where Workspace is defined in this repository.",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_symbol": "Workspace",
+      "retrieval": {
+        "route": "exact_symbol",
+        "matched_symbol": "Workspace",
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/workspace.py",
+            "symbol": "Workspace",
+            "score": 1.0,
+            "characters": 57
+          }
+        ],
+        "context_characters": 57,
+        "context_evidence_count": 1,
+        "context_unique_file_count": 1
+      },
+      "condition_order": [
+        "production_context",
+        "no_context"
+      ],
+      "conditions": {
+        "production_context": {
+          "context_characters": 57,
+          "context_evidence_count": 1,
+          "context_unique_file_count": 1,
+          "response_seconds": 3.5441136299996288,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "correct": true,
+          "response_text": "The Workspace class is defined in the src/hewn/workspace.py file.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        },
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 3.2666447310002695,
+          "error_type": "model",
+          "error": "ModelError: llama.cpp returned HTTP 400",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        }
+      }
+    },
+    {
+      "task_id": "nav-003",
+      "category": "symbol",
+      "task": "Find where CompletionPolicy is defined in this repository.",
+      "expected_file": "src/hewn/completion.py",
+      "expected_symbol": "CompletionPolicy",
+      "retrieval": {
+        "route": "exact_symbol",
+        "matched_symbol": "CompletionPolicy",
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/completion.py",
+            "symbol": "CompletionPolicy",
+            "score": 1.0,
+            "characters": 65
+          }
+        ],
+        "context_characters": 65,
+        "context_evidence_count": 1,
+        "context_unique_file_count": 1
+      },
+      "condition_order": [
+        "no_context",
+        "production_context"
+      ],
+      "conditions": {
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 6.699817945001996,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": false,
+          "expected_symbol_present": true,
+          "correct": false,
+          "response_text": "CompletionPolicy is defined in the 'completion.py' file within the 'hewn' directory.",
+          "model_calls": 2,
+          "tool_calls": 1,
+          "successful_tool_calls": 1,
+          "failed_tool_calls": 0
+        },
+        "production_context": {
+          "context_characters": 65,
+          "context_evidence_count": 1,
+          "context_unique_file_count": 1,
+          "response_seconds": 4.217089649999252,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": false,
+          "expected_symbol_present": true,
+          "correct": false,
+          "response_text": "The `CompletionPolicy` class is defined in the `completion.py` file located in the `src/hewn/completion` directory.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        }
+      }
+    },
+    {
+      "task_id": "nav-004",
+      "category": "symbol",
+      "task": "Find where AgentMetrics is defined in this repository.",
+      "expected_file": "src/hewn/telemetry.py",
+      "expected_symbol": "AgentMetrics",
+      "retrieval": {
+        "route": "exact_symbol",
+        "matched_symbol": "AgentMetrics",
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/telemetry.py",
+            "symbol": "AgentMetrics",
+            "score": 1.0,
+            "characters": 60
+          }
+        ],
+        "context_characters": 60,
+        "context_evidence_count": 1,
+        "context_unique_file_count": 1
+      },
+      "condition_order": [
+        "production_context",
+        "no_context"
+      ],
+      "conditions": {
+        "production_context": {
+          "context_characters": 60,
+          "context_evidence_count": 1,
+          "context_unique_file_count": 1,
+          "response_seconds": 7.160736300000281,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": true,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": "Error: Search path is not a directory: src/hewn/telemetry.py",
+          "model_calls": 2,
+          "tool_calls": 1,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 1
+        },
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 92.62326409799789,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "correct": true,
+          "response_text": "src/hewn/telemetry.py:13:class AgentMetrics:",
+          "model_calls": 2,
+          "tool_calls": 1,
+          "successful_tool_calls": 1,
+          "failed_tool_calls": 0
+        }
+      }
+    },
+    {
+      "task_id": "nav-005",
+      "category": "symbol",
+      "task": "Find where LlamaCppModel is defined in this repository.",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_symbol": "LlamaCppModel",
+      "retrieval": {
+        "route": "exact_symbol",
+        "matched_symbol": "LlamaCppModel",
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/llama_cpp.py",
+            "symbol": "LlamaCppModel",
+            "score": 1.0,
+            "characters": 61
+          }
+        ],
+        "context_characters": 61,
+        "context_evidence_count": 1,
+        "context_unique_file_count": 1
+      },
+      "condition_order": [
+        "no_context",
+        "production_context"
+      ],
+      "conditions": {
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 3.2408492180002213,
+          "error_type": "model",
+          "error": "ModelError: llama.cpp returned HTTP 400",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        },
+        "production_context": {
+          "context_characters": 61,
+          "context_evidence_count": 1,
+          "context_unique_file_count": 1,
+          "response_seconds": 3.757253675001266,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": true,
+          "expected_symbol_present": true,
+          "correct": true,
+          "response_text": "The class `LlamaCppModel` is defined in the file `src/hewn/llama_cpp.py`.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        }
+      }
+    },
+    {
+      "task_id": "nav-006",
+      "category": "concept",
+      "task": "Find the code responsible for preventing repository file operations from escaping the configured workspace.",
+      "expected_file": "src/hewn/workspace.py",
+      "expected_symbol": "Workspace",
+      "retrieval": {
+        "route": "semantic",
+        "matched_symbol": null,
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/workspace.py",
+            "symbol": "Workspace",
+            "score": 0.7188390493392944,
+            "characters": 692
+          },
+          {
+            "path": "src/hewn/context/source.py",
+            "symbol": "build_bounded_source_document",
+            "score": 0.6717725396156311,
+            "characters": 745
+          },
+          {
+            "path": "src/hewn/repository/index.py",
+            "symbol": "RepositoryIndex.build",
+            "score": 0.6655219793319702,
+            "characters": 248
+          }
+        ],
+        "context_characters": 1685,
+        "context_evidence_count": 3,
+        "context_unique_file_count": 3
+      },
+      "condition_order": [
+        "production_context",
+        "no_context"
+      ],
+      "conditions": {
+        "production_context": {
+          "context_characters": 1685,
+          "context_evidence_count": 3,
+          "context_unique_file_count": 3,
+          "response_seconds": 20.659829110001738,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        },
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 9.615706225002214,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        }
+      }
+    },
+    {
+      "task_id": "nav-007",
+      "category": "concept",
+      "task": "Find the code responsible for deciding whether the agent is allowed to return its final answer.",
+      "expected_file": "src/hewn/completion.py",
+      "expected_symbol": "CompletionPolicy",
+      "retrieval": {
+        "route": "semantic",
+        "matched_symbol": null,
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/model_protocol.py",
+            "symbol": "_parse_final_response",
+            "score": 0.6366456747055054,
+            "characters": 535
+          },
+          {
+            "path": "src/hewn/agent.py",
+            "symbol": "Agent.run",
+            "score": 0.6190739870071411,
+            "characters": 707
+          },
+          {
+            "path": "src/hewn/completion.py",
+            "symbol": "CompletionPolicy.rejection_reason",
+            "score": 0.6120434999465942,
+            "characters": 578
+          }
+        ],
+        "context_characters": 1820,
+        "context_evidence_count": 3,
+        "context_unique_file_count": 3
+      },
+      "condition_order": [
+        "no_context",
+        "production_context"
+      ],
+      "conditions": {
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 6.859771806997742,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        },
+        "production_context": {
+          "context_characters": 1820,
+          "context_evidence_count": 3,
+          "context_unique_file_count": 3,
+          "response_seconds": 22.254393002000143,
+          "error_type": null,
+          "error": null,
+          "final_response": true,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": "The code responsible for deciding whether the agent is allowed to return its final answer is in the `Agent.run` method, specifically in the `rejection_reason` method. This method checks the completion requirement and the verification state to determine if the agent can finish the task. If the requirement is `CompletionRequirement.VERIFIED` and the verification state is `VerificationState.UNKNOWN`, the agent cannot finish because it requires verification and no successful verification has been observed. If the verification state is `VerificationState.FAILED`, the agent cannot finish because the latest verification check failed. Continue working and verify the repository again before finishing.",
+          "model_calls": 1,
+          "tool_calls": 0,
+          "successful_tool_calls": 0,
+          "failed_tool_calls": 0
+        }
+      }
+    },
+    {
+      "task_id": "nav-008",
+      "category": "concept",
+      "task": "Find the code responsible for converting a model's requested action into an actual tool execution.",
+      "expected_file": "src/hewn/tools.py",
+      "expected_symbol": "ToolExecutor",
+      "retrieval": {
+        "route": "semantic",
+        "matched_symbol": null,
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/tools.py",
+            "symbol": "ToolExecutor.execute",
+            "score": 0.7427173256874084,
+            "characters": 722
+          },
+          {
+            "path": "src/hewn/model_protocol.py",
+            "symbol": "_parse_tool_call",
+            "score": 0.7359634041786194,
+            "characters": 736
+          },
+          {
+            "path": "src/hewn/models.py",
+            "symbol": "Model.respond",
+            "score": 0.7162284851074219,
+            "characters": 112
+          }
+        ],
+        "context_characters": 1570,
+        "context_evidence_count": 3,
+        "context_unique_file_count": 3
+      },
+      "condition_order": [
+        "production_context",
+        "no_context"
+      ],
+      "conditions": {
+        "production_context": {
+          "context_characters": 1570,
+          "context_evidence_count": 3,
+          "context_unique_file_count": 3,
+          "response_seconds": 18.252842285997758,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        },
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 7.548328740998841,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        }
+      }
+    },
+    {
+      "task_id": "nav-009",
+      "category": "concept",
+      "task": "Find the code responsible for turning a local llama.cpp HTTP response into Hewn's internal model response.",
+      "expected_file": "src/hewn/llama_cpp.py",
+      "expected_symbol": "LlamaCppModel",
+      "retrieval": {
+        "route": "semantic",
+        "matched_symbol": null,
+        "covered_expected_file": true,
+        "selected_evidence": [
+          {
+            "path": "src/hewn/llama_cpp.py",
+            "symbol": "LlamaCppModel.respond",
+            "score": 0.806454062461853,
+            "characters": 496
+          },
+          {
+            "path": "src/hewn/model_protocol.py",
+            "symbol": "parse_model_response",
+            "score": 0.738562285900116,
+            "characters": 748
+          },
+          {
+            "path": "src/hewn/models.py",
+            "symbol": "FinalResponse",
+            "score": 0.7191426753997803,
+            "characters": 34
+          }
+        ],
+        "context_characters": 1278,
+        "context_evidence_count": 3,
+        "context_unique_file_count": 3
+      },
+      "condition_order": [
+        "no_context",
+        "production_context"
+      ],
+      "conditions": {
+        "no_context": {
+          "context_characters": 0,
+          "context_evidence_count": 0,
+          "context_unique_file_count": 0,
+          "response_seconds": 4.448927162000473,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        },
+        "production_context": {
+          "context_characters": 1278,
+          "context_evidence_count": 3,
+          "context_unique_file_count": 3,
+          "response_seconds": 20.294038760999683,
+          "error_type": "protocol",
+          "error": "ModelProtocolError: Model response is not valid JSON",
+          "final_response": false,
+          "expected_file_present": false,
+          "expected_symbol_present": false,
+          "correct": false,
+          "response_text": null,
+          "model_calls": null,
+          "tool_calls": null,
+          "successful_tool_calls": null,
+          "failed_tool_calls": null
+        }
+      }
+    }
+  ]
+}

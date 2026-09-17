@@ -3,10 +3,18 @@ from __future__ import annotations
 from dataclasses import dataclass
 from time import perf_counter
 
-from hewn.completion import CompletionPolicy, CompletionRequirement
+from hewn.completion import (
+    CompletionPolicy,
+    CompletionRequirement,
+)
+from hewn.context.models import ContextBundle
 from hewn.models import FinalResponse, Message, Model
 from hewn.telemetry import AgentEvent, AgentMetrics
-from hewn.tools import ToolCall, ToolExecutor, ToolRegistry
+from hewn.tools import (
+    ToolCall,
+    ToolExecutor,
+    ToolRegistry,
+)
 
 
 def _format_tool_observation(
@@ -21,13 +29,38 @@ def _format_tool_observation(
     parts = []
 
     if error:
-        parts.append(f"Error: {error}")
+        parts.append(
+            f"Error: {error}"
+        )
 
     if output:
         parts.append(output)
 
     return "\n".join(parts)
 
+
+def _build_initial_user_message(
+    *,
+    user_request: str,
+    context: ContextBundle | None,
+) -> str:
+    if (
+        context is None
+        or context.evidence_count == 0
+    ):
+        return user_request
+
+    formatted_context = (
+        context.format_for_model()
+    )
+
+    return (
+        f"{user_request}\n\n"
+        "Relevant repository evidence follows. "
+        "Use it as grounding, but verify with tools "
+        "when necessary.\n\n"
+        f"{formatted_context}"
+    )
 
 
 class AgentStagnationError(RuntimeError):
@@ -41,7 +74,6 @@ class AgentStagnationError(RuntimeError):
         self.metrics = metrics
 
 
-
 class AgentLimitError(RuntimeError):
     def __init__(
         self,
@@ -51,6 +83,7 @@ class AgentLimitError(RuntimeError):
     ) -> None:
         super().__init__(message)
         self.metrics = metrics
+
 
 @dataclass(frozen=True)
 class AgentRunResult:
@@ -70,18 +103,30 @@ class Agent:
         self,
         user_request: str,
         *,
-        completion_requirement: CompletionRequirement = CompletionRequirement.NONE,
+        completion_requirement: CompletionRequirement = (
+            CompletionRequirement.NONE
+        ),
+        context: ContextBundle | None = None,
     ) -> AgentRunResult:
         started_at = perf_counter()
+
         completion_policy = CompletionPolicy(
             requirement=completion_requirement,
         )
+
         consecutive_stagnant_turns = 0
+
+        initial_user_message = (
+            _build_initial_user_message(
+                user_request=user_request,
+                context=context,
+            )
+        )
 
         messages = [
             Message(
                 role="user",
-                content=user_request,
+                content=initial_user_message,
             )
         ]
 
@@ -103,9 +148,14 @@ class Agent:
                 )
             )
 
-            if isinstance(response, FinalResponse):
+            if isinstance(
+                response,
+                FinalResponse,
+            ):
                 if not completion_policy.can_finish():
-                    reason = completion_policy.rejection_reason()
+                    reason = (
+                        completion_policy.rejection_reason()
+                    )
 
                     metrics.events.append(
                         AgentEvent(
@@ -123,54 +173,75 @@ class Agent:
 
                     consecutive_stagnant_turns += 1
 
-                    if consecutive_stagnant_turns >= self.max_stagnant_turns:
+                    if (
+                        consecutive_stagnant_turns
+                        >= self.max_stagnant_turns
+                    ):
                         metrics.events.append(
                             AgentEvent(
                                 kind="stagnation_detected",
                                 detail=(
-                                    f"{consecutive_stagnant_turns} consecutive "
-                                    "non-progressing turns"
+                                    f"{consecutive_stagnant_turns} "
+                                    "consecutive non-progressing turns"
                                 ),
                             )
                         )
 
                         metrics.wall_time_seconds = (
-                            perf_counter() - started_at
+                            perf_counter()
+                            - started_at
                         )
 
                         raise AgentStagnationError(
                             (
                                 "Agent stagnated after "
-                                f"{consecutive_stagnant_turns} consecutive "
-                                "non-progressing turns"
+                                f"{consecutive_stagnant_turns} "
+                                "consecutive non-progressing turns"
                             ),
                             metrics=metrics,
                         )
 
                     continue
-                
-                metrics.wall_time_seconds = perf_counter() - started_at
+
+                metrics.wall_time_seconds = (
+                    perf_counter()
+                    - started_at
+                )
+
                 return AgentRunResult(
                     text=response.text,
                     metrics=metrics,
                 )
-            
-            if isinstance(response, ToolCall):
+
+            if isinstance(
+                response,
+                ToolCall,
+            ):
                 metrics.tool_calls += 1
 
-                result = self.executor.execute(response)
+                result = self.executor.execute(
+                    response
+                )
+
                 consecutive_stagnant_turns = 0
 
                 if response.name == "run_check":
-                    completion_policy.record_check(passed=result.ok)
+                    completion_policy.record_check(
+                        passed=result.ok
+                    )
 
-                if response.name == "replace_text" and result.ok:
+                if (
+                    response.name == "replace_text"
+                    and result.ok
+                ):
                     completion_policy.record_repository_change()
 
-                observation = _format_tool_observation(
-                    ok=result.ok,
-                    output=result.output,
-                    error=result.error,
+                observation = (
+                    _format_tool_observation(
+                        ok=result.ok,
+                        output=result.output,
+                        error=result.error,
+                    )
                 )
 
                 metrics.events.append(
@@ -209,9 +280,15 @@ class Agent:
                 f"{type(response).__name__}"
             )
 
-        metrics.wall_time_seconds = perf_counter() - started_at
+        metrics.wall_time_seconds = (
+            perf_counter()
+            - started_at
+        )
 
         raise AgentLimitError(
-            f"Agent exceeded maximum turns: {self.max_turns}",
+            (
+                "Agent exceeded maximum turns: "
+                f"{self.max_turns}"
+            ),
             metrics=metrics,
         )

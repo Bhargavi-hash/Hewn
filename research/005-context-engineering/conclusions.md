@@ -139,3 +139,89 @@ retrieval order.
 
 Repeated-trial evaluation on a larger and less self-referential task set
 is required before making stronger claims about diversity.
+
+## Final Module 5 conclusion
+
+Module 5 began with the question:
+
+> How should Hewn select, budget, order, and represent retrieved repository evidence so that a small coding model can reason effectively without wasting context?
+
+The experiments did not identify a single universally optimal context size or representation. Instead, they established several narrower design decisions.
+
+### Decisions retained
+
+For exact-symbol retrieval:
+
+- use the deterministic exact-symbol result;
+- keep the representation compact and structural;
+- do not expand source automatically;
+- do not add filler evidence.
+
+For semantic retrieval:
+
+- preserve semantic retrieval order;
+- select up to 3 unique files;
+- use bounded source with an 800-character per-symbol limit;
+- retrieve a larger candidate pool before file-level deduplication.
+
+Hewn does not currently use:
+
+- dependency-aware evidence reordering;
+- skip-to-fit character-budget packing;
+- whole-source expansion by default.
+
+### Evidence supporting those decisions
+
+Fixed-count experiments showed that additional evidence can recover relevant files, but adding context beyond that point can increase text substantially without increasing mechanical retrieval coverage.
+
+Character-budget experiments showed that a byte or character budget is not equivalent to a relevance policy: skip-to-fit packing can discard higher-ranked evidence while admitting smaller lower-ranked evidence.
+
+Representation experiments showed that source-aware evidence is substantially more expensive than structural evidence, but the local coding-model experiment also showed that richer source-aware context can change model behavior and was associated with better conceptual-task performance in that run.
+
+Bounded source matched whole-source aggregate success on the four-task source-granularity experiment while using substantially fewer characters, although the two representations succeeded on different tasks.
+
+Evidence-position experiments showed that ordering can affect model behavior even when evidence content and total size are held fixed.
+
+Dependency-aware ordering did not improve the four conceptual tasks and frequently produced protocol failures. Structural topology was therefore not adopted as a replacement for query-conditioned semantic ranking.
+
+The diversity experiment provided limited causal evidence but supported file-level deduplication as a conservative policy that prevents a small evidence budget from being dominated by multiple symbols from one file.
+
+### Production integration
+
+The final production policy was implemented through a separation of responsibilities:
+
+`retrieve_routed()` determines which repository evidence is relevant.
+
+`ContextBuilder` determines what representation of that evidence enters model context.
+
+`HewnSession` orchestrates retrieval, context construction, and the core `Agent`.
+
+The core `Agent` remains independent of semantic retrieval infrastructure and accepts an optional prepared `ContextBundle`.
+
+In the final nine-task integration run, production retrieval covered the expected file for all 9 tasks. End-to-end agent success was 1/9 without prepared context and 3/9 with production context.
+
+The difference occurred entirely on exact-symbol tasks:
+
+- no context: 1/5 exact, 0/4 conceptual;
+- production context: 3/5 exact, 0/4 conceptual.
+
+All four conceptual tasks had expected-file retrieval coverage under the production policy, but none produced a correct final answer.
+
+### What Module 5 established
+
+For this Hewn self-navigation benchmark, the repository-understanding, retrieval, and context pipeline can reliably place the mechanically expected file into the model's evidence set.
+
+That does not imply that the model can reliably reason over the evidence.
+
+The remaining conceptual failures demonstrate a boundary between evidence acquisition and downstream model behavior:
+
+repository understanding
+→ retrieval
+→ context construction
+→ model interpretation
+→ tool/action selection
+→ final response
+
+Modules 3–5 primarily improve the first three stages. The final integration run shows that failures can remain after those stages succeed.
+
+No broad accuracy, latency, or compute-efficiency claim is made from the single-run nine-task integration experiment. Repeated trials, unseen repositories, stronger statistical evaluation, and broader task distributions are deferred to Module 11.

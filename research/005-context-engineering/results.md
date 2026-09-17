@@ -687,3 +687,103 @@ improves model success.
 
 The experiment also reinforces the need for repeated trials in the later
 evaluation module.
+
+## Production integration evaluation
+
+After the isolated context experiments, the surviving Module 5 policies were integrated into the production path through `ContextPolicy`, `ContextBuilder`, and `HewnSession`.
+
+The production policy was frozen before the final integration evaluation:
+
+- exact-symbol retrieval keeps the single compact structural result;
+- semantic retrieval preserves semantic ranking;
+- semantic context selects the first 3 unique files;
+- semantic symbols use bounded source with an 800-character per-symbol limit;
+- dependency-aware reordering is not applied;
+- character-budget skip-to-fit packing is not applied;
+- semantic retrieval requests up to 12 candidates so file-level deduplication has room to select 3 distinct files.
+
+The 12-candidate retrieval limit is an engineering default, not an experimentally established optimum.
+
+### Evaluation design
+
+The final integration evaluation compared two conditions on the 9 existing Hewn self-navigation tasks:
+
+1. `no_context` — the normal agent receives only the task.
+2. `production_context` — the same agent receives context prepared by the production retrieval and context-building pipeline.
+
+Both conditions used:
+
+- Qwen2.5-Coder-1.5B-Instruct Q4_K_M;
+- temperature 0.0;
+- the normal builtin Hewn tool registry;
+- the same task set and mechanical file-and-symbol correctness criterion;
+- one run per task and condition.
+
+Condition execution order was alternated by task to avoid making treatment condition identical to execution order.
+
+This does not eliminate generation instability. Repeated-trial evaluation is deferred to Module 11.
+
+### Results
+
+Production retrieval covered the expected file for all 9 tasks:
+
+- exact-symbol routes: 5/5 expected files covered;
+- semantic routes: 4/4 expected files covered;
+- overall retrieval coverage: 9/9.
+
+End-to-end agent results were:
+
+| Metric | No context | Production context |
+| --- | ---: | ---: |
+| Correct | 1/9 | 3/9 |
+| Final responses | 3/9 | 6/9 |
+| Exact-symbol success | 1/5 | 3/5 |
+| Conceptual success | 0/4 | 0/4 |
+| Model errors | 2 | 0 |
+| Protocol errors | 4 | 3 |
+| Average context characters | 0.0 | 739.1 |
+| Average response time | 16.00 s | 11.55 s |
+
+For runs where agent metrics were available, the reported averages were:
+
+| Metric | No context | Production context |
+| --- | ---: | ---: |
+| Model calls | 1.67 | 1.17 |
+| Tool calls | 0.67 | 0.17 |
+
+These model-call and tool-call averages exclude runs where a model or protocol error occurred before complete agent metrics were returned, so they should not be interpreted as clean population-wide reductions.
+
+The no-context response-time mean was also strongly affected by a 92.62-second `nav-004` run. No latency improvement is claimed from this experiment.
+
+### Exact-symbol behavior
+
+Production context succeeded on `nav-001`, `nav-002`, and `nav-005` using only 56–61 characters of compact structural evidence and no tool calls.
+
+This supports retaining the exact-symbol policy of supplying one compact deterministic result without source expansion or filler.
+
+However, `nav-003` and `nav-004` still failed despite expected-file retrieval coverage. Correct compact evidence therefore did not guarantee correct use of that evidence by the coding model.
+
+### Conceptual behavior
+
+All four conceptual tasks had expected-file retrieval coverage, but none produced a correct end-to-end answer under the production-context condition.
+
+`nav-007` produced a valid but incorrect final response despite receiving context that covered the expected file.
+
+`nav-006`, `nav-008`, and `nav-009` failed at the model protocol boundary despite expected-file retrieval coverage.
+
+The final integration run therefore separates two failure classes:
+
+1. repository evidence acquisition; and
+2. downstream model interpretation, protocol adherence, and action selection.
+
+On this benchmark, the production retrieval/context pipeline succeeded at the first for all 9 tasks, while conceptual-task failures remained in the second.
+
+### Interpretation
+
+In this single nine-task Hewn self-navigation integration run, production context was associated with higher end-to-end success than no prepared context, from 1/9 to 3/9.
+
+The observed gain occurred entirely on exact-symbol tasks, which changed from 1/5 to 3/5. Conceptual tasks remained 0/4 despite 4/4 expected-file retrieval coverage.
+
+This experiment does not establish that context engineering generally improves coding-agent accuracy, nor that the observed aggregate difference is stable across repeated runs, repositories, models, or task distributions.
+
+The strongest conclusion is narrower: Hewn can now mechanically place the expected repository file into the model context for all tasks in this benchmark, but correct evidence is not sufficient for reliable reasoning by the current 1.5B local model.

@@ -37,3 +37,30 @@ class ContextBundle:
                 for item in self.evidence
             }
         )
+
+    def format_for_model(self) -> str:
+        sections: list[str] = []
+
+        for index, item in enumerate(
+            self.evidence,
+            start=1,
+        ):
+            document = (
+                item.retrieval_result.document
+            )
+
+            header = (
+                f"[Repository evidence {index}]\n"
+                f"path: {document.path}"
+            )
+
+            if document.symbol is not None:
+                header += (
+                    f"\nsymbol: {document.symbol}"
+                )
+
+            sections.append(
+                f"{header}\n\n{item.text}"
+            )
+
+        return "\n\n".join(sections)
