@@ -423,3 +423,267 @@ one query while hurting another.
 The next context-engineering question should therefore focus on which
 evidence is presented and how it is organized, rather than tuning the
 800-character threshold against this small benchmark.
+
+## Experiment 006 — Evidence position
+
+### Question
+
+Holding retrieved evidence, representation, and total context size fixed,
+does the position of relevant evidence affect a small coding model's
+behavior on conceptual repository questions?
+
+### Design
+
+The experiment used the four conceptual navigation tasks from
+Experiment 005:
+
+- nav-006
+- nav-007
+- nav-008
+- nav-009
+
+Retrieval was fixed to the Module 4 hybrid retriever with the top three
+unique files. Evidence representation was fixed to the 800-character
+bounded-source representation from Experiment 005.
+
+Three ordering conditions were compared:
+
+1. `retrieval_order` — preserve semantic retrieval order.
+2. `relevant_first` — move the benchmark-expected file to position 1.
+3. `relevant_last` — move the benchmark-expected file to the final
+   position.
+
+The latter two conditions use benchmark labels and are diagnostic only.
+They are not valid production ordering algorithms.
+
+Evidence content and total context size were unchanged across ordering
+conditions within each task.
+
+Total model calls: 12.
+
+### Results
+
+| Ordering | Success | Final responses | Protocol errors | Avg context chars | Avg response time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Retrieval order | 3/4 | 4/4 | 0 | 1747.2 | 7.20 s |
+| Relevant first | 3/4 | 3/4 | 1 | 1747.2 | 9.58 s |
+| Relevant last | 1/4 | 3/4 | 1 | 1747.2 | 14.08 s |
+
+Per-task outcomes:
+
+- nav-006: all three orderings succeeded.
+- nav-007: retrieval order and relevant-last returned incorrect final
+  answers; relevant-first produced a protocol error.
+- nav-008: relevant evidence at position 1 succeeded; moving it to
+  position 3 produced a protocol error.
+- nav-009: relevant evidence at position 1 succeeded; moving it to
+  position 3 produced an incorrect final answer.
+
+The average context size was identical across all three conditions.
+
+### Interpretation
+
+Evidence position affected model behavior in this four-task diagnostic
+even though evidence content and total context size were held constant.
+
+The strongest negative intervention was moving the benchmark-relevant
+file to the final position: aggregate success decreased from 3/4 under
+retrieval order to 1/4 under relevant-last.
+
+This does not establish a universal first-position advantage. Moving the
+expected file first did not improve aggregate success over retrieval
+order and did not solve nav-007.
+
+The label-aware relevant-first and relevant-last conditions must not be
+used as production policies. Their purpose is only to establish whether
+position can matter.
+
+The bounded-source retrieval-order condition also differed from its
+nominally equivalent condition in Experiment 005. Experiment 005
+produced 2/4 successes and two protocol errors, while Experiment 006
+produced 3/4 successes and no protocol errors. Therefore single-run
+results should not be treated as deterministic estimates of model
+quality, even at temperature 0.
+
+The experiment motivates studying a legitimate, label-free evidence
+ordering policy rather than assuming retrieval rank alone is the final
+context order.
+
+## Experiment 007 — Dependency-aware evidence ordering
+
+### Question
+
+Can deterministic repository dependency structure improve the ordering of
+already-selected evidence without using benchmark labels?
+
+### Design
+
+Experiment 006 established that evidence position can affect model
+behavior. Experiment 007 therefore tested two deployable, label-free
+ordering policies based on the internal file dependency graph created in
+Module 3.
+
+`FileDependency(source=A, target=B)` means that A imports or depends on B.
+
+The three conditions were:
+
+1. `retrieval_order` — preserve semantic retrieval order.
+2. `dependency_first` — prioritize selected files that other selected
+   files depend on.
+3. `dependent_first` — prioritize selected files that depend on other
+   selected files.
+
+Ties preserved original retrieval order.
+
+Only dependency relationships among the three selected files were used.
+
+The following remained fixed:
+
+- four conceptual tasks: nav-006 through nav-009
+- Module 4 hybrid retrieval
+- top 3 unique files
+- 800-character bounded-source representation
+- Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- temperature 0
+- no tools
+- prompt and scoring
+- evidence content and total context size
+
+Total model calls: 12.
+
+### Treatment exposure
+
+The selected evidence contained dependency relationships for every task:
+
+- nav-006: 1 selected dependency
+- nav-007: 1 selected dependency
+- nav-008: 3 selected dependencies
+- nav-009: 3 selected dependencies
+
+`dependency_first` changed the evidence order on 4/4 tasks.
+
+`dependent_first` changed the evidence order on 3/4 tasks.
+
+The experiment therefore had substantial treatment exposure.
+
+### Results
+
+| Ordering | Success | Final responses | Protocol errors | Order changes | Avg context chars | Avg response time |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Retrieval order | 3/4 | 4/4 | 0 | 0/4 | 1747.2 | 7.05 s |
+| Dependency first | 0/4 | 0/4 | 4 | 4/4 | 1747.2 | 14.85 s |
+| Dependent first | 2/4 | 2/4 | 2 | 3/4 | 1747.2 | 11.20 s |
+
+Dependency-first changed all four contexts and produced protocol failures
+on all four tasks.
+
+Dependent-first changed three contexts. Among those three changed cases,
+one succeeded and two produced protocol failures. Its fourth success,
+nav-009, occurred without changing retrieval order.
+
+### Interpretation
+
+The result does not support replacing semantic retrieval order with
+either tested dependency-based ordering policy.
+
+In this four-task run, dependency-first consistently changed context
+ordering but produced no valid final responses. Dependent-first also did
+not improve over retrieval order.
+
+This does not imply that repository dependencies are harmful or useless.
+The dependency graph represents architectural relationships, while
+semantic retrieval rank represents query-relative relevance. Those are
+different signals.
+
+The experiment suggests that blindly replacing query-relative ranking
+with repository-topology ordering can remove useful information encoded
+in the retrieval ranking.
+
+The current evidence therefore supports retaining semantic retrieval
+order as Hewn's default context order while using dependency structure
+for other repository-intelligence purposes unless future experiments
+show a better query-aware combination.
+
+## Experiment 008 — Evidence diversity
+
+### Question
+
+When selecting three semantic retrieval results, does forcing file-level
+diversity improve small-model reasoning compared with taking the raw
+top-three symbol results?
+
+### Design
+
+Two selection policies were compared:
+
+1. `raw_top3` — take the first three retrieved symbol documents,
+   allowing multiple symbols from the same file.
+2. `unique_file_top3` — preserve retrieval order while selecting at most
+   one symbol from each file.
+
+The following remained fixed:
+
+- conceptual tasks nav-006 through nav-009
+- Module 4 hybrid retrieval
+- evidence limit of three
+- semantic retrieval order
+- 800-character bounded-source representation
+- Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- temperature 0
+- no tools
+- prompt and scoring
+
+Total model calls: 8.
+
+### Treatment exposure
+
+The two policies selected different evidence on 2/4 tasks:
+
+- nav-006: raw Top-3 contained evidence from one file; unique-file Top-3
+  contained evidence from three files.
+- nav-009: raw Top-3 contained evidence from one file; unique-file Top-3
+  contained evidence from three files.
+
+The selections were identical on nav-007 and nav-008.
+
+Therefore, causal interpretation of the diversity intervention should
+focus on nav-006 and nav-009.
+
+### Results
+
+| Policy | Success | Final responses | Protocol errors | Avg unique files | Avg context chars | Avg response time |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Raw Top-3 | 1/4 | 2/4 | 2 | 2.00 | 1584.2 | 9.85 s |
+| Unique-file Top-3 | 3/4 | 4/4 | 0 | 3.00 | 1747.2 | 9.62 s |
+
+Task-level results:
+
+- nav-006: selection changed; both policies succeeded.
+- nav-007: selection did not change; both policies failed.
+- nav-008: selection did not change; raw Top-3 produced a protocol error
+  while unique-file Top-3 succeeded.
+- nav-009: selection changed; raw Top-3 produced a protocol error while
+  unique-file Top-3 succeeded.
+
+### Interpretation
+
+The aggregate 1/4 versus 3/4 difference must not be attributed entirely
+to file diversity.
+
+On nav-008, the two policies supplied identical selected evidence and
+identical context size, yet produced different model outcomes. This is
+additional evidence of run-to-run variation in the current small-model
+evaluation setup.
+
+Among the two tasks where selection actually changed, unique-file
+selection did not hurt either task: nav-006 succeeded under both
+conditions, while nav-009 succeeded only under unique-file selection.
+
+This provides limited positive evidence for retaining file-level
+deduplication as a default selection policy, particularly because it
+prevents the context from being dominated by several retrieved symbols
+from one file. It does not establish that file diversity generally
+improves model success.
+
+The experiment also reinforces the need for repeated trials in the later
+evaluation module.
