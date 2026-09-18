@@ -26,7 +26,7 @@ CONDITION = "failure_signal"
 
 RESULTS_PATH = (
     RESULTS_DIR
-    / "failure-signal-run-001.json"
+    / "failure-signal-run-002.json"
 )
 
 CODING_MODEL = "Qwen2.5-Coder-1.5B-Instruct Q4_K_M"
