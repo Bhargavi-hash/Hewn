@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "task_count": 8,
+  "tasks": [
+    {
+      "task_id": "plan-001",
+      "category": "same_file_multi_operation",
+      "task": "Extend the retry policy so callers can determine whether another attempt is allowed and how long to wait before that attempt. Invalid attempt numbers must be rejected.",
+      "files": {
+        "src/retry.py": "from __future__ import annotations\n\nMAX_ATTEMPTS = 3\nBASE_DELAY_SECONDS = 2\n\n\ndef can_retry(attempt: int) -> bool:\n    return attempt < MAX_ATTEMPTS\n\n\ndef retry_delay(attempt: int) -> int:\n    return BASE_DELAY_SECONDS * attempt\n"
+      },
+      "required_files": [
+        "src/retry.py"
+      ],
+      "required_symbols": [
+        "can_retry",
+        "retry_delay"
+      ],
+      "required_operations": [
+        "validate_attempt",
+        "preserve_retry_limit",
+        "compute_exponential_backoff"
+      ],
+      "required_verification": [
+        "tests/test_retry.py"
+      ]
+    },
+    {
+      "task_id": "plan-002",
+      "category": "same_file_multi_operation",
+      "task": "Update user display formatting so inactive users are marked as inactive and administrators receive an admin suffix. Both rules must compose when both are true.",
+      "files": {
+        "src/users.py": "from __future__ import annotations\n\n\ndef display_name(name: str, *, active: bool, admin: bool) -> str:\n    return name\n"
+      },
+      "required_files": [
+        "src/users.py"
+      ],
+      "required_symbols": [
+        "display_name"
+      ],
+      "required_operations": [
+        "mark_inactive_users",
+        "mark_admin_users",
+        "compose_status_markers"
+      ],
+      "required_verification": [
+        "tests/test_users.py"
+      ]
+    },
+    {
+      "task_id": "plan-003",
+      "category": "cross_file_dependency",
+      "task": "Rename the request timeout setting to NETWORK_TIMEOUT everywhere it is part of the runtime timeout behavior. Preserve the configured timeout value and keep the client behavior working.",
+      "files": {
+        "src/config.py": "NETWORK_RETRIES = 3\nREQUEST_TIMEOUT = 10\n",
+        "src/client.py": "from config import REQUEST_TIMEOUT\n\n\ndef timeout_seconds() -> int:\n    return REQUEST_TIMEOUT\n"
+      },
+      "required_files": [
+        "src/config.py",
+        "src/client.py"
+      ],
+      "required_symbols": [
+        "REQUEST_TIMEOUT",
+        "timeout_seconds"
+      ],
+      "required_operations": [
+        "rename_timeout_definition",
+        "update_timeout_import",
+        "update_timeout_reference"
+      ],
+      "required_verification": [
+        "tests/test_config.py",
+        "tests/test_client.py"
+      ]
+    },
+    {
+      "task_id": "plan-004",
+      "category": "cross_file_dependency",
+      "task": "Add a suspended account state. Suspended accounts must not be authorized, and the public account-status formatter must report them as suspended.",
+      "files": {
+        "src/models.py": "from dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Account:\n    active: bool\n",
+        "src/auth.py": "from models import Account\n\n\ndef can_access(account: Account) -> bool:\n    return account.active\n",
+        "src/presentation.py": "from models import Account\n\n\ndef account_status(account: Account) -> str:\n    return \"active\" if account.active else \"inactive\"\n"
+      },
+      "required_files": [
+        "src/models.py",
+        "src/auth.py",
+        "src/presentation.py"
+      ],
+      "required_symbols": [
+        "Account",
+        "can_access",
+        "account_status"
+      ],
+      "required_operations": [
+        "represent_suspended_state",
+        "deny_suspended_access",
+        "format_suspended_status"
+      ],
+      "required_verification": [
+        "tests/test_models.py",
+        "tests/test_auth.py",
+        "tests/test_presentation.py"
+      ]
+    },
+    {
+      "task_id": "plan-005",
+      "category": "behavior_verification",
+      "task": "Change the default cache TTL from 60 seconds to 120 seconds while preserving explicit caller-provided TTL values. Update the verification surface that owns the default behavior.",
+      "files": {
+        "src/cache.py": "DEFAULT_TTL = 60\n\n\ndef cache_ttl(ttl: int | None = None) -> int:\n    if ttl is None:\n        return DEFAULT_TTL\n    return ttl\n",
+        "tests/test_cache.py": "from cache import cache_ttl\n\n\ndef test_default_ttl() -> None:\n    assert cache_ttl() == 60\n\n\ndef test_explicit_ttl() -> None:\n    assert cache_ttl(15) == 15\n"
+      },
+      "required_files": [
+        "src/cache.py",
+        "tests/test_cache.py"
+      ],
+      "required_symbols": [
+        "DEFAULT_TTL",
+        "test_default_ttl"
+      ],
+      "required_operations": [
+        "change_default_ttl",
+        "preserve_explicit_ttl",
+        "update_default_behavior_test"
+      ],
+      "required_verification": [
+        "tests/test_cache.py"
+      ]
+    },
+    {
+      "task_id": "plan-006",
+      "category": "behavior_verification",
+      "task": "Allow the parser to accept .yaml configuration files in addition to .json files. Unsupported extensions must still be rejected, and the existing JSON behavior must remain covered.",
+      "files": {
+        "src/parser.py": "from pathlib import Path\n\n\ndef parse_config(path: Path) -> str:\n    if path.suffix != \".json\":\n        raise ValueError(\"unsupported config format\")\n    return path.read_text()\n",
+        "tests/test_parser.py": "from pathlib import Path\n\nimport pytest\n\nfrom parser import parse_config\n\n\ndef test_json_supported(tmp_path: Path) -> None:\n    path = tmp_path / \"config.json\"\n    path.write_text(\"{}\")\n    assert parse_config(path) == \"{}\"\n\n\ndef test_other_format_rejected(tmp_path: Path) -> None:\n    path = tmp_path / \"config.toml\"\n    path.write_text(\"\")\n    with pytest.raises(ValueError):\n        parse_config(path)\n"
+      },
+      "required_files": [
+        "src/parser.py",
+        "tests/test_parser.py"
+      ],
+      "required_symbols": [
+        "parse_config",
+        "test_json_supported",
+        "test_other_format_rejected"
+      ],
+      "required_operations": [
+        "accept_yaml_extension",
+        "preserve_json_support",
+        "preserve_unsupported_rejection",
+        "add_yaml_verification"
+      ],
+      "required_verification": [
+        "tests/test_parser.py"
+      ]
+    },
+    {
+      "task_id": "plan-007",
+      "category": "dependency_reasoning",
+      "task": "Change normalized document identifiers so they use repository-relative POSIX paths instead of platform-specific path strings. Update every downstream formatter that exposes the identifier.",
+      "files": {
+        "src/documents.py": "from pathlib import Path\n\n\ndef document_id(path: Path) -> str:\n    return str(path)\n",
+        "src/search.py": "from pathlib import Path\n\nfrom documents import document_id\n\n\ndef search_label(path: Path, score: float) -> str:\n    return f\"{document_id(path)}:{score:.2f}\"\n",
+        "src/report.py": "from pathlib import Path\n\nfrom search import search_label\n\n\ndef report_line(path: Path, score: float) -> str:\n    return f\"result={search_label(path, score)}\"\n"
+      },
+      "required_files": [
+        "src/documents.py",
+        "src/search.py",
+        "src/report.py"
+      ],
+      "required_symbols": [
+        "document_id",
+        "search_label",
+        "report_line"
+      ],
+      "required_operations": [
+        "normalize_document_id",
+        "preserve_search_format",
+        "preserve_report_format"
+      ],
+      "required_verification": [
+        "tests/test_documents.py",
+        "tests/test_search.py",
+        "tests/test_report.py"
+      ]
+    },
+    {
+      "task_id": "plan-008",
+      "category": "dependency_reasoning",
+      "task": "Add a verbose execution mode that is configured at session construction, propagated through the agent, and included when command execution is requested. Existing non-verbose sessions must behave unchanged.",
+      "files": {
+        "src/session.py": "from agent import Agent\n\n\nclass Session:\n    def __init__(self, agent: Agent) -> None:\n        self.agent = agent\n\n    def execute(self, command: str) -> str:\n        return self.agent.execute(command)\n",
+        "src/agent.py": "from tools import run_command\n\n\nclass Agent:\n    def execute(self, command: str) -> str:\n        return run_command(command)\n",
+        "src/tools.py": "def run_command(command: str) -> str:\n    return f\"run:{command}\"\n"
+      },
+      "required_files": [
+        "src/session.py",
+        "src/agent.py",
+        "src/tools.py"
+      ],
+      "required_symbols": [
+        "Session",
+        "Agent",
+        "run_command"
+      ],
+      "required_operations": [
+        "configure_verbose_mode",
+        "propagate_verbose_mode",
+        "use_verbose_mode_during_execution",
+        "preserve_default_behavior"
+      ],
+      "required_verification": [
+        "tests/test_session.py",
+        "tests/test_agent.py",
+        "tests/test_tools.py"
+      ]
+    }
+  ]
+}
