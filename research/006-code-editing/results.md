@@ -465,3 +465,110 @@ retain atomic edit batches as a candidate higher-level representation.
 Run one final Module 6 experiment testing whether deterministic
 preflight errors can repair an invalid batch without introducing an
 open-ended conversational editing loop.
+
+## Experiment 005 — Deterministic preflight with one repair opportunity
+
+### Question
+
+Can deterministic preflight feedback help the small coding model repair an
+otherwise unappliable atomic edit batch without introducing an open-ended
+conversational editing loop?
+
+### Configuration
+
+- Model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- Temperature: 0
+- Maximum output tokens: 512
+- Same six frozen editing fixtures
+- One initial batch proposal per task
+- Maximum six exact replacements per batch
+- Relevant source supplied
+- Atomic application
+- Deterministic preflight before mutation
+- Explicit rejection of no-op replacements
+- Exactly one repair opportunity for invalid batches
+- Valid batches receive no repair opportunity
+- No compiler, test, or linter feedback to the model
+- Independent evaluator-side behavioral verification
+- One run per task
+
+This experiment changes both the validation policy and the availability of
+one repair call relative to Experiment 004. It should therefore be treated
+as an evaluation of a candidate validation-and-repair design rather than a
+strict single-variable causal comparison.
+
+### Results
+
+| Metric | Result |
+|---|---:|
+| Behavioral success | 2/6 |
+| Initially valid batches | 4/6 |
+| Repair attempts | 2/6 |
+| Invalid batches repaired to valid | 0/2 |
+| Committed batches | 4/6 |
+
+Behaviorally correct tasks were edit-001 and edit-003.
+
+### Invalid-batch repair behavior
+
+#### edit-002 — ambiguous target
+
+The initial batch failed deterministic preflight because an exact target
+occurred more than once.
+
+The model received the exact validation failure and one opportunity to
+produce a complete replacement batch.
+
+The repaired batch remained ambiguous and was rejected. No repository
+changes were committed.
+
+In this run, precise ambiguity feedback was insufficient for the model to
+recover the target.
+
+#### edit-006 — no-op proposal
+
+The initial batch contained a replacement whose `old` and `new` text were
+identical.
+
+The stricter preflight validator rejected this as a no-op before mutation.
+
+The model received the explicit no-op validation error and one repair
+opportunity, but the repaired batch again contained a no-op and remained
+invalid.
+
+The validator therefore prevented a meaningless edit, but the repair
+feedback did not produce a valid proposal in this run.
+
+### Interpretation
+
+Deterministic preflight improved the safety boundary by rejecting ambiguous
+and no-op transformations before repository mutation.
+
+However, neither of the two invalid initial batches was repaired to a valid
+batch after one precise validation-feedback turn.
+
+This six-task diagnostic therefore provides evidence for deterministic
+preflight as a safety mechanism, but not for the claim that one preflight
+repair turn reliably improves this model's editing ability.
+
+Combined with the sequential-control behavior observed in Experiment 003,
+the result does not justify adding a larger conversational editing loop
+inside Module 6.
+
+### Decision
+
+Close the Module 6 editing-representation experiments.
+
+Retain exact replacement as the underlying deterministic mutation
+operation.
+
+Promote atomic composition of exact replacements as the candidate
+higher-level editing representation.
+
+Retain deterministic preflight validation, including explicit rejection of
+ambiguous, missing, and no-op replacements.
+
+Do not introduce a general patch primitive based on the current evidence.
+
+Do not add further model-visible execution feedback in Module 6. Compiler,
+test, and linter feedback belong to Module 7.
