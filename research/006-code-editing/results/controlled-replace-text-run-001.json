@@ -1,0 +1,282 @@
+{
+  "experiment": "module_6_controlled_replace_text",
+  "configuration": {
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "temperature": 0.0,
+    "max_tokens": 256,
+    "permitted_actions": [
+      "replace_text"
+    ],
+    "final_response_permitted": false,
+    "source_supplied": true,
+    "verification": "evaluator_side",
+    "task_count": 6,
+    "runs_per_task": 1,
+    "repeated_trials": false
+  },
+  "summary": {
+    "behavior_successes": 2,
+    "protocol_successes": 6,
+    "tasks_with_edit_attempt": 6,
+    "tasks_with_applied_edit": 5,
+    "outcomes": {
+      "success": 2,
+      "application_failure": 1,
+      "verification_failure": 3
+    },
+    "total_seconds": 43.441256469999644
+  },
+  "records": [
+    {
+      "task_id": "edit-001",
+      "category": "unique_expression",
+      "task": "Fix add so it returns the sum of its two arguments.",
+      "source_files": [
+        "calculator.py"
+      ],
+      "test_file": "test_calculator.py",
+      "outcome": "success",
+      "behavior_correct": true,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"calculator.py\",\"old\":\"return a - b\",\"new\":\"return a + b\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "calculator.py",
+        "old": "return a - b",
+        "new": "return a + b"
+      },
+      "application_attempted": true,
+      "application_succeeded": true,
+      "application_output": "Updated calculator.py",
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+        "stderr": "",
+        "seconds": 0.2708517520004534
+      },
+      "files_modified": [
+        "calculator.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,2 +1,2 @@\n def add(a: int, b: int) -> int:\n-    return a - b\n+    return a + b\n",
+      "model_and_application_seconds": 6.89389149300041
+    },
+    {
+      "task_id": "edit-002",
+      "category": "repeated_expression",
+      "task": "user_status(True) should return \"active\". Preserve the other status behavior.",
+      "source_files": [
+        "status.py"
+      ],
+      "test_file": "test_status.py",
+      "outcome": "success",
+      "behavior_correct": true,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"status.py\",\"old\":\"if active:\\n        return \\\"pending\\\"\\n\\n    return \\\"pending\\\"\",\"new\":\"if active:\\n        return \\\"active\\\"\\n\\n    return \\\"pending\\\"\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "status.py",
+        "old": "if active:\n        return \"pending\"\n\n    return \"pending\"",
+        "new": "if active:\n        return \"active\"\n\n    return \"pending\""
+      },
+      "application_attempted": true,
+      "application_succeeded": true,
+      "application_output": "Updated status.py",
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+        "stderr": "",
+        "seconds": 0.48191623100137804
+      },
+      "files_modified": [
+        "status.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/status.py\n+++ b/status.py\n@@ -1,6 +1,6 @@\n def user_status(active: bool) -> str:\n     if active:\n-        return \"pending\"\n+        return \"active\"\n \n     return \"pending\"\n \n",
+      "model_and_application_seconds": 7.330311625999457
+    },
+    {
+      "task_id": "edit-003",
+      "category": "insertion",
+      "task": "Reject discounts below 0 or above 1 by raising ValueError. Preserve valid discount behavior.",
+      "source_files": [
+        "pricing.py"
+      ],
+      "test_file": "test_pricing.py",
+      "outcome": "application_failure",
+      "behavior_correct": false,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"pricing.py\",\"old\":\"if discount < 0 or discount > 1:\", \"new\":\"if discount < 0 or discount > 1: raise ValueError(\\\"Discount must be between 0 and 1 inclusive\\\")\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "pricing.py",
+        "old": "if discount < 0 or discount > 1:",
+        "new": "if discount < 0 or discount > 1: raise ValueError(\"Discount must be between 0 and 1 inclusive\")"
+      },
+      "application_attempted": true,
+      "application_succeeded": false,
+      "application_output": null,
+      "application_error": "Text to replace was not found",
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".FF                                                                      [100%]\n=================================== FAILURES ===================================\n_________________________ test_invalid_discount[-0.1] __________________________\n\ndiscount = -0.1\n\n    @pytest.mark.parametrize(\"discount\", [-0.1, 1.1])\n    def test_invalid_discount(discount: float) -> None:\n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\ntest_pricing.py:12: Failed\n__________________________ test_invalid_discount[1.1] __________________________\n\ndiscount = 1.1\n\n    @pytest.mark.parametrize(\"discount\", [-0.1, 1.1])\n    def test_invalid_discount(discount: float) -> None:\n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\ntest_pricing.py:12: Failed\n=========================== short test summary info ============================\nFAILED test_pricing.py::test_invalid_discount[-0.1] - Failed: DID NOT RAISE V...\nFAILED test_pricing.py::test_invalid_discount[1.1] - Failed: DID NOT RAISE Va...\n2 failed, 1 passed in 0.19s\n",
+        "stderr": "",
+        "seconds": 0.6799289289992885
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_and_application_seconds": 7.613953525000397
+    },
+    {
+      "task_id": "edit-004",
+      "category": "conditional",
+      "task": "Authenticated administrators should also be allowed to edit. Unauthenticated users must remain denied.",
+      "source_files": [
+        "access.py"
+      ],
+      "test_file": "test_access.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"access.py\",\"old\":\"authenticated and owner\",\"new\":\"authenticated or admin\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "access.py",
+        "old": "authenticated and owner",
+        "new": "authenticated or admin"
+      },
+      "application_attempted": true,
+      "application_succeeded": true,
+      "application_output": "Updated access.py",
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "..FF                                                                     [100%]\n=================================== FAILURES ===================================\n____________________ test_unauthenticated_admin_cannot_edit ____________________\n\n    def test_unauthenticated_admin_cannot_edit() -> None:\n>       assert not can_edit(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\nE       assert not True\nE        +  where True = can_edit(authenticated=False, owner=False, admin=True)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-004/test_access.py:21: AssertionError\n________________________ test_regular_user_cannot_edit _________________________\n\n    def test_regular_user_cannot_edit() -> None:\n>       assert not can_edit(\n            authenticated=True,\n            owner=False,\n            admin=False,\n        )\nE       assert not True\nE        +  where True = can_edit(authenticated=True, owner=False, admin=False)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-004/test_access.py:29: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_unauthenticated_admin_cannot_edit - assert not True\nFAILED test_access.py::test_regular_user_cannot_edit - assert not True\n2 failed, 2 passed in 0.04s\n",
+        "stderr": "",
+        "seconds": 0.4866515080029785
+      },
+      "files_modified": [
+        "access.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/access.py\n+++ b/access.py\n@@ -1,5 +1,5 @@\n def can_edit(*, authenticated: bool, owner: bool, admin: bool) -> bool:\n-    if authenticated and owner:\n+    if authenticated or admin:\n         return True\n \n     return False\n",
+      "model_and_application_seconds": 4.6867158230015775
+    },
+    {
+      "task_id": "edit-005",
+      "category": "multiple_same_file",
+      "task": "Change the supported retry range to 2 through 5. Values below the range should normalize to 2 and values above it should normalize to 5.",
+      "source_files": [
+        "limits.py"
+      ],
+      "test_file": "test_limits.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"limits.py\",\"old\":\"if value < MIN_RETRIES:\\n        return 0\\n\\n    if value > MAX_RETRIES:\\n        return 3\\n\\n    return value\",\"new\":\"if value < 2:\\n        return 2\\n\\n    if value > 5:\\n        return 5\\n\\n    return value\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "limits.py",
+        "old": "if value < MIN_RETRIES:\n        return 0\n\n    if value > MAX_RETRIES:\n        return 3\n\n    return value",
+        "new": "if value < 2:\n        return 2\n\n    if value > 5:\n        return 5\n\n    return value"
+      },
+      "application_attempted": true,
+      "application_succeeded": true,
+      "application_output": "Updated limits.py",
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n_____________________________ test_retry_constants _____________________________\n\n    def test_retry_constants() -> None:\n>       assert MIN_RETRIES == 2\nE       assert 1 == 2\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-005/test_limits.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_constants - assert 1 == 2\n1 failed, 1 passed in 0.03s\n",
+        "stderr": "",
+        "seconds": 0.49196880100134877
+      },
+      "files_modified": [
+        "limits.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 4,
+      "lines_deleted": 4,
+      "diff": "--- a/limits.py\n+++ b/limits.py\n@@ -3,10 +3,10 @@\n \n \n def normalize_retries(value: int) -> int:\n-    if value < MIN_RETRIES:\n-        return 0\n+    if value < 2:\n+        return 2\n \n-    if value > MAX_RETRIES:\n-        return 3\n+    if value > 5:\n+        return 5\n \n     return value\n",
+      "model_and_application_seconds": 9.279163737002818
+    },
+    {
+      "task_id": "edit-006",
+      "category": "multiple_files",
+      "task": "Rename the timeout constant to REQUEST_TIMEOUT while preserving the value and behavior.",
+      "source_files": [
+        "config.py",
+        "client.py"
+      ],
+      "test_file": "test_client.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "raw_model_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"config.py\",\"old\":\"DEFAULT_TIMEOUT\",\"new\":\"REQUEST_TIMEOUT\"}}",
+      "protocol_error": null,
+      "model_error": null,
+      "parsed_tool_name": "replace_text",
+      "parsed_arguments": {
+        "path": "config.py",
+        "old": "DEFAULT_TIMEOUT",
+        "new": "REQUEST_TIMEOUT"
+      },
+      "application_attempted": true,
+      "application_succeeded": true,
+      "application_output": "Updated config.py",
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 2,
+        "stdout": "\n==================================== ERRORS ====================================\n_______________________ ERROR collecting test_client.py ________________________\nImportError while importing test module '/tmp/hewn-controlled-edit-006-u8b3xpm5/edit-006/test_client.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntest_client.py:3: in <module>\n    from client import request_timeout\nclient.py:1: in <module>\n    from config import DEFAULT_TIMEOUT\nE   ImportError: cannot import name 'DEFAULT_TIMEOUT' from 'config' (/tmp/hewn-controlled-edit-006-u8b3xpm5/edit-006/config.py). Did you mean: 'REQUEST_TIMEOUT'?\n=========================== short test summary info ============================\nERROR test_client.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.23s\n",
+        "stderr": "",
+        "seconds": 0.6525617879997299
+      },
+      "files_modified": [
+        "config.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/config.py\n+++ b/config.py\n@@ -1 +1 @@\n-DEFAULT_TIMEOUT = 10\n+REQUEST_TIMEOUT = 10\n",
+      "model_and_application_seconds": 4.34178679300021
+    }
+  ]
+}
