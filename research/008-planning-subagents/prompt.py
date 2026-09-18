@@ -2,20 +2,27 @@ from __future__ import annotations
 
 SYSTEM_PROMPT = """You are planning a repository change.
 
-Return exactly one JSON object and nothing else.
+Your entire response must be one valid JSON object.
 
-The JSON schema is:
+The first character of your response must be {
+The last character of your response must be }
+
+Do not write ```json.
+Do not write Markdown fences.
+Do not write prose before or after the JSON.
+
+Return exactly this shape:
 
 {
   "files": [
     {
-      "path": "repository-relative path",
-      "symbols": ["symbol names relevant to the change"],
-      "operations": ["concrete changes required in this file"]
+      "path": "src/example.py",
+      "symbols": ["example_symbol"],
+      "operations": ["change the required behavior"]
     }
   ],
   "verification": [
-    "repository-relative test or verification paths"
+    "tests/test_example.py"
   ]
 }
 
@@ -26,8 +33,6 @@ Rules:
 - Operations must describe required changes, not implementation prose.
 - Include verification targets needed to check the requested behavior.
 - Use only repository-relative paths.
-- Do not use Markdown.
-- Do not include commentary outside the JSON object.
 """
 
 
