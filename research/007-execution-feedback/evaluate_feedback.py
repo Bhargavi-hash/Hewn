@@ -13,6 +13,8 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from normalize_pytest import normalize_pytest_output
+
 from hewn.workspace import Workspace
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -22,11 +24,11 @@ TASKS_PATH = MODULE_ROOT / "tasks.json"
 FIXTURES_ROOT = MODULE_ROOT / "fixtures"
 RESULTS_DIR = MODULE_ROOT / "results"
 
-CONDITION = "raw_output"
+CONDITION = "normalized_output"
 
 RESULTS_PATH = (
     RESULTS_DIR
-    / "raw-output-run-001.json"
+    / "normalized-output-run-001.json"
 )
 
 CODING_MODEL = "Qwen2.5-Coder-1.5B-Instruct Q4_K_M"
@@ -66,7 +68,9 @@ def load_tasks() -> list[dict[str, Any]]:
     )
 
     if not isinstance(data, list):
-        raise TypeError("Execution-feedback tasks must be a list")
+        raise TypeError(
+            "Execution-feedback tasks must be a list"
+        )
 
     return data
 
@@ -90,7 +94,9 @@ def snapshot_files(root: Path) -> dict[str, str]:
             continue
 
         try:
-            contents = path.read_text(encoding="utf-8")
+            contents = path.read_text(
+                encoding="utf-8"
+            )
         except UnicodeDecodeError:
             continue
 
@@ -122,8 +128,12 @@ def build_diff(
 
         sections.extend(
             difflib.unified_diff(
-                before_text.splitlines(keepends=True),
-                after_text.splitlines(keepends=True),
+                before_text.splitlines(
+                    keepends=True
+                ),
+                after_text.splitlines(
+                    keepends=True
+                ),
                 fromfile=f"a/{path}",
                 tofile=f"b/{path}",
             )
@@ -167,7 +177,9 @@ def current_sources(
         path = workspace_root / relative_path
 
         if path.exists():
-            contents = path.read_text(encoding="utf-8")
+            contents = path.read_text(
+                encoding="utf-8"
+            )
         else:
             contents = "<missing file>"
 
@@ -240,7 +252,7 @@ def build_user_prompt(
             "Verification result:",
             "FAILED",
             "",
-            "Raw execution output:",
+            "Normalized execution evidence:",
             feedback_text,
             "",
             "Relevant source:",
@@ -255,7 +267,11 @@ def build_user_prompt(
 def extract_content(body: str) -> str:
     try:
         payload: Any = json.loads(body)
-        content = payload["choices"][0]["message"]["content"]
+        content = (
+            payload["choices"][0]["message"][
+                "content"
+            ]
+        )
     except (
         json.JSONDecodeError,
         KeyError,
@@ -263,12 +279,14 @@ def extract_content(body: str) -> str:
         TypeError,
     ) as exc:
         raise RuntimeError(
-            "llama.cpp returned an invalid chat response"
+            "llama.cpp returned an invalid "
+            "chat response"
         ) from exc
 
     if not isinstance(content, str):
         raise TypeError(
-            "llama.cpp returned non-text assistant content"
+            "llama.cpp returned non-text "
+            "assistant content"
         )
 
     return content
@@ -287,7 +305,9 @@ def call_llama(
 
     request = Request(
         f"{BASE_URL}/v1/chat/completions",
-        data=json.dumps(payload).encode("utf-8"),
+        data=json.dumps(payload).encode(
+            "utf-8"
+        ),
         headers={
             "Content-Type": "application/json",
         },
@@ -299,14 +319,17 @@ def call_llama(
             request,
             timeout=TIMEOUT_SECONDS,
         ) as response:
-            body = response.read().decode("utf-8")
+            body = response.read().decode(
+                "utf-8"
+            )
     except HTTPError as exc:
         raise RuntimeError(
             f"llama.cpp returned HTTP {exc.code}"
         ) from exc
     except URLError as exc:
         raise RuntimeError(
-            f"Could not reach llama.cpp: {exc.reason}"
+            "Could not reach llama.cpp: "
+            f"{exc.reason}"
         ) from exc
 
     return extract_content(body)
@@ -321,7 +344,9 @@ def parse_batch_proposal(
         return BatchProposal(
             raw_response=raw_response,
             edits=(),
-            protocol_error="Model response is not valid JSON",
+            protocol_error=(
+                "Model response is not valid JSON"
+            ),
         )
 
     if not isinstance(payload, dict):
@@ -329,7 +354,8 @@ def parse_batch_proposal(
             raw_response=raw_response,
             edits=(),
             protocol_error=(
-                "Model response must be a JSON object"
+                "Model response must be a "
+                "JSON object"
             ),
         )
 
@@ -338,7 +364,8 @@ def parse_batch_proposal(
             raw_response=raw_response,
             edits=(),
             protocol_error=(
-                "Batch response has unexpected fields"
+                "Batch response has unexpected "
+                "fields"
             ),
         )
 
@@ -357,7 +384,9 @@ def parse_batch_proposal(
         return BatchProposal(
             raw_response=raw_response,
             edits=(),
-            protocol_error="edits must be an array",
+            protocol_error=(
+                "edits must be an array"
+            ),
         )
 
     if not 1 <= len(raw_edits) <= MAX_BATCH_EDITS:
@@ -378,16 +407,22 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} must be an object"
+                    f"edit {index} must be an "
+                    "object"
                 ),
             )
 
-        if set(raw_edit) != {"path", "old", "new"}:
+        if set(raw_edit) != {
+            "path",
+            "old",
+            "new",
+        }:
             return BatchProposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} has unexpected fields"
+                    f"edit {index} has unexpected "
+                    "fields"
                 ),
             )
 
@@ -400,7 +435,8 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} path must be a string"
+                    f"edit {index} path must be "
+                    "a string"
                 ),
             )
 
@@ -409,7 +445,8 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} old must be a string"
+                    f"edit {index} old must be "
+                    "a string"
                 ),
             )
 
@@ -418,7 +455,8 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} new must be a string"
+                    f"edit {index} new must be "
+                    "a string"
                 ),
             )
 
@@ -427,7 +465,8 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} path must not be empty"
+                    f"edit {index} path must not "
+                    "be empty"
                 ),
             )
 
@@ -436,7 +475,8 @@ def parse_batch_proposal(
                 raw_response=raw_response,
                 edits=(),
                 protocol_error=(
-                    f"edit {index} old must not be empty"
+                    f"edit {index} old must not "
+                    "be empty"
                 ),
             )
 
@@ -504,8 +544,9 @@ def preflight_batch(
                     valid=False,
                     failed_edit_index=index,
                     error=(
-                        "Replacement is a no-op: old and "
-                        "new text are identical"
+                        "Replacement is a no-op: "
+                        "old and new text are "
+                        "identical"
                     ),
                 ),
                 {},
@@ -522,7 +563,8 @@ def preflight_batch(
                         valid=False,
                         failed_edit_index=index,
                         error=(
-                            "File is not valid UTF-8: "
+                            "File is not valid "
+                            "UTF-8: "
                             f"{edit.path}"
                         ),
                     ),
@@ -537,7 +579,10 @@ def preflight_batch(
                 PreflightResult(
                     valid=False,
                     failed_edit_index=index,
-                    error="Text to replace was not found",
+                    error=(
+                        "Text to replace was not "
+                        "found"
+                    ),
                 ),
                 {},
             )
@@ -548,8 +593,8 @@ def preflight_batch(
                     valid=False,
                     failed_edit_index=index,
                     error=(
-                        "Text to replace occurs more "
-                        "than once"
+                        "Text to replace occurs "
+                        "more than once"
                     ),
                 ),
                 {},
@@ -592,11 +637,16 @@ def source_syntax_valid(
         if not path.exists():
             return (
                 False,
-                f"Missing source file: {relative_path}",
+                (
+                    "Missing source file: "
+                    f"{relative_path}"
+                ),
             )
 
         try:
-            source = path.read_text(encoding="utf-8")
+            source = path.read_text(
+                encoding="utf-8"
+            )
             ast.parse(
                 source,
                 filename=relative_path,
@@ -635,16 +685,19 @@ def run_verification(
 
     stdout = completed.stdout
     stderr = completed.stderr
+    raw_output = stdout + stderr
 
     return {
         "passed": completed.returncode == 0,
         "returncode": completed.returncode,
         "stdout": stdout,
         "stderr": stderr,
-        "raw_output": stdout + stderr,
-        "raw_output_characters": len(stdout + stderr),
+        "raw_output": raw_output,
+        "raw_output_characters": len(
+            raw_output
+        ),
         "raw_output_lines": len(
-            (stdout + stderr).splitlines()
+            raw_output.splitlines()
         ),
         "seconds": perf_counter() - started,
     }
@@ -733,20 +786,43 @@ def run_task(
 
         before = snapshot_files(workspace_root)
 
-        # Establish the actual failing execution state before
-        # asking the model for a repair.
         verification_before = run_verification(
             workspace_root
         )
 
         if verification_before["passed"]:
             raise RuntimeError(
-                f"{task_id} is not a failing fixture"
+                f"{task_id} is not a failing "
+                "fixture"
             )
 
-        feedback_text = str(
+        raw_feedback = str(
             verification_before["raw_output"]
         )
+
+        normalized_feedback = (
+            normalize_pytest_output(
+                raw_feedback
+            )
+        )
+
+        feedback_text = json.dumps(
+            normalized_feedback,
+            indent=2,
+        )
+
+        feedback_metrics = {
+            "raw_chars": len(raw_feedback),
+            "raw_lines": len(
+                raw_feedback.splitlines()
+            ),
+            "normalized_chars": len(
+                feedback_text
+            ),
+            "normalized_lines": len(
+                feedback_text.splitlines()
+            ),
+        }
 
         model_failure = False
         model_error: str | None = None
@@ -764,7 +840,7 @@ def run_task(
                     task_text=str(task["task"]),
                     workspace_root=workspace_root,
                     source_files=source_files,
-                    feedback_text = feedback_text,
+                    feedback_text=feedback_text,
                 ),
             },
         ]
@@ -903,6 +979,7 @@ def run_task(
             "feedback_lines": len(
                 feedback_text.splitlines()
             ),
+            "feedback_metrics": feedback_metrics,
             "verification_before": (
                 verification_before
             ),
@@ -950,13 +1027,21 @@ def main() -> int:
     print(f"Temperature: {TEMPERATURE}")
     print(f"Max tokens: {MAX_TOKENS}")
     print("Context window: 4096")
-    print("Editing representation: atomic edit_batch")
-    print("Underlying primitive: exact replace_text")
     print(
-        f"Maximum edits per batch: {MAX_BATCH_EDITS}"
+        "Editing representation: atomic edit_batch"
+    )
+    print(
+        "Underlying primitive: exact replace_text"
+    )
+    print(
+        "Maximum edits per batch: "
+        f"{MAX_BATCH_EDITS}"
     )
     print("Model calls per task: 1")
-    print("Feedback exposed to model: raw pytest stdout/stderr")
+    print(
+        "Feedback exposed to model: "
+        "normalized pytest evidence"
+    )
     print("Verification oracle: pytest")
     print("Runs per task: 1")
     print(f"Tasks: {len(tasks)}")
@@ -977,11 +1062,11 @@ def main() -> int:
         print(
             "  "
             f"outcome={record['outcome']} "
-            f"behavior="
+            "behavior="
             f"{'PASS' if record['behavior_correct'] else 'FAIL'} "
-            f"protocol="
+            "protocol="
             f"{'PASS' if record['protocol_error'] is None and not record['model_failure'] else 'FAIL'} "
-            f"preflight="
+            "preflight="
             f"{'PASS' if record['preflight_valid'] else 'FAIL'} "
             f"committed={record['committed']} "
             f"files={len(record['files_modified'])} "
@@ -1033,9 +1118,33 @@ def main() -> int:
             outcome_counts.get(outcome, 0) + 1
         )
 
+    raw_feedback_characters = sum(
+        int(record["feedback_metrics"]["raw_chars"])
+        for record in records
+    )
+
+    normalized_feedback_characters = sum(
+        int(
+            record["feedback_metrics"][
+                "normalized_chars"
+            ]
+        )
+        for record in records
+    )
+
+    feedback_character_reduction = (
+        1.0
+        - (
+            normalized_feedback_characters
+            / raw_feedback_characters
+        )
+        if raw_feedback_characters
+        else 0.0
+    )
+
     output = {
         "experiment": (
-            "module_7_failure_output"
+            "module_7_normalized_execution_evidence"
         ),
         "configuration": {
             "condition": CONDITION,
@@ -1051,7 +1160,9 @@ def main() -> int:
             ),
             "max_batch_edits": MAX_BATCH_EDITS,
             "model_calls_per_task": 1,
-            "feedback": "raw_pytest_output",
+            "feedback": (
+                "normalized_pytest_evidence"
+            ),
             "verification": "pytest",
             "task_count": len(tasks),
             "runs_per_task": 1,
@@ -1069,6 +1180,15 @@ def main() -> int:
             ),
             "committed_batches": (
                 committed_batches
+            ),
+            "raw_feedback_characters": (
+                raw_feedback_characters
+            ),
+            "normalized_feedback_characters": (
+                normalized_feedback_characters
+            ),
+            "feedback_character_reduction": (
+                feedback_character_reduction
             ),
             "outcomes": outcome_counts,
             "total_seconds": total_seconds,
@@ -1113,6 +1233,15 @@ def main() -> int:
     print(
         "Committed batches: "
         f"{committed_batches}/{len(tasks)}"
+    )
+    print(
+        "Feedback characters: "
+        f"{raw_feedback_characters} raw -> "
+        f"{normalized_feedback_characters} normalized"
+    )
+    print(
+        "Feedback character reduction: "
+        f"{feedback_character_reduction:.1%}"
     )
     print(f"Outcomes: {outcome_counts}")
     print(
