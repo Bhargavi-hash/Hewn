@@ -1,0 +1,24 @@
+--- a/src/documents.py
++++ b/src/documents.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ 
+ def document_id(path: Path) -> str:
+--- a/src/report.py
++++ b/src/report.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ from search import search_label
+ 
+--- a/src/search.py
++++ b/src/search.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ from documents import document_id
+ 

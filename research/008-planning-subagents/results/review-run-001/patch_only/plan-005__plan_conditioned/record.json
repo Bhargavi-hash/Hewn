@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-005__plan_conditioned",
+  "classification": "false_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 7.60114959099883,
+  "prompt_chars": 2094,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new default TTL value without preserving explicit caller-provided TTL values. This contradicts the task requirement to preserve explicit caller-provided TTL values.",
+  "response_chars": 238,
+  "review_condition": "patch_only",
+  "runtime_pass": true,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-005",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

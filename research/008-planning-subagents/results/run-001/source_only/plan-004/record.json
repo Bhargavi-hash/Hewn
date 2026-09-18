@@ -1,0 +1,22 @@
+{
+  "category": "cross_file_dependency",
+  "condition": "source_only",
+  "latency_seconds": 14.505623152000226,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1315,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/auth.py\",\n      \"symbols\": [\"can_access\"],\n      \"operations\": [\"Add a new method `is_suspended` that returns `True` for suspended accounts.\"]\n    },\n    {\n      \"path\": \"src/models.py\",\n      \"symbols\": [\"Account\"],\n      \"operations\": [\"Add a new attribute `suspended` to the `Account` class that defaults to `False`.\"]\n    },\n    {\n      \"path\": \"src/presentation.py\",\n      \"symbols\": [\"account_status\"],\n      \"operations\": [\"Modify the `account_status` function to return 'suspended' for suspended accounts.\"]\n    }\n  ],\n  \"verification\": [\n    \"src/auth.py: can_access should return True for suspended accounts.\"\n  ]\n}\n```",
+  "response_chars": 677,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-004"
+}

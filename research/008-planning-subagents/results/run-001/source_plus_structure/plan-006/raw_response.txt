@@ -1,0 +1,21 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/parser.py",
+      "symbols": ["parse_config"],
+      "operations": ["add import statement for pathlib: Path"]
+    },
+    {
+      "path": "tests/test_parser.py",
+      "symbols": ["test_json_supported", "test_other_format_rejected"],
+      "operations": ["add import statement for pathlib: Path | pytest | parser: parse_config"]
+    }
+  ],
+  "verification": [
+    "src/parser.py: parse_config",
+    "tests/test_parser.py: test_json_supported",
+    "tests/test_parser.py: test_other_format_rejected"
+  ]
+}
+```

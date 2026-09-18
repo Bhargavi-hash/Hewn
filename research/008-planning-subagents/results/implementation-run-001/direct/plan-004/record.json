@@ -1,0 +1,35 @@
+{
+  "behavioral_success": false,
+  "category": "cross_file_dependency",
+  "changed_files": [
+    "src/auth.py",
+    "src/models.py",
+    "src/presentation.py"
+  ],
+  "committed": true,
+  "condition": "direct",
+  "diff_additions": 8,
+  "diff_deletions": 0,
+  "edit_count": 4,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 18.5820669249988,
+  "outcome": "invalid_code",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 1968,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 778,
+  "syntax_error": "unexpected indent (models.py, line 2)",
+  "syntax_valid": false,
+  "task_id": "plan-004",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": null
+}

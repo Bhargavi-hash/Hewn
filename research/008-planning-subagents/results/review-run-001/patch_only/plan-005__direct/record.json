@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-005__direct",
+  "classification": "true_positive",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.066888402001496,
+  "prompt_chars": 1963,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch changes the default cache TTL from 60 seconds to 120 seconds while preserving explicit caller-provided TTL values. The verification surface is updated to reflect the new default behavior.",
+  "response_chars": 248,
+  "review_condition": "patch_only",
+  "runtime_pass": true,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-005",
+  "temperature": 0.0,
+  "verdict": "accept"
+}

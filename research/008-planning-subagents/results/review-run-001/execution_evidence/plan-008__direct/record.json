@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.117506047999996,
+  "prompt_chars": 2747,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new keyword argument 'verbose' to the `Session` class, which is not present in the original `Session` class. This change violates the task requirement of maintaining the existing non-verbose sessions unchanged.",
+  "response_chars": 284,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

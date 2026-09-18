@@ -1,0 +1,41 @@
+{
+  "behavioral_success": false,
+  "category": "dependency_reasoning",
+  "changed_files": [
+    "src/agent.py",
+    "src/session.py",
+    "src/tools.py"
+  ],
+  "committed": true,
+  "condition": "direct",
+  "diff_additions": 8,
+  "diff_deletions": 0,
+  "edit_count": 3,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 15.885902345000432,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2100,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 553,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.4672270299997763,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_verbose_execution_contract ________________________\n\n    def test_verbose_execution_contract() -> None:\n        normal = Session(Agent())\n>       verbose = Session(Agent(), verbose=True)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: Session.__init__() got an unexpected keyword argument 'verbose'\n\n__hewn_oracle__/test_behavior.py:7: TypeError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_verbose_execution_contract - Ty...\n1 failed in 0.03s\n"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-003__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 4.404082855000524,
+  "prompt_chars": 1819,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch does not change the behavior of the runtime timeout settings. It only renames the variable from REQUEST_TIMEOUT to NETWORK_TIMEOUT, which does not affect the timeout behavior.",
+  "response_chars": 236,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-003",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

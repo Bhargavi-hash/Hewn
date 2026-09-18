@@ -1,0 +1,15 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/users.py",
+      "old": "def display_name(name: str, *, active: bool, admin: bool) -> str:",
+      "new": "def display_name(name: str, *, active: bool, admin: bool) -> str:\n    if not active:\n        return f'{name} (inactive)'
+    },
+    {
+      "path": "src/users.py",
+      "old": "return name",
+      "new": "return f'{name} (admin)' if admin else name"
+    }
+  ]
+}

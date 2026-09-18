@@ -1,0 +1,16 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/cache.py",
+      "symbols": ["DEFAULT_TTL", "cache_ttl"],
+      "operations": [
+        "Change the value of DEFAULT_TTL from 60 to 120."
+      ]
+    }
+  ],
+  "verification": [
+    "src/cache.py: test_default_ttl, src/cache.py: test_explicit_ttl"
+  ]
+}
+```

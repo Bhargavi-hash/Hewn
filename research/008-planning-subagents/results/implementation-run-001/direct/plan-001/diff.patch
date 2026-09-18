@@ -1,0 +1,19 @@
+--- a/src/retry.py
++++ b/src/retry.py
+@@ -1,12 +1,14 @@
+ from __future__ import annotations
+ 
+-MAX_ATTEMPTS = 3
+-BASE_DELAY_SECONDS = 2
++MAX_ATTEMPTS = 4
++BASE_DELAY_SECONDS = 3
+ 
+ 
+ def can_retry(attempt: int) -> bool:
++    return attempt < MAX_ATTEMPTS
+     return attempt < MAX_ATTEMPTS
+ 
+ 
+ def retry_delay(attempt: int) -> int:
+     return BASE_DELAY_SECONDS * attempt
++    return BASE_DELAY_SECONDS * attempt

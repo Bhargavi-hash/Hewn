@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-006__plan_conditioned",
+  "classification": "false_positive",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 4.097304692999387,
+  "prompt_chars": 2136,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The patch correctly adds support for .yaml files while maintaining the existing JSON behavior.",
+  "response_chars": 135,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-006",
+  "temperature": 0.0,
+  "verdict": "accept"
+}

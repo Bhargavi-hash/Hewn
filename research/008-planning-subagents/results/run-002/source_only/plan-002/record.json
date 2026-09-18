@@ -1,0 +1,28 @@
+{
+  "category": "same_file_multi_operation",
+  "condition": "source_only",
+  "latency_seconds": 5.656415479000316,
+  "planned_files": [
+    "src/users.py"
+  ],
+  "planned_symbols": [
+    "display_name"
+  ],
+  "planned_verification": [
+    "tests/test_users.py"
+  ],
+  "prompt_chars": 1141,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/users.py\",\n      \"symbols\": [\"display_name\"],\n      \"operations\": [\"add admin suffix to inactive users\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_users.py\"\n  ]\n}",
+  "response_chars": 207,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 1.0,
+    "required_symbol_recall": 1.0,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 1.0
+  },
+  "task_id": "plan-002"
+}

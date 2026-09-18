@@ -1,0 +1,16 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/users.py",
+      "symbols": ["display_name"],
+      "operations": [
+        "Add a new parameter 'admin' to the function 'display_name' to indicate if the user is an administrator."
+      ]
+    }
+  ],
+  "verification": [
+    "src/users.py"
+  ]
+}
+```

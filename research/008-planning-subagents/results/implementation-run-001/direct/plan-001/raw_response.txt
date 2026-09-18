@@ -1,0 +1,25 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/retry.py",
+      "old": "MAX_ATTEMPTS = 3",
+      "new": "MAX_ATTEMPTS = 4"
+    },
+    {
+      "path": "src/retry.py",
+      "old": "BASE_DELAY_SECONDS = 2",
+      "new": "BASE_DELAY_SECONDS = 3"
+    },
+    {
+      "path": "src/retry.py",
+      "old": "def can_retry(attempt: int) -> bool:",
+      "new": "def can_retry(attempt: int) -> bool:\n    return attempt < MAX_ATTEMPTS"
+    },
+    {
+      "path": "src/retry.py",
+      "old": "def retry_delay(attempt: int) -> int:",
+      "new": "def retry_delay(attempt: int) -> int:\n    return BASE_DELAY_SECONDS * attempt"
+    }
+  ]
+}

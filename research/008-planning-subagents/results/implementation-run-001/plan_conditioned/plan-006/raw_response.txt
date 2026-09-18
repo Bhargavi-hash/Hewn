@@ -1,0 +1,10 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/parser.py",
+      "old": "raise ValueError(\"unsupported config format\")",
+      "new": "raise ValueError(\"unsupported config format\").allow('.yaml')"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch does not change the behavior of the runtime timeout settings. It only renames the variable from REQUEST_TIMEOUT to NETWORK_TIMEOUT, which does not affect the timeout behavior."
+}

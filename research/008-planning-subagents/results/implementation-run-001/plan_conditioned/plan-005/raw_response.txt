@@ -1,0 +1,25 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/cache.py",
+      "old": "DEFAULT_TTL = 60",
+      "new": "DEFAULT_TTL = 120"
+    },
+    {
+      "path": "src/cache.py",
+      "old": "def cache_ttl(ttl: int | None = None) -> int:",
+      "new": "def cache_ttl(ttl: int | None = None) -> int:\n    if ttl is None:\n        return DEFAULT_TTL\n    return ttl"
+    },
+    {
+      "path": "tests/test_cache.py",
+      "old": "assert cache_ttl() == 60",
+      "new": "assert cache_ttl() == 120"
+    },
+    {
+      "path": "tests/test_cache.py",
+      "old": "assert cache_ttl(15) == 15",
+      "new": "assert cache_ttl(15) == 120"
+    }
+  ]
+}

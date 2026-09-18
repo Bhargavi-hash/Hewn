@@ -1,0 +1,35 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Update user display formatting so inactive users are marked as inactive and administrators receive an admin suffix. Both rules must compose when both are true.
+
+Visible repository:
+[File 1]
+path: src/users.py
+from __future__ import annotations
+
+
+def display_name(name: str, *, active: bool, admin: bool) -> str:
+    return name
+
+
+
+Explicit plan produced by the planning stage:
+{
+  "files": [
+    {
+      "operations": [
+        "add 'inactive' suffix to inactive users, add 'admin' suffix to administrators"
+      ],
+      "path": "src/users.py",
+      "symbols": [
+        "display_name"
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_users.py"
+  ]
+}
+
+Use the plan as implementation guidance, but the task and repository remain the source of truth.

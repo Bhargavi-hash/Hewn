@@ -1,0 +1,39 @@
+{
+  "behavioral_success": false,
+  "category": "same_file_multi_operation",
+  "changed_files": [
+    "src/retry.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 5,
+  "diff_deletions": 0,
+  "edit_count": 3,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 16.98207567800091,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2327,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 605,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.4688380320003489,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_retry_policy _______________________________\n\n    def test_retry_policy() -> None:\n        assert MAX_ATTEMPTS == 3\n        assert can_retry(1) is True\n        assert can_retry(2) is True\n        assert can_retry(3) is False\n        assert retry_delay(1) == 2\n        assert retry_delay(2) == 4\n>       assert retry_delay(3) == 8\nE       assert 6 == 8\nE        +  where 6 = retry_delay(3)\n\n__hewn_oracle__/test_behavior.py:11: AssertionError\n________________________ test_invalid_attempts_rejected ________________________\n\n    def test_invalid_attempts_rejected() -> None:\n        import pytest\n    \n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\n__hewn_oracle__/test_behavior.py:17: Failed\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_retry_policy - assert 6 == 8\nFAILED __hewn_oracle__/test_behavior.py::test_invalid_attempts_rejected - Fai...\n2 failed in 0.04s\n"
+  }
+}

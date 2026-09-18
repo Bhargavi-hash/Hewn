@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 16.34886010899936,
+  "prompt_chars": 1865,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new maximum attempt count (4) without any corresponding changes to the logic for determining whether another attempt is allowed or how long to wait. This introduces an inconsistency with the original task, which only allows up to 3 attempts.",
+  "response_chars": 315,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

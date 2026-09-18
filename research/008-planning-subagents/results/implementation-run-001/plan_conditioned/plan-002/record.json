@@ -1,0 +1,33 @@
+{
+  "behavioral_success": false,
+  "category": "same_file_multi_operation",
+  "changed_files": [
+    "src/users.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 7,
+  "diff_deletions": 1,
+  "edit_count": 2,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 14.462619520998487,
+  "outcome": "invalid_code",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2146,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 551,
+  "syntax_error": "expected ':' (users.py, line 4)",
+  "syntax_valid": false,
+  "task_id": "plan-002",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": null
+}

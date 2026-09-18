@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__direct",
+  "classification": "protocol_failure",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 29.099274553000214,
+  "prompt_chars": 2481,
+  "protocol_error": "response is not valid JSON",
+  "protocol_valid": false,
+  "reason": null,
+  "response_chars": 1225,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": null
+}

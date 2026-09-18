@@ -1,0 +1,20 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/documents.py",
+      "old": "from pathlib import Path",
+      "new": "from pathlib import Path\nfrom os import path"
+    },
+    {
+      "path": "src/report.py",
+      "old": "from pathlib import Path",
+      "new": "from pathlib import Path\nfrom os import path"
+    },
+    {
+      "path": "src/search.py",
+      "old": "from pathlib import Path",
+      "new": "from pathlib import Path\nfrom os import path"
+    }
+  ]
+}

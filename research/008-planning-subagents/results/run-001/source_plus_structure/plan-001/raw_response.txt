@@ -1,0 +1,14 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/retry.py",
+      "symbols": ["MAX_ATTEMPTS", "BASE_DELAY_SECONDS", "can_retry", "retry_delay"],
+      "operations": ["Added can_retry function to check if another attempt is allowed", "Added retry_delay function to calculate the delay for the next attempt"]
+    }
+  ],
+  "verification": [
+    "src/retry.py"
+  ]
+}
+```

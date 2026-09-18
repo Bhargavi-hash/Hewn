@@ -1,0 +1,23 @@
+{
+  "files": [
+    {
+      "path": "src/agent.py",
+      "symbols": ["Agent"],
+      "operations": ["add a verbose_execution_mode attribute to the Agent class"]
+    },
+    {
+      "path": "src/session.py",
+      "symbols": ["Session"],
+      "operations": ["add a verbose_execution_mode attribute to the Session class"]
+    },
+    {
+      "path": "src/tools.py",
+      "symbols": ["run_command"],
+      "operations": ["add a verbose_execution_mode parameter to the run_command function"]
+    }
+  ],
+  "verification": [
+    "tests/test_agent.py",
+    "tests/test_session.py"
+  ]
+}

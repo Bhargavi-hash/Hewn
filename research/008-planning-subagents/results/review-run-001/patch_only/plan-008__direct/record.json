@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__direct",
+  "classification": "false_positive",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 16.331371972000852,
+  "prompt_chars": 2299,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch adds a new attribute `verbose_mode` to the `Agent` class, which is used to control the verbosity of command execution. The patch ensures that the `verbose_mode` is set to `False` by default, and it is propagated through the `Session` class. The `run_command` function is modified to include a print statement if `verbose_mode` is `True`, otherwise it returns the original command.",
+  "response_chars": 441,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "accept"
+}

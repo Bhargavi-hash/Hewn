@@ -1,0 +1,57 @@
+Review this candidate patch.
+
+Task:
+Allow the parser to accept .yaml configuration files in addition to .json files. Unsupported extensions must still be rejected, and the existing JSON behavior must remain covered.
+
+Original visible repository:
+[File 1]
+path: src/parser.py
+from pathlib import Path
+
+
+def parse_config(path: Path) -> str:
+    if path.suffix != ".json":
+        raise ValueError("unsupported config format")
+    return path.read_text()
+
+
+[File 2]
+path: tests/test_parser.py
+from pathlib import Path
+
+import pytest
+
+from parser import parse_config
+
+
+def test_json_supported(tmp_path: Path) -> None:
+    path = tmp_path / "config.json"
+    path.write_text("{}")
+    assert parse_config(path) == "{}"
+
+
+def test_other_format_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "config.toml"
+    path.write_text("")
+    with pytest.raises(ValueError):
+        parse_config(path)
+
+
+
+Candidate patch:
+--- a/src/parser.py
++++ b/src/parser.py
+@@ -1,4 +1,4 @@
+-from pathlib import Path
++from pathlib import Path, yaml
+ 
+ 
+ def parse_config(path: Path) -> str:
+--- a/tests/test_parser.py
++++ b/tests/test_parser.py
+@@ -1,4 +1,4 @@
+-from pathlib import Path
++from pathlib import Path, yaml
+ 
+ import pytest
+ 

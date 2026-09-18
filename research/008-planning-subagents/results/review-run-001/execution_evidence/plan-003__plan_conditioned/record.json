@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-003__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 6.0810401149992686,
+  "prompt_chars": 1956,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new timeout setting named NETWORK_TIMEOUT, which is not part of the runtime timeout behavior as specified in the task. This change contradicts the task's requirement to preserve the configured timeout value and keep the client behavior working.",
+  "response_chars": 318,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-003",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

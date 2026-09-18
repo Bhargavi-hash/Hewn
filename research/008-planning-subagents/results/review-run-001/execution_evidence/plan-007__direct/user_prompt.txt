@@ -1,0 +1,83 @@
+Review this candidate patch.
+
+Task:
+Change normalized document identifiers so they use repository-relative POSIX paths instead of platform-specific path strings. Update every downstream formatter that exposes the identifier.
+
+Original visible repository:
+[File 1]
+path: src/documents.py
+from pathlib import Path
+
+
+def document_id(path: Path) -> str:
+    return str(path)
+
+
+[File 2]
+path: src/report.py
+from pathlib import Path
+
+from search import search_label
+
+
+def report_line(path: Path, score: float) -> str:
+    return f"result={search_label(path, score)}"
+
+
+[File 3]
+path: src/search.py
+from pathlib import Path
+
+from documents import document_id
+
+
+def search_label(path: Path, score: float) -> str:
+    return f"{document_id(path)}:{score:.2f}"
+
+
+
+Candidate patch:
+--- a/src/documents.py
++++ b/src/documents.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ 
+ def document_id(path: Path) -> str:
+--- a/src/report.py
++++ b/src/report.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ from search import search_label
+ 
+--- a/src/search.py
++++ b/src/search.py
+@@ -1,4 +1,5 @@
+ from pathlib import Path
++from os import path
+ 
+ from documents import document_id
+ 
+
+
+Deterministic execution evidence:
+{
+  "failed_checks": [
+    {
+      "exception": "AssertionError",
+      "location": "/tmp/tmp0qfq__xv/__hewn_oracle__/test_behavior.py:15",
+      "message": "assert '/tmp/pytest-...s/chapter.txt' == 'docs/chapter.txt'",
+      "test": "__hewn_oracle__/test_behavior.py::test_document_identifier_contract"
+    }
+  ],
+  "summary": {
+    "errors": 0,
+    "failed": 1,
+    "passed": 0
+  },
+  "tool": "pytest",
+  "verification": "failed"
+}

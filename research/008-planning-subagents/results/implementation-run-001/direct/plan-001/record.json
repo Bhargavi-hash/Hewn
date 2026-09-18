@@ -1,0 +1,39 @@
+{
+  "behavioral_success": false,
+  "category": "same_file_multi_operation",
+  "changed_files": [
+    "src/retry.py"
+  ],
+  "committed": true,
+  "condition": "direct",
+  "diff_additions": 4,
+  "diff_deletions": 2,
+  "edit_count": 4,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 26.641969751999568,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 1836,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 645,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.4966813289993297,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_retry_policy _______________________________\n\n    def test_retry_policy() -> None:\n>       assert MAX_ATTEMPTS == 3\nE       assert 4 == 3\n\n__hewn_oracle__/test_behavior.py:5: AssertionError\n________________________ test_invalid_attempts_rejected ________________________\n\n    def test_invalid_attempts_rejected() -> None:\n        import pytest\n    \n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\n__hewn_oracle__/test_behavior.py:17: Failed\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_retry_policy - assert 4 == 3\nFAILED __hewn_oracle__/test_behavior.py::test_invalid_attempts_rejected - Fai...\n2 failed in 0.04s\n"
+  }
+}

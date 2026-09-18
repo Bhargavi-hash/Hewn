@@ -1,0 +1,22 @@
+{
+  "category": "behavior_verification",
+  "condition": "source_plus_structure",
+  "latency_seconds": 7.884078053999474,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1462,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/cache.py\",\n      \"symbols\": [\"DEFAULT_TTL\", \"cache_ttl\"],\n      \"operations\": [\n        \"Change the value of DEFAULT_TTL from 60 to 120.\"\n      ]\n    }\n  ],\n  \"verification\": [\n    \"src/cache.py: test_default_ttl, src/cache.py: test_explicit_ttl\"\n  ]\n}\n```",
+  "response_chars": 304,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-005"
+}

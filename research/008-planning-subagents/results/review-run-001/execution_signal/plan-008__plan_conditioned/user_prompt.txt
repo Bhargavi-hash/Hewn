@@ -1,0 +1,66 @@
+Review this candidate patch.
+
+Task:
+Add a verbose execution mode that is configured at session construction, propagated through the agent, and included when command execution is requested. Existing non-verbose sessions must behave unchanged.
+
+Original visible repository:
+[File 1]
+path: src/agent.py
+from tools import run_command
+
+
+class Agent:
+    def execute(self, command: str) -> str:
+        return run_command(command)
+
+
+[File 2]
+path: src/session.py
+from agent import Agent
+
+
+class Session:
+    def __init__(self, agent: Agent) -> None:
+        self.agent = agent
+
+    def execute(self, command: str) -> str:
+        return self.agent.execute(command)
+
+
+[File 3]
+path: src/tools.py
+def run_command(command: str) -> str:
+    return f"run:{command}"
+
+
+
+Candidate patch:
+--- a/src/agent.py
++++ b/src/agent.py
+@@ -2,5 +2,6 @@
+ 
+ 
+ class Agent:
++    verbose_execution_mode = False
+     def execute(self, command: str) -> str:
+         return run_command(command)
+--- a/src/session.py
++++ b/src/session.py
+@@ -2,6 +2,7 @@
+ 
+ 
+ class Session:
++    verbose_execution_mode = False
+     def __init__(self, agent: Agent) -> None:
+         self.agent = agent
+ 
+--- a/src/tools.py
++++ b/src/tools.py
+@@ -1,2 +1,2 @@
+-def run_command(command: str) -> str:
++def run_command(command: str, verbose_execution_mode: bool = False) -> str:
+     return f"run:{command}"
+
+
+Deterministic runtime verification:
+FAIL

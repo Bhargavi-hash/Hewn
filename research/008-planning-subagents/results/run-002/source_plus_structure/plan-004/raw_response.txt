@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "path": "src/auth.py",
+      "symbols": ["can_access"],
+      "operations": ["add a new method to check if the account is suspended"]
+    },
+    {
+      "path": "src/models.py",
+      "symbols": ["Account"],
+      "operations": ["add a new attribute to indicate if the account is suspended"]
+    },
+    {
+      "path": "src/presentation.py",
+      "symbols": ["account_status"],
+      "operations": ["add a new condition to check if the account is suspended and return 'suspended' if true"]
+    }
+  ],
+  "verification": [
+    "tests/test_auth.py",
+    "tests/test_models.py",
+    "tests/test_presentation.py"
+  ]
+}

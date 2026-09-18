@@ -1,0 +1,16 @@
+--- a/src/parser.py
++++ b/src/parser.py
+@@ -1,4 +1,4 @@
+-from pathlib import Path
++from pathlib import Path, yaml
+ 
+ 
+ def parse_config(path: Path) -> str:
+--- a/tests/test_parser.py
++++ b/tests/test_parser.py
+@@ -1,4 +1,4 @@
+-from pathlib import Path
++from pathlib import Path, yaml
+ 
+ import pytest
+ 

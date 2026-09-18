@@ -1,0 +1,22 @@
+{
+  "category": "behavior_verification",
+  "condition": "source_plus_structure",
+  "latency_seconds": 11.52478474200052,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1822,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/parser.py\",\n      \"symbols\": [\"parse_config\"],\n      \"operations\": [\"add import statement for pathlib: Path\"]\n    },\n    {\n      \"path\": \"tests/test_parser.py\",\n      \"symbols\": [\"test_json_supported\", \"test_other_format_rejected\"],\n      \"operations\": [\"add import statement for pathlib: Path | pytest | parser: parse_config\"]\n    }\n  ],\n  \"verification\": [\n    \"src/parser.py: parse_config\",\n    \"tests/test_parser.py: test_json_supported\",\n    \"tests/test_parser.py: test_other_format_rejected\"\n  ]\n}\n```",
+  "response_chars": 555,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-006"
+}

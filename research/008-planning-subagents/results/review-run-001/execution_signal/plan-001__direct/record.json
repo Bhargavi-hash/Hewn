@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 7.33099685399975,
+  "prompt_chars": 1907,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The original task specified that invalid attempt numbers must be rejected, but the patch changes the behavior to allow invalid attempt numbers.",
+  "response_chars": 257,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

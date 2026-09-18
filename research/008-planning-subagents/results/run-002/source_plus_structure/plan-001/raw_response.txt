@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/retry.py",
+      "symbols": ["MAX_ATTEMPTS", "BASE_DELAY_SECONDS", "can_retry", "retry_delay"],
+      "operations": ["add the can_retry function", "add the retry_delay function"]
+    }
+  ],
+  "verification": [
+    "tests/test_retry.py"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "path": "src/client.py",
+      "symbols": ["timeout_seconds"],
+      "operations": ["change the required behavior"]
+    },
+    {
+      "path": "src/config.py",
+      "symbols": ["NETWORK_RETRIES", "REQUEST_TIMEOUT"],
+      "operations": ["change the required behavior"]
+    }
+  ],
+  "verification": [
+    "tests/test_client.py"
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The verbose mode is not configurable at session construction, but it is included when command execution is requested. This introduces a new behavior that is not specified in the task."
+}

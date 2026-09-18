@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 6.713552522998725,
+  "prompt_chars": 1921,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new variable `MAX_ATTEMPTS` and changes the logic of the `can_retry` function without providing a clear reason for the change.",
+  "response_chars": 200,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

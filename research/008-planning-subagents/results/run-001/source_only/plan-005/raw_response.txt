@@ -1,0 +1,16 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/cache.py",
+      "symbols": ["cache_ttl"],
+      "operations": [
+        "Change the default TTL from 60 seconds to 120 seconds."
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_cache.py"
+  ]
+}
+```

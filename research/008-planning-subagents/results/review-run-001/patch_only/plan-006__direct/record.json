@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-006__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 10.160699681000551,
+  "prompt_chars": 2157,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The patch changes the behavior of the parser to accept .yaml files, which is not allowed according to the task requirements.",
+  "response_chars": 238,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-006",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

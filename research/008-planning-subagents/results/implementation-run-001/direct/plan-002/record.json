@@ -1,0 +1,31 @@
+{
+  "behavioral_success": false,
+  "category": "same_file_multi_operation",
+  "changed_files": [],
+  "committed": false,
+  "condition": "direct",
+  "diff_additions": 0,
+  "diff_deletions": 0,
+  "edit_count": 0,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.326844897001138,
+  "outcome": "protocol_failure",
+  "preflight": {
+    "error": "Model response is not valid JSON",
+    "failed_edit_index": null,
+    "valid": false
+  },
+  "prompt_chars": 1718,
+  "protocol_error": "Model response is not valid JSON",
+  "protocol_valid": false,
+  "required_file_precision": 0.0,
+  "required_file_recall": 0.0,
+  "response_chars": 435,
+  "syntax_error": null,
+  "syntax_valid": false,
+  "task_id": "plan-002",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": null
+}

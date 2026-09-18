@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-006__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 5.262432174999049,
+  "prompt_chars": 2178,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch does not handle .yaml files correctly. It raises a ValueError for .yaml files, which contradicts the task requirement to allow .yaml files.",
+  "response_chars": 200,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-006",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

@@ -1,0 +1,15 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/parser.py",
+      "old": "from pathlib import Path",
+      "new": "from pathlib import Path, yaml"
+    },
+    {
+      "path": "tests/test_parser.py",
+      "old": "from pathlib import Path",
+      "new": "from pathlib import Path, yaml"
+    }
+  ]
+}

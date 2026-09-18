@@ -1,0 +1,31 @@
+{
+  "behavioral_success": false,
+  "category": "cross_file_dependency",
+  "changed_files": [],
+  "committed": false,
+  "condition": "direct",
+  "diff_additions": 0,
+  "diff_deletions": 0,
+  "edit_count": 2,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 7.668543296998905,
+  "outcome": "application_failure",
+  "preflight": {
+    "error": "old text occurs more than once in src/client.py",
+    "failed_edit_index": 0,
+    "valid": false
+  },
+  "prompt_chars": 1791,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 0.0,
+  "required_file_recall": 0.0,
+  "response_chars": 257,
+  "syntax_error": null,
+  "syntax_valid": false,
+  "task_id": "plan-003",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": null
+}

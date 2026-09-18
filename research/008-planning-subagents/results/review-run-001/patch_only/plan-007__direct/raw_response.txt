@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new dependency on the `os` module, which is not allowed in the original repository."
+}

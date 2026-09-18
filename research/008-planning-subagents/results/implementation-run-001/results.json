@@ -1,0 +1,681 @@
+{
+  "controls": {
+    "atomic_application": true,
+    "hidden_oracle": true,
+    "implementer_calls_per_task": 1,
+    "repair_calls": 0,
+    "same_visible_repository": true
+  },
+  "experiment": "008B",
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "planner": {
+    "condition": "source_plus_structure",
+    "replayed": true,
+    "source_run": "008A run-002"
+  },
+  "records": [
+    {
+      "behavioral_success": false,
+      "category": "same_file_multi_operation",
+      "changed_files": [
+        "src/retry.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 4,
+      "diff_deletions": 2,
+      "edit_count": 4,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 26.641969751999568,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 1836,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 645,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-001",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.4966813289993297,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_retry_policy _______________________________\n\n    def test_retry_policy() -> None:\n>       assert MAX_ATTEMPTS == 3\nE       assert 4 == 3\n\n__hewn_oracle__/test_behavior.py:5: AssertionError\n________________________ test_invalid_attempts_rejected ________________________\n\n    def test_invalid_attempts_rejected() -> None:\n        import pytest\n    \n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\n__hewn_oracle__/test_behavior.py:17: Failed\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_retry_policy - assert 4 == 3\nFAILED __hewn_oracle__/test_behavior.py::test_invalid_attempts_rejected - Fai...\n2 failed in 0.04s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "same_file_multi_operation",
+      "changed_files": [
+        "src/retry.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 5,
+      "diff_deletions": 0,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 16.98207567800091,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2327,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 605,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-001",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.4688380320003489,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_retry_policy _______________________________\n\n    def test_retry_policy() -> None:\n        assert MAX_ATTEMPTS == 3\n        assert can_retry(1) is True\n        assert can_retry(2) is True\n        assert can_retry(3) is False\n        assert retry_delay(1) == 2\n        assert retry_delay(2) == 4\n>       assert retry_delay(3) == 8\nE       assert 6 == 8\nE        +  where 6 = retry_delay(3)\n\n__hewn_oracle__/test_behavior.py:11: AssertionError\n________________________ test_invalid_attempts_rejected ________________________\n\n    def test_invalid_attempts_rejected() -> None:\n        import pytest\n    \n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\n__hewn_oracle__/test_behavior.py:17: Failed\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_retry_policy - assert 6 == 8\nFAILED __hewn_oracle__/test_behavior.py::test_invalid_attempts_rejected - Fai...\n2 failed in 0.04s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "same_file_multi_operation",
+      "changed_files": [],
+      "committed": false,
+      "condition": "direct",
+      "diff_additions": 0,
+      "diff_deletions": 0,
+      "edit_count": 0,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 11.326844897001138,
+      "outcome": "protocol_failure",
+      "preflight": {
+        "error": "Model response is not valid JSON",
+        "failed_edit_index": null,
+        "valid": false
+      },
+      "prompt_chars": 1718,
+      "protocol_error": "Model response is not valid JSON",
+      "protocol_valid": false,
+      "required_file_precision": 0.0,
+      "required_file_recall": 0.0,
+      "response_chars": 435,
+      "syntax_error": null,
+      "syntax_valid": false,
+      "task_id": "plan-002",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": null
+    },
+    {
+      "behavioral_success": false,
+      "category": "same_file_multi_operation",
+      "changed_files": [
+        "src/users.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 7,
+      "diff_deletions": 1,
+      "edit_count": 2,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 14.462619520998487,
+      "outcome": "invalid_code",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2146,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 551,
+      "syntax_error": "expected ':' (users.py, line 4)",
+      "syntax_valid": false,
+      "task_id": "plan-002",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": null
+    },
+    {
+      "behavioral_success": false,
+      "category": "cross_file_dependency",
+      "changed_files": [],
+      "committed": false,
+      "condition": "direct",
+      "diff_additions": 0,
+      "diff_deletions": 0,
+      "edit_count": 2,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 7.668543296998905,
+      "outcome": "application_failure",
+      "preflight": {
+        "error": "old text occurs more than once in src/client.py",
+        "failed_edit_index": 0,
+        "valid": false
+      },
+      "prompt_chars": 1791,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 0.0,
+      "required_file_recall": 0.0,
+      "response_chars": 257,
+      "syntax_error": null,
+      "syntax_valid": false,
+      "task_id": "plan-003",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": null
+    },
+    {
+      "behavioral_success": false,
+      "category": "cross_file_dependency",
+      "changed_files": [
+        "src/client.py",
+        "src/config.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 4,
+      "diff_deletions": 4,
+      "edit_count": 4,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 15.483011779000663,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2369,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 563,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-003",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.6513011429997277,
+        "passed": false,
+        "returncode": 2,
+        "stderr": "",
+        "stdout": "\n==================================== ERRORS ====================================\n______________ ERROR collecting __hewn_oracle__/test_behavior.py _______________\nImportError while importing test module '/tmp/tmp46aqj530/__hewn_oracle__/test_behavior.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n__hewn_oracle__/test_behavior.py:2: in <module>\n    from client import timeout_seconds\nE   ImportError: cannot import name 'timeout_seconds' from 'client' (/tmp/tmp46aqj530/src/client.py)\n=========================== short test summary info ============================\nERROR __hewn_oracle__/test_behavior.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.21s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "cross_file_dependency",
+      "changed_files": [
+        "src/auth.py",
+        "src/models.py",
+        "src/presentation.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 8,
+      "diff_deletions": 0,
+      "edit_count": 4,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 18.5820669249988,
+      "outcome": "invalid_code",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 1968,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 778,
+      "syntax_error": "unexpected indent (models.py, line 2)",
+      "syntax_valid": false,
+      "task_id": "plan-004",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": null
+    },
+    {
+      "behavioral_success": false,
+      "category": "cross_file_dependency",
+      "changed_files": [
+        "src/auth.py",
+        "src/models.py",
+        "src/presentation.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 5,
+      "diff_deletions": 0,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 19.16075227699912,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2851,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 639,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-004",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.49883583699920564,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_suspended_account_contract ________________________\n\n    def test_suspended_account_contract() -> None:\n        active = Account(active=True, suspended=False)\n        inactive = Account(active=False, suspended=False)\n        suspended = Account(active=True, suspended=True)\n    \n>       assert can_access(active) is True\nE       assert False is True\nE        +  where False = can_access(Account(active=True, suspended=False))\n\n__hewn_oracle__/test_behavior.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_suspended_account_contract - as...\n1 failed in 0.04s\n"
+      }
+    },
+    {
+      "behavioral_success": true,
+      "category": "behavior_verification",
+      "changed_files": [
+        "src/cache.py",
+        "tests/test_cache.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 3,
+      "diff_deletions": 3,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 14.660912204999477,
+      "outcome": "success",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 1938,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 420,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-005",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.5214394489994447,
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      }
+    },
+    {
+      "behavioral_success": true,
+      "category": "behavior_verification",
+      "changed_files": [
+        "src/cache.py",
+        "tests/test_cache.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 6,
+      "diff_deletions": 3,
+      "edit_count": 4,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 19.908146612000564,
+      "outcome": "success",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2362,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 651,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-005",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.47768937399996503,
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "behavior_verification",
+      "changed_files": [
+        "src/parser.py",
+        "tests/test_parser.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 2,
+      "diff_deletions": 2,
+      "edit_count": 2,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 11.727939559999868,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2240,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 312,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-006",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.6414322189993982,
+        "passed": false,
+        "returncode": 2,
+        "stderr": "",
+        "stdout": "\n==================================== ERRORS ====================================\n______________ ERROR collecting __hewn_oracle__/test_behavior.py _______________\nImportError while importing test module '/tmp/tmprxi9y8xn/__hewn_oracle__/test_behavior.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n__hewn_oracle__/test_behavior.py:5: in <module>\n    from parser import parse_config\nsrc/parser.py:1: in <module>\n    from pathlib import Path, yaml\nE   ImportError: cannot import name 'yaml' from 'pathlib' (/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/pathlib.py)\n=========================== short test summary info ============================\nERROR __hewn_oracle__/test_behavior.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.16s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "behavior_verification",
+      "changed_files": [
+        "src/parser.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 1,
+      "diff_deletions": 1,
+      "edit_count": 1,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 7.14914406799835,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2624,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 0.5,
+      "response_chars": 229,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-006",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.47338151399890194,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_parser_contract _____________________________\n\ntmp_path = PosixPath('/tmp/pytest-of-bhargavi/pytest-8/test_parser_contract0')\n\n    def test_parser_contract(tmp_path: Path) -> None:\n        json_path = tmp_path / \"config.json\"\n        yaml_path = tmp_path / \"config.yaml\"\n        toml_path = tmp_path / \"config.toml\"\n    \n        json_path.write_text(\"json\")\n        yaml_path.write_text(\"yaml\")\n        toml_path.write_text(\"toml\")\n    \n        assert parse_config(json_path) == \"json\"\n>       assert parse_config(yaml_path) == \"yaml\"\n               ^^^^^^^^^^^^^^^^^^^^^^^\n\n__hewn_oracle__/test_behavior.py:18: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = PosixPath('/tmp/pytest-of-bhargavi/pytest-8/test_parser_contract0/config.yaml')\n\n    def parse_config(path: Path) -> str:\n        if path.suffix != \".json\":\n>           raise ValueError(\"unsupported config format\").allow('.yaml')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'ValueError' object has no attribute 'allow'\n\nsrc/parser.py:6: AttributeError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_parser_contract - AttributeErro...\n1 failed in 0.04s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "dependency_reasoning",
+      "changed_files": [
+        "src/documents.py",
+        "src/report.py",
+        "src/search.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 3,
+      "diff_deletions": 0,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 13.218077407998862,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2096,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 484,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-007",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.4985056789992086,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_document_identifier_contract _______________________\n\ntmp_path = PosixPath('/tmp/pytest-of-bhargavi/pytest-9/test_document_identifier_contr0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71dea377b8c0>\n\n    def test_document_identifier_contract(tmp_path: Path, monkeypatch) -> None:\n        repo = tmp_path / \"repo\"\n        nested = repo / \"docs\" / \"chapter.txt\"\n        nested.parent.mkdir(parents=True)\n        nested.write_text(\"chapter\")\n        monkeypatch.chdir(repo)\n    \n>       assert document_id(nested) == \"docs/chapter.txt\"\nE       AssertionError: assert '/tmp/pytest-...s/chapter.txt' == 'docs/chapter.txt'\nE         \nE         - docs/chapter.txt\nE         + /tmp/pytest-of-bhargavi/pytest-9/test_document_identifier_contr0/repo/docs/chapter.txt\n\n/tmp/tmp0qfq__xv/__hewn_oracle__/test_behavior.py:15: AssertionError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_document_identifier_contract - ...\n1 failed in 0.06s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "dependency_reasoning",
+      "changed_files": [
+        "src/documents.py",
+        "src/report.py",
+        "src/search.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 3,
+      "diff_deletions": 0,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 13.978050381001594,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2865,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 484,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-007",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.6174426109992055,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_document_identifier_contract _______________________\n\ntmp_path = PosixPath('/tmp/pytest-of-bhargavi/pytest-10/test_document_identifier_contr0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74a6feb43d40>\n\n    def test_document_identifier_contract(tmp_path: Path, monkeypatch) -> None:\n        repo = tmp_path / \"repo\"\n        nested = repo / \"docs\" / \"chapter.txt\"\n        nested.parent.mkdir(parents=True)\n        nested.write_text(\"chapter\")\n        monkeypatch.chdir(repo)\n    \n>       assert document_id(nested) == \"docs/chapter.txt\"\nE       AssertionError: assert '/tmp/pytest-...s/chapter.txt' == 'docs/chapter.txt'\nE         \nE         - docs/chapter.txt\nE         + /tmp/pytest-of-bhargavi/pytest-10/test_document_identifier_contr0/repo/docs/chapter.txt\n\n/tmp/tmp9vl8n7nd/__hewn_oracle__/test_behavior.py:15: AssertionError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_document_identifier_contract - ...\n1 failed in 0.07s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "dependency_reasoning",
+      "changed_files": [
+        "src/agent.py",
+        "src/session.py",
+        "src/tools.py"
+      ],
+      "committed": true,
+      "condition": "direct",
+      "diff_additions": 8,
+      "diff_deletions": 0,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 15.885902345000432,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2100,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 553,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-008",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.4672270299997763,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_verbose_execution_contract ________________________\n\n    def test_verbose_execution_contract() -> None:\n        normal = Session(Agent())\n>       verbose = Session(Agent(), verbose=True)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: Session.__init__() got an unexpected keyword argument 'verbose'\n\n__hewn_oracle__/test_behavior.py:7: TypeError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_verbose_execution_contract - Ty...\n1 failed in 0.03s\n"
+      }
+    },
+    {
+      "behavioral_success": false,
+      "category": "dependency_reasoning",
+      "changed_files": [
+        "src/agent.py",
+        "src/session.py",
+        "src/tools.py"
+      ],
+      "committed": true,
+      "condition": "plan_conditioned",
+      "diff_additions": 3,
+      "diff_deletions": 1,
+      "edit_count": 3,
+      "max_tokens": 512,
+      "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+      "model_seconds": 16.360115119998227,
+      "outcome": "verification_failure",
+      "preflight": {
+        "error": null,
+        "failed_edit_index": null,
+        "valid": true
+      },
+      "prompt_chars": 2903,
+      "protocol_error": null,
+      "protocol_valid": true,
+      "required_file_precision": 1.0,
+      "required_file_recall": 1.0,
+      "response_chars": 509,
+      "syntax_error": null,
+      "syntax_valid": true,
+      "task_id": "plan-008",
+      "temperature": 0.0,
+      "unnecessary_changed_files": 0,
+      "verification": {
+        "duration_seconds": 0.5548189910005021,
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_verbose_execution_contract ________________________\n\n    def test_verbose_execution_contract() -> None:\n        normal = Session(Agent())\n>       verbose = Session(Agent(), verbose=True)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: Session.__init__() got an unexpected keyword argument 'verbose'\n\n__hewn_oracle__/test_behavior.py:7: TypeError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_verbose_execution_contract - Ty...\n1 failed in 0.04s\n"
+      }
+    }
+  ],
+  "run_id": "run-001",
+  "summary": {
+    "direct": {
+      "behavioral_successes": 1,
+      "committed": 6,
+      "mean_prompt_chars": 1960.875,
+      "mean_required_file_precision": 0.75,
+      "mean_required_file_recall": 0.75,
+      "mean_response_chars": 485.5,
+      "outcomes": {
+        "application_failure": 1,
+        "invalid_code": 1,
+        "protocol_failure": 1,
+        "success": 1,
+        "verification_failure": 4
+      },
+      "preflight_valid": 6,
+      "protocol_valid": 7,
+      "syntax_valid": 5,
+      "tasks": 8,
+      "total_diff_additions": 28,
+      "total_diff_deletions": 7,
+      "total_model_seconds": 119.71225638899705,
+      "unnecessary_changed_files": 0
+    },
+    "plan_conditioned": {
+      "behavioral_successes": 1,
+      "committed": 8,
+      "mean_prompt_chars": 2555.875,
+      "mean_required_file_precision": 1.0,
+      "mean_required_file_recall": 0.9375,
+      "mean_response_chars": 528.875,
+      "outcomes": {
+        "application_failure": 0,
+        "invalid_code": 1,
+        "protocol_failure": 0,
+        "success": 1,
+        "verification_failure": 6
+      },
+      "preflight_valid": 8,
+      "protocol_valid": 8,
+      "syntax_valid": 7,
+      "tasks": 8,
+      "total_diff_additions": 34,
+      "total_diff_deletions": 10,
+      "total_model_seconds": 123.48391543599791,
+      "unnecessary_changed_files": 0
+    }
+  },
+  "temperature": 0.0
+}

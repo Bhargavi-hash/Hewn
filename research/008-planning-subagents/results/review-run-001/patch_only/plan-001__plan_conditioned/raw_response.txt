@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch does not introduce a behavior that contradicts the task. It only changes the existing logic without adding new features or altering the intended behavior."
+}

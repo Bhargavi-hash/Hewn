@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 8.51722042199981,
+  "prompt_chars": 2341,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The verbose mode is not configurable at session construction, but it is included when command execution is requested. This introduces a new behavior that is not specified in the task.",
+  "response_chars": 297,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

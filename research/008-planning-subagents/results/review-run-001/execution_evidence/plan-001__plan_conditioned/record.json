@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.78668984900105,
+  "prompt_chars": 2496,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new variable `MAX_ATTEMPTS` and `BASE_DELAY_SECONDS` without any explanation or justification for their use. This change does not align with the task requirements of extending the retry policy without introducing new behavior that contradicts the task.",
+  "response_chars": 326,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

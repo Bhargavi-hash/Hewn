@@ -1,0 +1,66 @@
+Review this candidate patch.
+
+Task:
+Add a suspended account state. Suspended accounts must not be authorized, and the public account-status formatter must report them as suspended.
+
+Original visible repository:
+[File 1]
+path: src/auth.py
+from models import Account
+
+
+def can_access(account: Account) -> bool:
+    return account.active
+
+
+[File 2]
+path: src/models.py
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Account:
+    active: bool
+
+
+[File 3]
+path: src/presentation.py
+from models import Account
+
+
+def account_status(account: Account) -> str:
+    return "active" if account.active else "inactive"
+
+
+
+Candidate patch:
+--- a/src/auth.py
++++ b/src/auth.py
+@@ -3,3 +3,5 @@
+ 
+ def can_access(account: Account) -> bool:
+     return account.active
++
++    return account.active
+--- a/src/models.py
++++ b/src/models.py
+@@ -1,6 +1,10 @@
+ from dataclasses import dataclass
++    from typing import Optional
++
+ 
+ 
+ @dataclass(frozen=True)
++    active: bool
++
+ class Account:
+     active: bool
+--- a/src/presentation.py
++++ b/src/presentation.py
+@@ -2,4 +2,6 @@
+ 
+ 
+ def account_status(account: Account) -> str:
++    return 'active' if account.active else 'inactive'
++
+     return "active" if account.active else "inactive"

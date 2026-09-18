@@ -1,0 +1,17 @@
+--- a/src/client.py
++++ b/src/client.py
+@@ -1,5 +1,5 @@
+-from config import REQUEST_TIMEOUT
++from config import NETWORK_TIMEOUT
+ 
+ 
+-def timeout_seconds() -> int:
++def network_timeout_seconds() -> int:
+     return REQUEST_TIMEOUT
+--- a/src/config.py
++++ b/src/config.py
+@@ -1,2 +1,2 @@
+-NETWORK_RETRIES = 3
+-REQUEST_TIMEOUT = 10
++NETWORK_TIMEOUT = 3
++NETWORK_TIMEOUT = 10

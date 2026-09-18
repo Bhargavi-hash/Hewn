@@ -1,0 +1,24 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/auth.py",
+      "symbols": ["can_access"],
+      "operations": ["Add a new method `is_suspended` that returns `True` for suspended accounts."]
+    },
+    {
+      "path": "src/models.py",
+      "symbols": ["Account"],
+      "operations": ["Add a new attribute `suspended` to the `Account` class that defaults to `False`."]
+    },
+    {
+      "path": "src/presentation.py",
+      "symbols": ["account_status"],
+      "operations": ["Modify the `account_status` function to return 'suspended' for suspended accounts."]
+    }
+  ],
+  "verification": [
+    "src/auth.py: can_access should return True for suspended accounts."
+  ]
+}
+```
