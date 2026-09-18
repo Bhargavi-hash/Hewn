@@ -13,7 +13,6 @@ from grounding import extract_structure, format_structure
 from planning import Plan, PlanningProtocolError, parse_plan
 from prompt import SYSTEM_PROMPT, build_prompt
 
-
 ROOT = Path(__file__).resolve().parents[2]
 RESEARCH_DIR = ROOT / "research" / "008-planning-subagents"
 MANIFEST = RESEARCH_DIR / "fixtures" / "manifest.json"
