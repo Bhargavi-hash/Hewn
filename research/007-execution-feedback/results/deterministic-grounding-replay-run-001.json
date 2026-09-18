@@ -1,0 +1,332 @@
+{
+  "metadata": {
+    "module": 7,
+    "experiment": "deterministic_grounding_offline_replay",
+    "source_results": "/home/bhargavi/Documents/Hewn/research/007-execution-feedback/results/normalized-output-run-001.json",
+    "source_condition": "normalized_output",
+    "model_proposals_reused": true,
+    "new_model_calls": 0,
+    "editing_representation": "atomic edit_batch",
+    "underlying_primitive": "exact replacement with conservative deterministic grounding fallback",
+    "grounding_strategies": [
+      "exact",
+      "token_equivalent"
+    ],
+    "verification_oracle": "pytest",
+    "runs_per_task": 1
+  },
+  "summary": {
+    "tasks": 6,
+    "behavior_success": 2,
+    "preflight_success": 5,
+    "committed_batches": 5,
+    "grounding_used": 1,
+    "new_model_calls": 0,
+    "outcomes": {
+      "success": 2,
+      "invalid_code": 1,
+      "verification_failure": 2,
+      "application_failure": 1
+    }
+  },
+  "records": [
+    {
+      "task_id": "feedback-001",
+      "category": "assertion_value_mismatch",
+      "task": "Fix multiply so that it returns the mathematical product of a and b.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "success",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "calculator.py",
+          "old": "def multiply(a: int, b: int) -> int:",
+          "new": "def multiply(a: int, b: int) -> int:\n    return a * b"
+        }
+      ],
+      "preflight_valid": true,
+      "grounded_edits": [
+        {
+          "path": "calculator.py",
+          "original_old": "def multiply(a: int, b: int) -> int:",
+          "grounded_old": "def multiply(a: int, b: int) -> int:",
+          "new": "def multiply(a: int, b: int) -> int:\n    return a * b",
+          "grounding_strategy": "exact",
+          "grounding_candidates": 1
+        }
+      ],
+      "grounding_used": false,
+      "grounding_failure": null,
+      "committed": true,
+      "syntax_valid": true,
+      "behavior_success": true,
+      "outcome": "success",
+      "changed_files": 1,
+      "diff_added_lines": 1,
+      "diff_removed_lines": 0,
+      "diff": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,2 +1,3 @@\n def multiply(a: int, b: int) -> int:\n+    return a * b\n     return a + b",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_multiply_positive_values _________________________\n\n    def test_multiply_positive_values() -> None:\n>       assert multiply(4, 3) == 12\nE       assert 7 == 12\nE        +  where 7 = multiply(4, 3)\n\ntest_calculator.py:5: AssertionError\n_________________________ test_multiply_negative_value _________________________\n\n    def test_multiply_negative_value() -> None:\n>       assert multiply(-2, 5) == -10\nE       assert 3 == -10\nE        +  where 3 = multiply(-2, 5)\n\ntest_calculator.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED test_calculator.py::test_multiply_positive_values - assert 7 == 12\nFAILED test_calculator.py::test_multiply_negative_value - assert 3 == -10\n2 failed in 0.03s\n"
+      },
+      "verification_after": {
+        "returncode": 0,
+        "passed": true,
+        "raw_output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      }
+    },
+    {
+      "task_id": "feedback-002",
+      "category": "runtime_key_error",
+      "task": "Fix display_name so that it returns nickname when present and otherwise falls back to name.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "application_failure",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "profile.py",
+          "old": "return profile['nickname']",
+          "new": "return profile.get('nickname', profile['name'])"
+        }
+      ],
+      "preflight_valid": true,
+      "grounded_edits": [
+        {
+          "path": "profile.py",
+          "original_old": "return profile['nickname']",
+          "grounded_old": "    return profile[\"nickname\"]",
+          "new": "return profile.get('nickname', profile['name'])",
+          "grounding_strategy": "token_equivalent",
+          "grounding_candidates": 1
+        }
+      ],
+      "grounding_used": true,
+      "grounding_failure": null,
+      "committed": true,
+      "syntax_valid": false,
+      "behavior_success": false,
+      "outcome": "invalid_code",
+      "changed_files": 1,
+      "diff_added_lines": 0,
+      "diff_removed_lines": 1,
+      "diff": "--- a/profile.py\n+++ b/profile.py\n@@ -1,2 +1,2 @@\n def display_name(profile: dict[str, str]) -> str:\n-    return profile[\"nickname\"]+return profile.get('nickname', profile['name'])",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_falls_back_to_name ____________________________\n\n    def test_falls_back_to_name() -> None:\n>       assert display_name(\n            {\"name\": \"Ada\"}\n        ) == \"Ada\"\n\ntest_profile.py:11: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nprofile = {'name': 'Ada'}\n\n    def display_name(profile: dict[str, str]) -> str:\n>       return profile[\"nickname\"]\n               ^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'nickname'\n\nprofile.py:2: KeyError\n=========================== short test summary info ============================\nFAILED test_profile.py::test_falls_back_to_name - KeyError: 'nickname'\n1 failed, 1 passed in 0.03s\n"
+      },
+      "verification_after": {
+        "returncode": 2,
+        "passed": false,
+        "raw_output": "\n==================================== ERRORS ====================================\n_______________________ ERROR collecting test_profile.py _______________________\n/home/bhargavi/Documents/Hewn/.venv/lib/python3.12/site-packages/_pytest/python.py:508: in importtestmodule\n    mod = import_path(\n/home/bhargavi/Documents/Hewn/.venv/lib/python3.12/site-packages/_pytest/pathlib.py:596: in import_path\n    importlib.import_module(module_name)\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1387: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/bhargavi/Documents/Hewn/.venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:188: in exec_module\n    exec(co, module.__dict__)\ntest_profile.py:1: in <module>\n    from profile import display_name\nE     File \"/tmp/hewn-feedback-002-ukmppv5l/feedback-002/profile.py\", line 2\nE       return profile.get('nickname', profile['name'])\nE       ^^^^^^\nE   IndentationError: expected an indented block after function definition on line 1\n=========================== short test summary info ============================\nERROR test_profile.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.32s\n"
+      }
+    },
+    {
+      "task_id": "feedback-003",
+      "category": "boolean_semantic_error",
+      "task": "Fix can_delete so that authenticated owners and authenticated admins can delete, while unauthenticated users cannot.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "verification_failure",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "access.py",
+          "old": "return authenticated and owner or admin",
+          "new": "return authenticated and owner or admin and not is_authenticated"
+        }
+      ],
+      "preflight_valid": true,
+      "grounded_edits": [
+        {
+          "path": "access.py",
+          "original_old": "return authenticated and owner or admin",
+          "grounded_old": "return authenticated and owner or admin",
+          "new": "return authenticated and owner or admin and not is_authenticated",
+          "grounding_strategy": "exact",
+          "grounding_candidates": 1
+        }
+      ],
+      "grounding_used": false,
+      "grounding_failure": null,
+      "committed": true,
+      "syntax_valid": true,
+      "behavior_success": false,
+      "outcome": "verification_failure",
+      "changed_files": 1,
+      "diff_added_lines": 0,
+      "diff_removed_lines": 1,
+      "diff": "--- a/access.py\n+++ b/access.py\n@@ -4,4 +4,4 @@\n     owner: bool,\n     admin: bool,\n ) -> bool:\n-    return authenticated and owner or admin+    return authenticated and owner or admin and not is_authenticated",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": "...F                                                                     [100%]\n=================================== FAILURES ===================================\n___________________ test_unauthenticated_admin_cannot_delete ___________________\n\n    def test_unauthenticated_admin_cannot_delete() -> None:\n>       assert not can_delete(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\nE       assert not True\nE        +  where True = can_delete(authenticated=False, owner=False, admin=True)\n\ntest_access.py:29: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_unauthenticated_admin_cannot_delete - assert not ...\n1 failed, 3 passed in 0.04s\n"
+      },
+      "verification_after": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F.F                                                                     [100%]\n=================================== FAILURES ===================================\n_____________________ test_authenticated_admin_can_delete ______________________\n\n    def test_authenticated_admin_can_delete() -> None:\n>       assert can_delete(\n            authenticated=True,\n            owner=False,\n            admin=True,\n        )\n\ntest_access.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nauthenticated = True, owner = False, admin = True\n\n    def can_delete(\n        *,\n        authenticated: bool,\n        owner: bool,\n        admin: bool,\n    ) -> bool:\n>       return authenticated and owner or admin and not is_authenticated\n                                                        ^^^^^^^^^^^^^^^^\nE       NameError: name 'is_authenticated' is not defined\n\naccess.py:7: NameError\n___________________ test_unauthenticated_admin_cannot_delete ___________________\n\n    def test_unauthenticated_admin_cannot_delete() -> None:\n>       assert not can_delete(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\n\ntest_access.py:29: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nauthenticated = False, owner = False, admin = True\n\n    def can_delete(\n        *,\n        authenticated: bool,\n        owner: bool,\n        admin: bool,\n    ) -> bool:\n>       return authenticated and owner or admin and not is_authenticated\n                                                        ^^^^^^^^^^^^^^^^\nE       NameError: name 'is_authenticated' is not defined\n\naccess.py:7: NameError\n=========================== short test summary info ============================\nFAILED test_access.py::test_authenticated_admin_can_delete - NameError: name ...\nFAILED test_access.py::test_unauthenticated_admin_cannot_delete - NameError: ...\n2 failed, 2 passed in 0.03s\n"
+      }
+    },
+    {
+      "task_id": "feedback-004",
+      "category": "incomplete_same_file_behavior",
+      "task": "Fix retry normalization so that values are clamped to the configured MIN_RETRIES and MAX_RETRIES range.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "verification_failure",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "limits.py",
+          "old": "if value < MIN_RETRIES:",
+          "new": "if value < MIN_RETRIES and value <= MAX_RETRIES:"
+        },
+        {
+          "path": "limits.py",
+          "old": "if value > MAX_RETRIES:",
+          "new": "if value > MAX_RETRIES and value <= MAX_RETRIES:"
+        }
+      ],
+      "preflight_valid": true,
+      "grounded_edits": [
+        {
+          "path": "limits.py",
+          "original_old": "if value < MIN_RETRIES:",
+          "grounded_old": "if value < MIN_RETRIES:",
+          "new": "if value < MIN_RETRIES and value <= MAX_RETRIES:",
+          "grounding_strategy": "exact",
+          "grounding_candidates": 1
+        },
+        {
+          "path": "limits.py",
+          "original_old": "if value > MAX_RETRIES:",
+          "grounded_old": "if value > MAX_RETRIES:",
+          "new": "if value > MAX_RETRIES and value <= MAX_RETRIES:",
+          "grounding_strategy": "exact",
+          "grounding_candidates": 1
+        }
+      ],
+      "grounding_used": false,
+      "grounding_failure": null,
+      "committed": true,
+      "syntax_valid": true,
+      "behavior_success": false,
+      "outcome": "verification_failure",
+      "changed_files": 1,
+      "diff_added_lines": 2,
+      "diff_removed_lines": 2,
+      "diff": "--- a/limits.py\n+++ b/limits.py\n@@ -3,10 +3,10 @@\n \n \n def normalize_retries(value: int) -> int:\n-    if value < MIN_RETRIES:\n+    if value < MIN_RETRIES and value <= MAX_RETRIES:\n         return 0\n \n-    if value > MAX_RETRIES:\n+    if value > MAX_RETRIES and value <= MAX_RETRIES:\n         return 3\n \n     return value",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 0 == 2\nE        +  where 0 = normalize_retries(1)\n\ntest_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_range - assert 0 == 2\n1 failed, 1 passed in 0.02s\n"
+      },
+      "verification_after": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 0 == 2\nE        +  where 0 = normalize_retries(1)\n\ntest_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_range - assert 0 == 2\n1 failed, 1 passed in 0.02s\n"
+      }
+    },
+    {
+      "task_id": "feedback-005",
+      "category": "runtime_name_error",
+      "task": "Complete the timeout rename so that request_timeout uses REQUEST_TIMEOUT and existing behavior is preserved.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "application_failure",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "config.py",
+          "old": "DEFAULT_TIMEOUT = 10",
+          "new": "DEFAULT_TIMEOUT = REQUEST_TIMEOUT"
+        },
+        {
+          "path": "client.py",
+          "old": "from config import DEFAULT_TIMEOUT",
+          "new": "from config import REQUEST_TIMEOUT"
+        }
+      ],
+      "preflight_valid": false,
+      "grounded_edits": [],
+      "grounding_used": false,
+      "grounding_failure": {
+        "edit_index": 0,
+        "path": "config.py",
+        "original_old": "DEFAULT_TIMEOUT = 10",
+        "strategy": null,
+        "candidates": 0,
+        "error": "Text to replace was not found and could not be deterministically grounded"
+      },
+      "committed": false,
+      "syntax_valid": true,
+      "behavior_success": false,
+      "outcome": "application_failure",
+      "changed_files": 0,
+      "diff_added_lines": 0,
+      "diff_removed_lines": 0,
+      "diff": "",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________________ test_timeout_behavior _____________________________\n\n    def test_timeout_behavior() -> None:\n>       assert request_timeout() == 10\n               ^^^^^^^^^^^^^^^^^\n\ntest_client.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def request_timeout() -> int:\n>       return DEFAULT_TIMEOUT\n               ^^^^^^^^^^^^^^^\nE       NameError: name 'DEFAULT_TIMEOUT' is not defined\n\nclient.py:5: NameError\n=========================== short test summary info ============================\nFAILED test_client.py::test_timeout_behavior - NameError: name 'DEFAULT_TIMEO...\n1 failed, 1 passed in 0.02s\n"
+      },
+      "verification_after": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________________ test_timeout_behavior _____________________________\n\n    def test_timeout_behavior() -> None:\n>       assert request_timeout() == 10\n               ^^^^^^^^^^^^^^^^^\n\ntest_client.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def request_timeout() -> int:\n>       return DEFAULT_TIMEOUT\n               ^^^^^^^^^^^^^^^\nE       NameError: name 'DEFAULT_TIMEOUT' is not defined\n\nclient.py:5: NameError\n=========================== short test summary info ============================\nFAILED test_client.py::test_timeout_behavior - NameError: name 'DEFAULT_TIMEO...\n1 failed, 1 passed in 0.02s\n"
+      }
+    },
+    {
+      "task_id": "feedback-006",
+      "category": "expression_grouping_error",
+      "task": "Fix fahrenheit_to_celsius so that it correctly converts Fahrenheit temperatures to Celsius.",
+      "source_condition": "normalized_output",
+      "source_result_outcome": "success",
+      "model_reused": true,
+      "new_model_calls": 0,
+      "proposed_edits": [
+        {
+          "path": "temperature.py",
+          "old": "return value - 32 * 5 / 9",
+          "new": "return (value - 32) * 5 / 9"
+        }
+      ],
+      "preflight_valid": true,
+      "grounded_edits": [
+        {
+          "path": "temperature.py",
+          "original_old": "return value - 32 * 5 / 9",
+          "grounded_old": "return value - 32 * 5 / 9",
+          "new": "return (value - 32) * 5 / 9",
+          "grounding_strategy": "exact",
+          "grounding_candidates": 1
+        }
+      ],
+      "grounding_used": false,
+      "grounding_failure": null,
+      "committed": true,
+      "syntax_valid": true,
+      "behavior_success": true,
+      "outcome": "success",
+      "changed_files": 1,
+      "diff_added_lines": 0,
+      "diff_removed_lines": 1,
+      "diff": "--- a/temperature.py\n+++ b/temperature.py\n@@ -1,2 +1,2 @@\n def fahrenheit_to_celsius(value: float) -> float:\n-    return value - 32 * 5 / 9+    return (value - 32) * 5 / 9",
+      "verification_before": {
+        "returncode": 1,
+        "passed": false,
+        "raw_output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_freezing_point ______________________________\n\n    def test_freezing_point() -> None:\n>       assert fahrenheit_to_celsius(32) == 0\nE       assert 14.222222222222221 == 0\nE        +  where 14.222222222222221 = fahrenheit_to_celsius(32)\n\ntest_temperature.py:5: AssertionError\n______________________________ test_boiling_point ______________________________\n\n    def test_boiling_point() -> None:\n>       assert fahrenheit_to_celsius(212) == 100\nE       assert 194.22222222222223 == 100\nE        +  where 194.22222222222223 = fahrenheit_to_celsius(212)\n\ntest_temperature.py:9: AssertionError\n__________________________ test_negative_temperature ___________________________\n\n    def test_negative_temperature() -> None:\n>       assert fahrenheit_to_celsius(-40) == -40\nE       assert -57.77777777777778 == -40\nE        +  where -57.77777777777778 = fahrenheit_to_celsius(-40)\n\ntest_temperature.py:13: AssertionError\n=========================== short test summary info ============================\nFAILED test_temperature.py::test_freezing_point - assert 14.222222222222221 == 0\nFAILED test_temperature.py::test_boiling_point - assert 194.22222222222223 ==...\nFAILED test_temperature.py::test_negative_temperature - assert -57.7777777777...\n3 failed in 0.02s\n"
+      },
+      "verification_after": {
+        "returncode": 0,
+        "passed": true,
+        "raw_output": "...                                                                      [100%]\n3 passed in 0.00s\n"
+      }
+    }
+  ]
+}
