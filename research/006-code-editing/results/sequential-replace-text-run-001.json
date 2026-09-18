@@ -1,0 +1,533 @@
+{
+  "experiment": "module_6_sequential_replace_text",
+  "configuration": {
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "temperature": 0.0,
+    "max_tokens": 256,
+    "editing_primitive": "replace_text",
+    "max_edit_attempts": 4,
+    "application_feedback": true,
+    "updated_source_after_attempt": true,
+    "source_supplied": true,
+    "verification": "evaluator_side_only",
+    "task_count": 6,
+    "runs_per_task": 1,
+    "repeated_trials": false
+  },
+  "summary": {
+    "behavior_successes": 1,
+    "protocol_successes": 5,
+    "completed_by_model": 1,
+    "exhausted_tasks": 4,
+    "total_edit_attempts": 19,
+    "total_successful_edits": 8,
+    "total_failed_edits": 11,
+    "outcomes": {
+      "success": 1,
+      "application_failure": 2,
+      "attempt_limit": 2,
+      "protocol_failure": 1
+    },
+    "total_seconds": 122.45309442100552
+  },
+  "records": [
+    {
+      "task_id": "edit-001",
+      "category": "unique_expression",
+      "task": "Fix add so it returns the sum of its two arguments.",
+      "source_files": [
+        "calculator.py"
+      ],
+      "test_file": "test_calculator.py",
+      "outcome": "success",
+      "behavior_correct": true,
+      "done": true,
+      "exhausted": false,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 3,
+      "successful_edits": 3,
+      "failed_edits": 0,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"calculator.py\",\"old\":\"return a - b\",\"new\":\"return a + b\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "calculator.py",
+            "old": "return a - b",
+            "new": "return a + b"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated calculator.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"calculator.py\",\"old\":\"return a + b\",\"new\":\"return a - b\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "calculator.py",
+            "old": "return a + b",
+            "new": "return a - b"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated calculator.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"calculator.py\",\"old\":\"return a - b\",\"new\":\"return a + b\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "calculator.py",
+            "old": "return a - b",
+            "new": "return a + b"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated calculator.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"done\"}",
+          "kind": "done",
+          "protocol_error": null,
+          "parsed_arguments": null,
+          "application_succeeded": null,
+          "application_output": null,
+          "application_error": null
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+        "stderr": "",
+        "seconds": 0.4542439770011697
+      },
+      "files_modified": [
+        "calculator.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,2 +1,2 @@\n def add(a: int, b: int) -> int:\n-    return a - b\n+    return a + b\n",
+      "model_and_application_seconds": 23.15517907600588
+    },
+    {
+      "task_id": "edit-002",
+      "category": "repeated_expression",
+      "task": "user_status(True) should return \"active\". Preserve the other status behavior.",
+      "source_files": [
+        "status.py"
+      ],
+      "test_file": "test_status.py",
+      "outcome": "application_failure",
+      "behavior_correct": false,
+      "done": false,
+      "exhausted": true,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 4,
+      "successful_edits": 0,
+      "failed_edits": 4,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"status.py\",\"old\":\"active\",\"new\":\"active\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "status.py",
+            "old": "active",
+            "new": "active"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"status.py\",\"old\":\"active\",\"new\":\"active\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "status.py",
+            "old": "active",
+            "new": "active"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"status.py\",\"old\":\"active\",\"new\":\"active\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "status.py",
+            "old": "active",
+            "new": "active"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"status.py\",\"old\":\"active\",\"new\":\"active\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "status.py",
+            "old": "active",
+            "new": "active"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_user_status _______________________________\n\n    def test_user_status() -> None:\n>       assert user_status(True) == \"active\"\nE       AssertionError: assert 'pending' == 'active'\nE         \nE         - active\nE         + pending\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-002/test_status.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED test_status.py::test_user_status - AssertionError: assert 'pending' ==...\n1 failed, 1 passed in 0.03s\n",
+        "stderr": "",
+        "seconds": 0.47198886900150683
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_and_application_seconds": 19.632871742993302
+    },
+    {
+      "task_id": "edit-003",
+      "category": "insertion",
+      "task": "Reject discounts below 0 or above 1 by raising ValueError. Preserve valid discount behavior.",
+      "source_files": [
+        "pricing.py"
+      ],
+      "test_file": "test_pricing.py",
+      "outcome": "application_failure",
+      "behavior_correct": false,
+      "done": false,
+      "exhausted": true,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 4,
+      "successful_edits": 0,
+      "failed_edits": 4,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"pricing.py\",\"old\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\",\"new\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "pricing.py",
+            "old": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')",
+            "new": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace was not found"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"pricing.py\",\"old\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\",\"new\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "pricing.py",
+            "old": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')",
+            "new": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace was not found"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"pricing.py\",\"old\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\",\"new\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "pricing.py",
+            "old": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')",
+            "new": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace was not found"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"pricing.py\",\"old\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\",\"new\":\"raise ValueError(f'Discount must be between 0 and 1, got {discount}')\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "pricing.py",
+            "old": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')",
+            "new": "raise ValueError(f'Discount must be between 0 and 1, got {discount}')"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace was not found"
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".FF                                                                      [100%]\n=================================== FAILURES ===================================\n_________________________ test_invalid_discount[-0.1] __________________________\n\ndiscount = -0.1\n\n    @pytest.mark.parametrize(\"discount\", [-0.1, 1.1])\n    def test_invalid_discount(discount: float) -> None:\n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\ntest_pricing.py:12: Failed\n__________________________ test_invalid_discount[1.1] __________________________\n\ndiscount = 1.1\n\n    @pytest.mark.parametrize(\"discount\", [-0.1, 1.1])\n    def test_invalid_discount(discount: float) -> None:\n>       with pytest.raises(ValueError):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE ValueError\n\ntest_pricing.py:12: Failed\n=========================== short test summary info ============================\nFAILED test_pricing.py::test_invalid_discount[-0.1] - Failed: DID NOT RAISE V...\nFAILED test_pricing.py::test_invalid_discount[1.1] - Failed: DID NOT RAISE Va...\n2 failed, 1 passed in 0.04s\n",
+        "stderr": "",
+        "seconds": 0.5014691129981657
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_and_application_seconds": 29.25978413700068
+    },
+    {
+      "task_id": "edit-004",
+      "category": "conditional",
+      "task": "Authenticated administrators should also be allowed to edit. Unauthenticated users must remain denied.",
+      "source_files": [
+        "access.py"
+      ],
+      "test_file": "test_access.py",
+      "outcome": "attempt_limit",
+      "behavior_correct": false,
+      "done": false,
+      "exhausted": true,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 4,
+      "successful_edits": 4,
+      "failed_edits": 0,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"access.py\",\"old\":\"authenticated and owner\",\"new\":\"authenticated or owner\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "access.py",
+            "old": "authenticated and owner",
+            "new": "authenticated or owner"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated access.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"access.py\",\"old\":\"authenticated or owner\",\"new\":\"authenticated and owner\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "access.py",
+            "old": "authenticated or owner",
+            "new": "authenticated and owner"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated access.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"access.py\",\"old\":\"authenticated and owner\",\"new\":\"authenticated or owner\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "access.py",
+            "old": "authenticated and owner",
+            "new": "authenticated or owner"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated access.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"access.py\",\"old\":\"authenticated or owner\",\"new\":\"authenticated and owner\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "access.py",
+            "old": "authenticated or owner",
+            "new": "authenticated and owner"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated access.py",
+          "application_error": null
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F..                                                                     [100%]\n=================================== FAILURES ===================================\n______________________ test_authenticated_admin_can_edit _______________________\n\n    def test_authenticated_admin_can_edit() -> None:\n>       assert can_edit(\n            authenticated=True,\n            owner=False,\n            admin=True,\n        )\nE       assert False\nE        +  where False = can_edit(authenticated=True, owner=False, admin=True)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-004/test_access.py:13: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_authenticated_admin_can_edit - assert False\n1 failed, 3 passed in 0.03s\n",
+        "stderr": "",
+        "seconds": 0.46379381899896543
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_and_application_seconds": 19.365573337003298
+    },
+    {
+      "task_id": "edit-005",
+      "category": "multiple_same_file",
+      "task": "Change the supported retry range to 2 through 5. Values below the range should normalize to 2 and values above it should normalize to 5.",
+      "source_files": [
+        "limits.py"
+      ],
+      "test_file": "test_limits.py",
+      "outcome": "protocol_failure",
+      "behavior_correct": false,
+      "done": false,
+      "exhausted": false,
+      "protocol_failure": true,
+      "protocol_error": "Model response is not valid JSON",
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 0,
+      "successful_edits": 0,
+      "failed_edits": 0,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"limits.py\",\"old\":\"MIN_RETRIES = 1\",\"new\":\"MIN_RETRIES = 2\"}}\n{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"limits.py\",\"old\":\"MAX_RETRIES = 3\",\"new\":\"MAX_RETRIES = 5\"}}\n{\"type\":\"done\"}",
+          "kind": "protocol_failure",
+          "protocol_error": "Model response is not valid JSON",
+          "parsed_arguments": null,
+          "application_succeeded": null,
+          "application_output": null,
+          "application_error": null
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_____________________________ test_retry_constants _____________________________\n\n    def test_retry_constants() -> None:\n>       assert MIN_RETRIES == 2\nE       assert 1 == 2\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-005/test_limits.py:9: AssertionError\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 1 == 2\nE        +  where 1 = normalize_retries(1)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-005/test_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_constants - assert 1 == 2\nFAILED test_limits.py::test_retry_range - assert 1 == 2\n2 failed in 0.04s\n",
+        "stderr": "",
+        "seconds": 0.4927985320027801
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_and_application_seconds": 9.252905870998802
+    },
+    {
+      "task_id": "edit-006",
+      "category": "multiple_files",
+      "task": "Rename the timeout constant to REQUEST_TIMEOUT while preserving the value and behavior.",
+      "source_files": [
+        "config.py",
+        "client.py"
+      ],
+      "test_file": "test_client.py",
+      "outcome": "attempt_limit",
+      "behavior_correct": false,
+      "done": false,
+      "exhausted": true,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "model_failure": false,
+      "model_error": null,
+      "edit_attempts": 4,
+      "successful_edits": 1,
+      "failed_edits": 3,
+      "turns": [
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"config.py\",\"old\":\"DEFAULT_TIMEOUT\",\"new\":\"REQUEST_TIMEOUT\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "config.py",
+            "old": "DEFAULT_TIMEOUT",
+            "new": "REQUEST_TIMEOUT"
+          },
+          "application_succeeded": true,
+          "application_output": "Updated config.py",
+          "application_error": null
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"client.py\",\"old\":\"DEFAULT_TIMEOUT\",\"new\":\"REQUEST_TIMEOUT\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "client.py",
+            "old": "DEFAULT_TIMEOUT",
+            "new": "REQUEST_TIMEOUT"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"client.py\",\"old\":\"DEFAULT_TIMEOUT\",\"new\":\"REQUEST_TIMEOUT\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "client.py",
+            "old": "DEFAULT_TIMEOUT",
+            "new": "REQUEST_TIMEOUT"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        },
+        {
+          "raw_response": "{\"type\":\"tool_call\",\"name\":\"replace_text\",\"arguments\":{\"path\":\"client.py\",\"old\":\"DEFAULT_TIMEOUT\",\"new\":\"REQUEST_TIMEOUT\"}}",
+          "kind": "tool_call",
+          "protocol_error": null,
+          "parsed_arguments": {
+            "path": "client.py",
+            "old": "DEFAULT_TIMEOUT",
+            "new": "REQUEST_TIMEOUT"
+          },
+          "application_succeeded": false,
+          "application_output": null,
+          "application_error": "Text to replace occurs more than once"
+        }
+      ],
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 2,
+        "stdout": "\n==================================== ERRORS ====================================\n_______________________ ERROR collecting test_client.py ________________________\nImportError while importing test module '/tmp/hewn-sequential-edit-006-i7n1ul_t/edit-006/test_client.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntest_client.py:3: in <module>\n    from client import request_timeout\nclient.py:1: in <module>\n    from config import DEFAULT_TIMEOUT\nE   ImportError: cannot import name 'DEFAULT_TIMEOUT' from 'config' (/tmp/hewn-sequential-edit-006-i7n1ul_t/edit-006/config.py). Did you mean: 'REQUEST_TIMEOUT'?\n=========================== short test summary info ============================\nERROR test_client.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.14s\n",
+        "stderr": "",
+        "seconds": 0.5892673189955531
+      },
+      "files_modified": [
+        "config.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/config.py\n+++ b/config.py\n@@ -1 +1 @@\n-DEFAULT_TIMEOUT = 10\n+REQUEST_TIMEOUT = 10\n",
+      "model_and_application_seconds": 18.78648647799855
+    }
+  ]
+}
