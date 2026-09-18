@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new state (suspended) that is not handled in the public account-status formatter. This violates the task requirement that suspended accounts must not be authorized and the public account-status formatter must report them as suspended."
+}

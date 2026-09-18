@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch does not handle .yaml files correctly. It raises a ValueError for .yaml files, which contradicts the task requirement to allow .yaml files."
+}

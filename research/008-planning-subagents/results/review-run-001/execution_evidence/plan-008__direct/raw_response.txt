@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new keyword argument 'verbose' to the `Session` class, which is not present in the original `Session` class. This change violates the task requirement of maintaining the existing non-verbose sessions unchanged."
+}

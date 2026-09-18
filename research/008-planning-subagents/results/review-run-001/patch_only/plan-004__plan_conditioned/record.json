@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-004__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 8.049375511000108,
+  "prompt_chars": 2123,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new state (suspended) that is not authorized and does not match the task requirements. The public account-status formatter should report suspended accounts as suspended, but the patch does not handle this case.",
+  "response_chars": 284,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-004",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

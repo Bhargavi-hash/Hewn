@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new condition that does not align with the task requirements. The patch adds an 'inactive' suffix to the display name only when the user is active and not an administrator, which contradicts the requirement that both rules must compose when both are true."
+}

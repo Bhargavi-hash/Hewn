@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The patch changes the behavior of the parser to accept .yaml files, which is not allowed according to the task."
+}

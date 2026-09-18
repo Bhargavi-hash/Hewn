@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-001__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 6.452653768001255,
+  "prompt_chars": 1879,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch does not introduce a behavior that contradicts the task. It only changes the existing logic without adding new features or altering the intended behavior.",
+  "response_chars": 215,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-001",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

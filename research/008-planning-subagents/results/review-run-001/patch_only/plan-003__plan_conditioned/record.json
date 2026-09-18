@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-003__plan_conditioned",
+  "classification": "false_positive",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 8.332978006001213,
+  "prompt_chars": 1777,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The patch renames the request timeout setting to NETWORK_TIMEOUT in both the client and config files, preserving the configured timeout value and keeping the client behavior working as intended.",
+  "response_chars": 235,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-003",
+  "temperature": 0.0,
+  "verdict": "accept"
+}

@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new timeout setting named NETWORK_TIMEOUT, which is not part of the runtime timeout behavior as specified in the task. This change contradicts the task's requirement to preserve the configured timeout value and keep the client behavior working."
+}

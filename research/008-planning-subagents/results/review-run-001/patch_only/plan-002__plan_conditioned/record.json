@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-002__plan_conditioned",
+  "classification": null,
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 9.750806665999335,
+  "prompt_chars": 1694,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new condition that does not align with the task requirements. The patch adds an 'inactive' suffix to the display name only when the user is active and not an administrator, which contradicts the requirement that both rules must compose when both are true.",
+  "response_chars": 329,
+  "review_condition": "patch_only",
+  "runtime_pass": null,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": false,
+  "task_id": "plan-002",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

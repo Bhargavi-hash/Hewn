@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-007__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 9.259483791000093,
+  "prompt_chars": 2142,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new dependency on the `os` module, which is not allowed in the original repository.",
+  "response_chars": 157,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-007",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

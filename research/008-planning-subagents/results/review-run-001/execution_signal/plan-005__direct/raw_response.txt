@@ -1,0 +1,4 @@
+{
+  "verdict": "accept",
+  "reason": "The candidate patch changes the default cache TTL from 60 seconds to 120 seconds while preserving explicit caller-provided TTL values, and updates the verification surface to own the default behavior. The patch does not introduce any behavior that contradicts the task."
+}

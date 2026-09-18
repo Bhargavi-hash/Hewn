@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new variable `MAX_ATTEMPTS` and changes the logic of the `can_retry` function without providing a clear reason for the change."
+}

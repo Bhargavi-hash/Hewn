@@ -1,0 +1,4 @@
+{
+  "verdict": "accept",
+  "reason": "The patch correctly adds support for .yaml files while maintaining the existing JSON behavior."
+}

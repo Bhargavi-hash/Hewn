@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new default TTL value without preserving explicit caller-provided TTL values. This contradicts the task requirement to preserve explicit caller-provided TTL values."
+}

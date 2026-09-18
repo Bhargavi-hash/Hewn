@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 8.797764692000783,
+  "prompt_chars": 2336,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new behavior that contradicts the task. The verbose execution mode is not configurable at session construction, but it is propagated through the agent, which contradicts the requirement to configure it at session construction.",
+  "response_chars": 300,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-004__direct",
+  "classification": null,
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.030430071999945,
+  "prompt_chars": 2175,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new state (suspended) without updating the public account-status formatter to report it as suspended. This contradicts the task requirement.",
+  "response_chars": 214,
+  "review_condition": "patch_only",
+  "runtime_pass": null,
+  "source_condition": "direct",
+  "syntax_valid": false,
+  "task_id": "plan-004",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

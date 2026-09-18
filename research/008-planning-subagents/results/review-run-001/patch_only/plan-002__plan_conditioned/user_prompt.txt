@@ -1,0 +1,32 @@
+Review this candidate patch.
+
+Task:
+Update user display formatting so inactive users are marked as inactive and administrators receive an admin suffix. Both rules must compose when both are true.
+
+Original visible repository:
+[File 1]
+path: src/users.py
+from __future__ import annotations
+
+
+def display_name(name: str, *, active: bool, admin: bool) -> str:
+    return name
+
+
+
+Candidate patch:
+--- a/src/users.py
++++ b/src/users.py
+@@ -1,5 +1,11 @@
+ from __future__ import annotations
+ 
+ 
+-def display_name(name: str, *, active: bool, admin: bool) -> str:
++def display_name(name: str, *, active: bool, admin: bool) -> str
++
++    if admin:
++        return name + ' admin'
++
++    if active and not admin:
++        return name + ' inactive':
+     return name

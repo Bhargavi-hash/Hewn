@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-004__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 4.764116090000243,
+  "prompt_chars": 2165,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new state (suspended) that is not handled in the public account-status formatter. This could lead to incorrect behavior if the formatter does not account for the new state.",
+  "response_chars": 246,
+  "review_condition": "execution_signal",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-004",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

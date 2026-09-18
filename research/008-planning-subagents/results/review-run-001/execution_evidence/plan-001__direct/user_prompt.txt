@@ -1,0 +1,69 @@
+Review this candidate patch.
+
+Task:
+Extend the retry policy so callers can determine whether another attempt is allowed and how long to wait before that attempt. Invalid attempt numbers must be rejected.
+
+Original visible repository:
+[File 1]
+path: src/retry.py
+from __future__ import annotations
+
+MAX_ATTEMPTS = 3
+BASE_DELAY_SECONDS = 2
+
+
+def can_retry(attempt: int) -> bool:
+    return attempt < MAX_ATTEMPTS
+
+
+def retry_delay(attempt: int) -> int:
+    return BASE_DELAY_SECONDS * attempt
+
+
+
+Candidate patch:
+--- a/src/retry.py
++++ b/src/retry.py
+@@ -1,12 +1,14 @@
+ from __future__ import annotations
+ 
+-MAX_ATTEMPTS = 3
+-BASE_DELAY_SECONDS = 2
++MAX_ATTEMPTS = 4
++BASE_DELAY_SECONDS = 3
+ 
+ 
+ def can_retry(attempt: int) -> bool:
++    return attempt < MAX_ATTEMPTS
+     return attempt < MAX_ATTEMPTS
+ 
+ 
+ def retry_delay(attempt: int) -> int:
+     return BASE_DELAY_SECONDS * attempt
++    return BASE_DELAY_SECONDS * attempt
+
+
+Deterministic execution evidence:
+{
+  "failed_checks": [
+    {
+      "assertion": "assert 4 == 3",
+      "exception": "AssertionError",
+      "location": "__hewn_oracle__/test_behavior.py:5",
+      "test": "__hewn_oracle__/test_behavior.py::test_retry_policy"
+    },
+    {
+      "exception": "Failed",
+      "location": "__hewn_oracle__/test_behavior.py:17",
+      "message": "DID NOT RAISE ValueError",
+      "test": "__hewn_oracle__/test_behavior.py::test_invalid_attempts_rejected"
+    }
+  ],
+  "summary": {
+    "errors": 0,
+    "failed": 2,
+    "passed": 0
+  },
+  "tool": "pytest",
+  "verification": "failed"
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-007__direct",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 8.093195285000547,
+  "prompt_chars": 2611,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a behavior that contradicts the task. The patch changes the normalized document identifiers to use repository-relative POSIX paths instead of platform-specific path strings, which is not consistent with the task requirement to use platform-specific path strings.",
+  "response_chars": 334,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "direct",
+  "syntax_valid": true,
+  "task_id": "plan-007",
+  "temperature": 0.0,
+  "verdict": "reject"
+}

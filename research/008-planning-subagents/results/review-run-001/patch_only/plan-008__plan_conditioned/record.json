@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__plan_conditioned",
+  "classification": "false_positive",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 12.43503597400013,
+  "prompt_chars": 2294,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch adds a new configuration option `verbose_execution_mode` to the `Agent` class, which is used to control whether the command execution is verbose or not. The patch also updates the `Session` class to use this new configuration option. The existing non-verbose sessions will behave unchanged, as the `verbose_execution_mode` is not set to `True` in the `Session` constructor. The patch does not introduce any behavior that contradicts the task or the original repository.",
+  "response_chars": 530,
+  "review_condition": "patch_only",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "accept"
+}

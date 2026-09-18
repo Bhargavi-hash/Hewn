@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a behavior that contradicts the task. The patch changes the way document identifiers are generated, which is not allowed."
+}

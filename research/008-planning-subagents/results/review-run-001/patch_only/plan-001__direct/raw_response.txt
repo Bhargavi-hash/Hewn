@@ -1,0 +1,4 @@
+{
+  "verdict": "reject",
+  "reason": "The candidate patch introduces a new maximum attempt count (4) without any corresponding changes to the logic for determining whether another attempt is allowed or how long to wait. This introduces an inconsistency with the original task, which only allows up to 3 attempts."
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "plan-008__plan_conditioned",
+  "classification": "true_negative",
+  "max_tokens": 256,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 11.33591916899968,
+  "prompt_chars": 2742,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "reason": "The candidate patch introduces a new keyword argument 'verbose_execution_mode' to the `run_command` function, which is not present in the original `tools.py` file. This change violates the task requirement of not introducing a behavior that contradicts the task.",
+  "response_chars": 303,
+  "review_condition": "execution_evidence",
+  "runtime_pass": false,
+  "source_condition": "plan_conditioned",
+  "syntax_valid": true,
+  "task_id": "plan-008",
+  "temperature": 0.0,
+  "verdict": "reject"
+}
