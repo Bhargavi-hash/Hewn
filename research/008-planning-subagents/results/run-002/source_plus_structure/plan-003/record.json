@@ -1,0 +1,31 @@
+{
+  "category": "cross_file_dependency",
+  "condition": "source_plus_structure",
+  "latency_seconds": 7.402618856000117,
+  "planned_files": [
+    "src/client.py",
+    "src/config.py"
+  ],
+  "planned_symbols": [
+    "NETWORK_RETRIES",
+    "REQUEST_TIMEOUT",
+    "timeout_seconds"
+  ],
+  "planned_verification": [
+    "tests/test_client.py"
+  ],
+  "prompt_chars": 1367,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/client.py\",\n      \"symbols\": [\"timeout_seconds\"],\n      \"operations\": [\"change the required behavior\"]\n    },\n    {\n      \"path\": \"src/config.py\",\n      \"symbols\": [\"NETWORK_RETRIES\", \"REQUEST_TIMEOUT\"],\n      \"operations\": [\"change the required behavior\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_client.py\"\n  ]\n}",
+  "response_chars": 360,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 1.0,
+    "required_symbol_recall": 1.0,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 0.5
+  },
+  "task_id": "plan-003"
+}

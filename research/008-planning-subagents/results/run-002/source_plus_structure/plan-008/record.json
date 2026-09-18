@@ -1,0 +1,33 @@
+{
+  "category": "dependency_reasoning",
+  "condition": "source_plus_structure",
+  "latency_seconds": 11.258345151999492,
+  "planned_files": [
+    "src/agent.py",
+    "src/session.py",
+    "src/tools.py"
+  ],
+  "planned_symbols": [
+    "Agent",
+    "Session",
+    "run_command"
+  ],
+  "planned_verification": [
+    "tests/test_agent.py",
+    "tests/test_session.py"
+  ],
+  "prompt_chars": 1690,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/agent.py\",\n      \"symbols\": [\"Agent\"],\n      \"operations\": [\"add verbose_execution_mode attribute to Agent class\"]\n    },\n    {\n      \"path\": \"src/session.py\",\n      \"symbols\": [\"Session\"],\n      \"operations\": [\"add verbose_execution_mode attribute to Session class\"]\n    },\n    {\n      \"path\": \"src/tools.py\",\n      \"symbols\": [\"run_command\"],\n      \"operations\": [\"add verbose_execution_mode parameter to run_command function\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_agent.py\",\n    \"tests/test_session.py\"\n  ]\n}",
+  "response_chars": 561,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 1.0,
+    "required_symbol_recall": 1.0,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 0.6666666666666666
+  },
+  "task_id": "plan-008"
+}

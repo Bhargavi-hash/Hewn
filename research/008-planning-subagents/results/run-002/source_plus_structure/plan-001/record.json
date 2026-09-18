@@ -1,0 +1,31 @@
+{
+  "category": "same_file_multi_operation",
+  "condition": "source_plus_structure",
+  "latency_seconds": 6.415092272999573,
+  "planned_files": [
+    "src/retry.py"
+  ],
+  "planned_symbols": [
+    "BASE_DELAY_SECONDS",
+    "MAX_ATTEMPTS",
+    "can_retry",
+    "retry_delay"
+  ],
+  "planned_verification": [
+    "tests/test_retry.py"
+  ],
+  "prompt_chars": 1400,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/retry.py\",\n      \"symbols\": [\"MAX_ATTEMPTS\", \"BASE_DELAY_SECONDS\", \"can_retry\", \"retry_delay\"],\n      \"operations\": [\"add the can_retry function\", \"add the retry_delay function\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_retry.py\"\n  ]\n}",
+  "response_chars": 281,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 1.0,
+    "required_symbol_recall": 1.0,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 1.0
+  },
+  "task_id": "plan-001"
+}

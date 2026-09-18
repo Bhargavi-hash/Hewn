@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/parser.py",
+      "symbols": ["parse_config"],
+      "operations": ["allow .yaml configuration files"]
+    }
+  ],
+  "verification": [
+    "tests/test_parser.py"
+  ]
+}

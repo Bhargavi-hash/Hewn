@@ -1,0 +1,28 @@
+{
+  "category": "behavior_verification",
+  "condition": "source_only",
+  "latency_seconds": 8.128895130000274,
+  "planned_files": [
+    "src/parser.py"
+  ],
+  "planned_symbols": [
+    "parse_config"
+  ],
+  "planned_verification": [
+    "tests/test_parser.py"
+  ],
+  "prompt_chars": 1655,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/parser.py\",\n      \"symbols\": [\"parse_config\"],\n      \"operations\": [\"add support for .yaml files\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_parser.py\"\n  ]\n}",
+  "response_chars": 202,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 0.5,
+    "required_symbol_recall": 0.3333333333333333,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 1.0
+  },
+  "task_id": "plan-006"
+}

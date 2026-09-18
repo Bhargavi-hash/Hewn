@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "path": "src/documents.py",
+      "symbols": ["document_id"],
+      "operations": ["change the required behavior"]
+    },
+    {
+      "path": "src/report.py",
+      "symbols": ["report_line"],
+      "operations": ["change the required behavior"]
+    },
+    {
+      "path": "src/search.py",
+      "symbols": ["search_label"],
+      "operations": ["change the required behavior"]
+    }
+  ],
+  "verification": [
+    "tests/test_documents.py",
+    "tests/test_report.py",
+    "tests/test_search.py"
+  ]
+}

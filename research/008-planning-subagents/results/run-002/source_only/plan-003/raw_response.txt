@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/client.py",
+      "symbols": ["timeout_seconds"],
+      "operations": ["change the return value to NETWORK_TIMEOUT"]
+    }
+  ],
+  "verification": [
+    "tests/test_client.py"
+  ]
+}

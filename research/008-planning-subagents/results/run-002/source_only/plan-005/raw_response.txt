@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/cache.py",
+      "symbols": ["DEFAULT_TTL", "cache_ttl"],
+      "operations": ["change the default TTL from 60 seconds to 120 seconds"]
+    }
+  ],
+  "verification": [
+    "tests/test_cache.py"
+  ]
+}

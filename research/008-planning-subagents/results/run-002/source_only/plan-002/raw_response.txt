@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/users.py",
+      "symbols": ["display_name"],
+      "operations": ["add admin suffix to inactive users"]
+    }
+  ],
+  "verification": [
+    "tests/test_users.py"
+  ]
+}

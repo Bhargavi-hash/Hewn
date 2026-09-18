@@ -1,0 +1,28 @@
+{
+  "category": "cross_file_dependency",
+  "condition": "source_only",
+  "latency_seconds": 6.067627209999955,
+  "planned_files": [
+    "src/client.py"
+  ],
+  "planned_symbols": [
+    "timeout_seconds"
+  ],
+  "planned_verification": [
+    "tests/test_client.py"
+  ],
+  "prompt_chars": 1206,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/client.py\",\n      \"symbols\": [\"timeout_seconds\"],\n      \"operations\": [\"change the return value to NETWORK_TIMEOUT\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_client.py\"\n  ]\n}",
+  "response_chars": 220,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 0.5,
+    "required_symbol_recall": 0.5,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 0.5
+  },
+  "task_id": "plan-003"
+}

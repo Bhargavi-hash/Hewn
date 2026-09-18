@@ -1,0 +1,34 @@
+{
+  "category": "dependency_reasoning",
+  "condition": "source_only",
+  "latency_seconds": 14.195135042000402,
+  "planned_files": [
+    "src/documents.py",
+    "src/report.py",
+    "src/search.py"
+  ],
+  "planned_symbols": [
+    "document_id",
+    "report_line",
+    "search_label"
+  ],
+  "planned_verification": [
+    "tests/test_documents.py",
+    "tests/test_report.py",
+    "tests/test_search.py"
+  ],
+  "prompt_chars": 1503,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/documents.py\",\n      \"symbols\": [\"document_id\"],\n      \"operations\": [\"change the required behavior\"]\n    },\n    {\n      \"path\": \"src/report.py\",\n      \"symbols\": [\"report_line\"],\n      \"operations\": [\"change the required behavior\"]\n    },\n    {\n      \"path\": \"src/search.py\",\n      \"symbols\": [\"search_label\"],\n      \"operations\": [\"change the required behavior\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_documents.py\",\n    \"tests/test_report.py\",\n    \"tests/test_search.py\"\n  ]\n}",
+  "response_chars": 527,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 1.0,
+    "required_symbol_recall": 1.0,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 1.0
+  },
+  "task_id": "plan-007"
+}

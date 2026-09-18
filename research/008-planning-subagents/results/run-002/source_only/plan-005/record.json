@@ -1,0 +1,29 @@
+{
+  "category": "behavior_verification",
+  "condition": "source_only",
+  "latency_seconds": 8.07719882299989,
+  "planned_files": [
+    "src/cache.py"
+  ],
+  "planned_symbols": [
+    "DEFAULT_TTL",
+    "cache_ttl"
+  ],
+  "planned_verification": [
+    "tests/test_cache.py"
+  ],
+  "prompt_chars": 1353,
+  "protocol_error": null,
+  "raw_response": "{\n  \"files\": [\n    {\n      \"path\": \"src/cache.py\",\n      \"symbols\": [\"DEFAULT_TTL\", \"cache_ttl\"],\n      \"operations\": [\"change the default TTL from 60 seconds to 120 seconds\"]\n    }\n  ],\n  \"verification\": [\n    \"tests/test_cache.py\"\n  ]\n}",
+  "response_chars": 238,
+  "score": {
+    "protocol_valid": true,
+    "required_file_precision": 1.0,
+    "required_file_recall": 0.5,
+    "required_symbol_recall": 0.5,
+    "unnecessary_files": 0,
+    "verification_precision": 1.0,
+    "verification_recall": 1.0
+  },
+  "task_id": "plan-005"
+}
