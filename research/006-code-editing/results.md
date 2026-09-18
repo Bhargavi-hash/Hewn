@@ -66,3 +66,145 @@ repository modification.
 The next experiment should isolate editing representation from
 independent action selection and completion behavior by requiring the
 model to propose an edit before verification.
+
+## Experiment 002 — Controlled single-action `replace_text`
+
+### Question
+
+When action selection and completion are removed, can the model express
+the required code modification through one exact-once `replace_text`
+operation?
+
+### Controls
+
+- Model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- Temperature: 0
+- Maximum output tokens: 256
+- Same six frozen editing fixtures
+- Relevant source supplied
+- Exactly one permitted action: `replace_text`
+- Final response unavailable during edit proposal
+- Strict Hewn model protocol
+- No JSON repair or Markdown-fence stripping
+- Real Hewn `ToolExecutor`
+- Independent evaluator-side verification
+- One run per task
+
+### Results
+
+| Metric | Result |
+|---|---:|
+| Strict protocol success | 6/6 |
+| Tasks with edit attempt | 6/6 |
+| Tasks with applied edit | 5/6 |
+| Behavioral success | 2/6 |
+| Application failures | 1/6 |
+| Verification failures after application | 3/6 |
+
+### Per-task observations
+
+#### edit-001 — unique expression
+
+The model selected the exact expression `return a - b` and replaced it
+with `return a + b`.
+
+The edit applied successfully and all tests passed.
+
+#### edit-002 — repeated expression
+
+The target value appeared in more than one location. Rather than
+selecting the repeated token alone, the model included surrounding
+control-flow context in the `old` argument, producing a unique target.
+
+The edit applied successfully and all tests passed.
+
+This demonstrates that repeated text does not necessarily require a
+different editing primitive when sufficient unique context can be
+included in the replacement anchor.
+
+#### edit-003 — insertion
+
+The task required adding validation that did not yet exist. The model
+used the desired new conditional as the `old` replacement target even
+though that text was absent from the repository.
+
+`replace_text` rejected the operation with:
+
+`Text to replace was not found`
+
+No repository modification occurred.
+
+This is a targeting failure associated with expressing insertion through
+an exact-replacement interface.
+
+#### edit-004 — conditional logic
+
+The model successfully replaced:
+
+`authenticated and owner`
+
+with:
+
+`authenticated or admin`
+
+The operation applied exactly as requested, but the resulting semantics
+were incorrect. It allowed unauthenticated administrators and regular
+authenticated non-owners.
+
+This is not an application failure of `replace_text`. The proposed
+transformation itself was behaviorally incorrect.
+
+#### edit-005 — multiple edits in one file
+
+The model successfully updated the clamping logic from 0/3 to 2/5, but
+did not update `MIN_RETRIES` and `MAX_RETRIES`.
+
+The resulting implementation failed the constant-value test.
+
+Because the experimental protocol permitted exactly one edit action,
+this result does not establish that `replace_text` cannot solve the
+task. It shows that one edit action was insufficient for the complete
+multi-location modification.
+
+#### edit-006 — multiple files
+
+The model successfully renamed `DEFAULT_TIMEOUT` to `REQUEST_TIMEOUT`
+in `config.py`, but the dependent import and reference in `client.py`
+were unchanged.
+
+Test collection then failed with an import error.
+
+As with edit-005, this exposes a single-action cardinality limitation.
+It does not yet establish a limitation of sequential exact replacement.
+
+### Interpretation
+
+The controlled action constraint removed the pre-editing failure seen
+in Experiment 001: all six responses satisfied the strict protocol and
+all six attempted `replace_text`.
+
+However, successful application was not equivalent to behavioral
+correctness. Five edits applied, while only two tasks passed
+verification.
+
+The failures separate into different layers:
+
+- edit-003: targeting/application failure for an insertion-shaped task;
+- edit-004: semantic reasoning failure despite successful application;
+- edit-005: incomplete multi-location change within one file;
+- edit-006: incomplete coordinated change across files.
+
+The latter two tasks were constrained by the experiment's one-action
+protocol. They therefore motivate testing sequential `replace_text`
+before introducing a more expressive editing primitive.
+
+### Decision
+
+Retain `replace_text`.
+
+Do not introduce a patch-based editor yet.
+
+The next experiment will allow multiple sequential `replace_text`
+operations with application feedback while keeping the task set, model,
+temperature, source availability, parser strictness, and deterministic
+editor fixed.
