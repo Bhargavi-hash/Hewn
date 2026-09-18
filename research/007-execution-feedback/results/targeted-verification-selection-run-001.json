@@ -1,0 +1,386 @@
+{
+  "metadata": {
+    "module": 7,
+    "experiment": "targeted_verification_selection",
+    "selector": "transitive reverse import graph",
+    "baseline": "direct test imports",
+    "model_calls": 0,
+    "mutations": 0,
+    "production_modules": 38,
+    "test_files": 31
+  },
+  "cases": [
+    {
+      "case_id": "TV-001",
+      "changed_path": "src/hewn/completion.py",
+      "changed_module": "hewn.completion",
+      "direct_tests": [
+        "tests/test_completion.py"
+      ],
+      "direct_test_count": 1,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_cli.py",
+        "tests/test_completion.py",
+        "tests/test_session.py"
+      ],
+      "selected_test_count": 5,
+      "transitive_only_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_cli.py",
+        "tests/test_session.py"
+      ],
+      "transitive_only_count": 4,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.8387096774193549
+    },
+    {
+      "case_id": "TV-002",
+      "changed_path": "src/hewn/workspace.py",
+      "changed_module": "hewn.workspace",
+      "direct_tests": [
+        "tests/test_agent.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_command_tools.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_search_tools.py",
+        "tests/test_workspace.py"
+      ],
+      "direct_test_count": 6,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_repository_tools.py",
+        "tests/test_search_tools.py",
+        "tests/test_symbol_tools.py",
+        "tests/test_workspace.py"
+      ],
+      "selected_test_count": 9,
+      "transitive_only_tests": [
+        "tests/test_cli.py",
+        "tests/test_repository_tools.py",
+        "tests/test_symbol_tools.py"
+      ],
+      "transitive_only_count": 3,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.7096774193548387
+    },
+    {
+      "case_id": "TV-003",
+      "changed_path": "src/hewn/tools.py",
+      "changed_module": "hewn.tools",
+      "direct_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_llama_cpp.py",
+        "tests/test_model_protocol.py",
+        "tests/test_repository_tools.py",
+        "tests/test_search_tools.py",
+        "tests/test_session.py",
+        "tests/test_symbol_tools.py",
+        "tests/test_tools.py"
+      ],
+      "direct_test_count": 12,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_llama_cpp.py",
+        "tests/test_model_protocol.py",
+        "tests/test_repository_tools.py",
+        "tests/test_search_tools.py",
+        "tests/test_session.py",
+        "tests/test_symbol_tools.py",
+        "tests/test_tools.py"
+      ],
+      "selected_test_count": 13,
+      "transitive_only_tests": [
+        "tests/test_builtin_tools.py"
+      ],
+      "transitive_only_count": 1,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.5806451612903225
+    },
+    {
+      "case_id": "TV-004",
+      "changed_path": "src/hewn/repository/python_parser.py",
+      "changed_module": "hewn.repository.python_parser",
+      "direct_tests": [
+        "tests/test_python_repository_parser.py",
+        "tests/test_repository_signatures.py"
+      ],
+      "direct_test_count": 2,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_character_budget.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_context_budget.py",
+        "tests/test_context_builder.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_python_repository_parser.py",
+        "tests/test_repository_index.py",
+        "tests/test_repository_models.py",
+        "tests/test_repository_signatures.py",
+        "tests/test_repository_tools.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_search_tools.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py",
+        "tests/test_symbol_documents.py",
+        "tests/test_symbol_tools.py"
+      ],
+      "selected_test_count": 25,
+      "transitive_only_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_character_budget.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_context_budget.py",
+        "tests/test_context_builder.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_repository_index.py",
+        "tests/test_repository_models.py",
+        "tests/test_repository_tools.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_search_tools.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py",
+        "tests/test_symbol_documents.py",
+        "tests/test_symbol_tools.py"
+      ],
+      "transitive_only_count": 23,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.19354838709677424
+    },
+    {
+      "case_id": "TV-005",
+      "changed_path": "src/hewn/repository/index.py",
+      "changed_module": "hewn.repository.index",
+      "direct_tests": [
+        "tests/test_builtin_tools.py",
+        "tests/test_context_builder.py",
+        "tests/test_repository_index.py",
+        "tests/test_repository_tools.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py",
+        "tests/test_symbol_documents.py",
+        "tests/test_symbol_tools.py"
+      ],
+      "direct_test_count": 10,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_builtin_tools.py",
+        "tests/test_character_budget.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_context_budget.py",
+        "tests/test_context_builder.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_python_repository_parser.py",
+        "tests/test_repository_index.py",
+        "tests/test_repository_models.py",
+        "tests/test_repository_signatures.py",
+        "tests/test_repository_tools.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_search_tools.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py",
+        "tests/test_symbol_documents.py",
+        "tests/test_symbol_tools.py"
+      ],
+      "selected_test_count": 25,
+      "transitive_only_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_character_budget.py",
+        "tests/test_cli.py",
+        "tests/test_command_tools.py",
+        "tests/test_context_budget.py",
+        "tests/test_filesystem_tools.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_python_repository_parser.py",
+        "tests/test_repository_models.py",
+        "tests/test_repository_signatures.py",
+        "tests/test_search_tools.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py"
+      ],
+      "transitive_only_count": 15,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.19354838709677424
+    },
+    {
+      "case_id": "TV-006",
+      "changed_path": "src/hewn/retrieval/models.py",
+      "changed_module": "hewn.retrieval.models",
+      "direct_tests": [
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_character_budget.py",
+        "tests/test_context_budget.py",
+        "tests/test_context_builder.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py"
+      ],
+      "direct_test_count": 11,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_bm25_retrieval.py",
+        "tests/test_character_budget.py",
+        "tests/test_cli.py",
+        "tests/test_context_budget.py",
+        "tests/test_context_builder.py",
+        "tests/test_lexical_retrieval.py",
+        "tests/test_retrieval_documents.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_semantic_index.py",
+        "tests/test_semantic_retrieval.py",
+        "tests/test_session.py",
+        "tests/test_source_context.py",
+        "tests/test_symbol_documents.py"
+      ],
+      "selected_test_count": 15,
+      "transitive_only_tests": [
+        "tests/test_agent.py",
+        "tests/test_cli.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_symbol_documents.py"
+      ],
+      "transitive_only_count": 4,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.5161290322580645
+    },
+    {
+      "case_id": "TV-007",
+      "changed_path": "src/hewn/retrieval/router.py",
+      "changed_module": "hewn.retrieval.router",
+      "direct_tests": [
+        "tests/test_context_builder.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_session.py"
+      ],
+      "direct_test_count": 3,
+      "selected_tests": [
+        "tests/test_context_builder.py",
+        "tests/test_retrieval_router.py",
+        "tests/test_session.py"
+      ],
+      "selected_test_count": 3,
+      "transitive_only_tests": [],
+      "transitive_only_count": 0,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.9032258064516129
+    },
+    {
+      "case_id": "TV-008",
+      "changed_path": "src/hewn/agent.py",
+      "changed_module": "hewn.agent",
+      "direct_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_session.py"
+      ],
+      "direct_test_count": 3,
+      "selected_tests": [
+        "tests/test_agent.py",
+        "tests/test_agent_context.py",
+        "tests/test_cli.py",
+        "tests/test_session.py"
+      ],
+      "selected_test_count": 4,
+      "transitive_only_tests": [
+        "tests/test_cli.py"
+      ],
+      "transitive_only_count": 1,
+      "full_test_file_count": 31,
+      "test_file_reduction_fraction": 0.8709677419354839
+    }
+  ],
+  "clean_verification": {
+    "union_selected_tests": [
+      "tests/test_agent.py",
+      "tests/test_agent_context.py",
+      "tests/test_bm25_retrieval.py",
+      "tests/test_builtin_tools.py",
+      "tests/test_character_budget.py",
+      "tests/test_cli.py",
+      "tests/test_command_tools.py",
+      "tests/test_completion.py",
+      "tests/test_context_budget.py",
+      "tests/test_context_builder.py",
+      "tests/test_filesystem_tools.py",
+      "tests/test_lexical_retrieval.py",
+      "tests/test_llama_cpp.py",
+      "tests/test_model_protocol.py",
+      "tests/test_python_repository_parser.py",
+      "tests/test_repository_index.py",
+      "tests/test_repository_models.py",
+      "tests/test_repository_signatures.py",
+      "tests/test_repository_tools.py",
+      "tests/test_retrieval_documents.py",
+      "tests/test_retrieval_router.py",
+      "tests/test_search_tools.py",
+      "tests/test_semantic_index.py",
+      "tests/test_semantic_retrieval.py",
+      "tests/test_session.py",
+      "tests/test_source_context.py",
+      "tests/test_symbol_documents.py",
+      "tests/test_symbol_tools.py",
+      "tests/test_tools.py",
+      "tests/test_workspace.py"
+    ],
+    "union_selected_count": 30,
+    "targeted": {
+      "returncode": 0,
+      "passed": true,
+      "elapsed_seconds": 6.314709158999904,
+      "output": "........................................................................ [ 36%]\n........................................................................ [ 72%]\n........................................................                 [100%]\n200 passed in 5.16s\n"
+    },
+    "full": {
+      "returncode": 0,
+      "passed": true,
+      "elapsed_seconds": 4.536039320999407,
+      "output": "........................................................................ [ 35%]\n........................................................................ [ 70%]\n...........................................................              [100%]\n203 passed in 4.18s\n"
+    }
+  }
+}
