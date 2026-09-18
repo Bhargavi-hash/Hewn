@@ -245,7 +245,7 @@ def source_syntax_valid(
                 (
                     f"{type(exc).__name__}: "
                     f"{exc}"
-                )
+                ),
             )
 
     return True, None
@@ -410,8 +410,10 @@ def run_task(
 
     if not fixture_root.is_dir():
         raise FileNotFoundError(
-            f"Fixture not found: "
-            f"{fixture_root}"
+            
+                "Fixture not found: "
+                f"{fixture_root}"
+            
         )
 
     source_files = [
@@ -487,6 +489,10 @@ def run_task(
             str | None
         ) = None
 
+        agent_raw_response: (
+            str | None
+        ) = None
+
         metrics = None
 
         try:
@@ -528,6 +534,9 @@ def run_task(
             agent_error = (
                 f"{type(exc).__name__}: "
                 f"{exc}"
+            )
+            agent_raw_response = (
+                exc.raw_response
             )
 
         except ModelError as exc:
@@ -666,6 +675,9 @@ def run_task(
             ),
             "agent_error": (
                 agent_error
+            ),
+            "agent_raw_response": (
+                agent_raw_response
             ),
             "agent_seconds": (
                 agent_seconds
