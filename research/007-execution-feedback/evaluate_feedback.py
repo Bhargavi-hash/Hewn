@@ -22,11 +22,11 @@ TASKS_PATH = MODULE_ROOT / "tasks.json"
 FIXTURES_ROOT = MODULE_ROOT / "fixtures"
 RESULTS_DIR = MODULE_ROOT / "results"
 
-CONDITION = "failure_signal"
+CONDITION = "raw_output"
 
 RESULTS_PATH = (
     RESULTS_DIR
-    / "failure-signal-run-002.json"
+    / "raw-output-run-001.json"
 )
 
 CODING_MODEL = "Qwen2.5-Coder-1.5B-Instruct Q4_K_M"
@@ -229,6 +229,7 @@ def build_user_prompt(
     task_text: str,
     workspace_root: Path,
     source_files: list[str],
+    feedback_text: str,
 ) -> str:
     return "\n".join(
         [
@@ -239,10 +240,8 @@ def build_user_prompt(
             "Verification result:",
             "FAILED",
             "",
-            (
-                "No additional execution details are "
-                "available in this condition."
-            ),
+            "Raw execution output:",
+            feedback_text,
             "",
             "Relevant source:",
             current_sources(
@@ -745,7 +744,9 @@ def run_task(
                 f"{task_id} is not a failing fixture"
             )
 
-        feedback_text = "FAILED"
+        feedback_text = str(
+            verification_before["raw_output"]
+        )
 
         model_failure = False
         model_error: str | None = None
@@ -763,6 +764,7 @@ def run_task(
                     task_text=str(task["task"]),
                     workspace_root=workspace_root,
                     source_files=source_files,
+                    feedback_text = feedback_text,
                 ),
             },
         ]
@@ -954,7 +956,7 @@ def main() -> int:
         f"Maximum edits per batch: {MAX_BATCH_EDITS}"
     )
     print("Model calls per task: 1")
-    print("Feedback exposed to model: FAILED only")
+    print("Feedback exposed to model: raw pytest stdout/stderr")
     print("Verification oracle: pytest")
     print("Runs per task: 1")
     print(f"Tasks: {len(tasks)}")
@@ -1033,7 +1035,7 @@ def main() -> int:
 
     output = {
         "experiment": (
-            "module_7_failure_signal"
+            "module_7_failure_output"
         ),
         "configuration": {
             "condition": CONDITION,
@@ -1049,7 +1051,7 @@ def main() -> int:
             ),
             "max_batch_edits": MAX_BATCH_EDITS,
             "model_calls_per_task": 1,
-            "feedback": "FAILED",
+            "feedback": "raw_pytest_output",
             "verification": "pytest",
             "task_count": len(tasks),
             "runs_per_task": 1,
