@@ -1,0 +1,74 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Add a verbose execution mode that is configured at session construction, propagated through the agent, and included when command execution is requested. Existing non-verbose sessions must behave unchanged.
+
+Visible repository:
+[File 1]
+path: src/agent.py
+from tools import run_command
+
+
+class Agent:
+    def execute(self, command: str) -> str:
+        return run_command(command)
+
+
+[File 2]
+path: src/session.py
+from agent import Agent
+
+
+class Session:
+    def __init__(self, agent: Agent) -> None:
+        self.agent = agent
+
+    def execute(self, command: str) -> str:
+        return self.agent.execute(command)
+
+
+[File 3]
+path: src/tools.py
+def run_command(command: str) -> str:
+    return f"run:{command}"
+
+
+
+Explicit plan produced by the planning stage:
+{
+  "files": [
+    {
+      "operations": [
+        "add verbose_execution_mode attribute to Agent class"
+      ],
+      "path": "src/agent.py",
+      "symbols": [
+        "Agent"
+      ]
+    },
+    {
+      "operations": [
+        "add verbose_execution_mode attribute to Session class"
+      ],
+      "path": "src/session.py",
+      "symbols": [
+        "Session"
+      ]
+    },
+    {
+      "operations": [
+        "add verbose_execution_mode parameter to run_command function"
+      ],
+      "path": "src/tools.py",
+      "symbols": [
+        "run_command"
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_agent.py",
+    "tests/test_session.py"
+  ]
+}
+
+Use the plan as implementation guidance, but the task and repository remain the source of truth.

@@ -1,0 +1,25 @@
+--- a/src/auth.py
++++ b/src/auth.py
+@@ -2,4 +2,5 @@
+ 
+ 
+ def can_access(account: Account) -> bool:
++    return account.suspended
+     return account.active
+--- a/src/models.py
++++ b/src/models.py
+@@ -4,3 +4,4 @@
+ @dataclass(frozen=True)
+ class Account:
+     active: bool
++    suspended: bool
+--- a/src/presentation.py
++++ b/src/presentation.py
+@@ -2,4 +2,7 @@
+ 
+ 
+ def account_status(account: Account) -> str:
++    if account.suspended:
++        return 'suspended'
++    return 'active'
+     return "active" if account.active else "inactive"

@@ -1,0 +1,41 @@
+{
+  "behavioral_success": false,
+  "category": "cross_file_dependency",
+  "changed_files": [
+    "src/auth.py",
+    "src/models.py",
+    "src/presentation.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 5,
+  "diff_deletions": 0,
+  "edit_count": 3,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 19.16075227699912,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2851,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 639,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-004",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.49883583699920564,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_suspended_account_contract ________________________\n\n    def test_suspended_account_contract() -> None:\n        active = Account(active=True, suspended=False)\n        inactive = Account(active=False, suspended=False)\n        suspended = Account(active=True, suspended=True)\n    \n>       assert can_access(active) is True\nE       assert False is True\nE        +  where False = can_access(Account(active=True, suspended=False))\n\n__hewn_oracle__/test_behavior.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_suspended_account_contract - as...\n1 failed in 0.04s\n"
+  }
+}

@@ -1,0 +1,59 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Allow the parser to accept .yaml configuration files in addition to .json files. Unsupported extensions must still be rejected, and the existing JSON behavior must remain covered.
+
+Visible repository:
+[File 1]
+path: src/parser.py
+from pathlib import Path
+
+
+def parse_config(path: Path) -> str:
+    if path.suffix != ".json":
+        raise ValueError("unsupported config format")
+    return path.read_text()
+
+
+[File 2]
+path: tests/test_parser.py
+from pathlib import Path
+
+import pytest
+
+from parser import parse_config
+
+
+def test_json_supported(tmp_path: Path) -> None:
+    path = tmp_path / "config.json"
+    path.write_text("{}")
+    assert parse_config(path) == "{}"
+
+
+def test_other_format_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "config.toml"
+    path.write_text("")
+    with pytest.raises(ValueError):
+        parse_config(path)
+
+
+
+Explicit plan produced by the planning stage:
+{
+  "files": [
+    {
+      "operations": [
+        "allow .yaml configuration files"
+      ],
+      "path": "src/parser.py",
+      "symbols": [
+        "parse_config"
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_parser.py"
+  ]
+}
+
+Use the plan as implementation guidance, but the task and repository remain the source of truth.

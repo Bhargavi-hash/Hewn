@@ -1,0 +1,30 @@
+--- a/src/auth.py
++++ b/src/auth.py
+@@ -3,3 +3,5 @@
+ 
+ def can_access(account: Account) -> bool:
+     return account.active
++
++    return account.active
+--- a/src/models.py
++++ b/src/models.py
+@@ -1,6 +1,10 @@
+ from dataclasses import dataclass
++    from typing import Optional
++
+ 
+ 
+ @dataclass(frozen=True)
++    active: bool
++
+ class Account:
+     active: bool
+--- a/src/presentation.py
++++ b/src/presentation.py
+@@ -2,4 +2,6 @@
+ 
+ 
+ def account_status(account: Account) -> str:
++    return 'active' if account.active else 'inactive'
++
+     return "active" if account.active else "inactive"

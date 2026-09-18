@@ -1,0 +1,40 @@
+{
+  "behavioral_success": true,
+  "category": "behavior_verification",
+  "changed_files": [
+    "src/cache.py",
+    "tests/test_cache.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 6,
+  "diff_deletions": 3,
+  "edit_count": 4,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 19.908146612000564,
+  "outcome": "success",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2362,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 651,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-005",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.47768937399996503,
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+  }
+}

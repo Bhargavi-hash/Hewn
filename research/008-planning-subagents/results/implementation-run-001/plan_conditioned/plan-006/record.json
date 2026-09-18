@@ -1,0 +1,39 @@
+{
+  "behavioral_success": false,
+  "category": "behavior_verification",
+  "changed_files": [
+    "src/parser.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 1,
+  "diff_deletions": 1,
+  "edit_count": 1,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 7.14914406799835,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2624,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 0.5,
+  "response_chars": 229,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-006",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.47338151399890194,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_parser_contract _____________________________\n\ntmp_path = PosixPath('/tmp/pytest-of-bhargavi/pytest-8/test_parser_contract0')\n\n    def test_parser_contract(tmp_path: Path) -> None:\n        json_path = tmp_path / \"config.json\"\n        yaml_path = tmp_path / \"config.yaml\"\n        toml_path = tmp_path / \"config.toml\"\n    \n        json_path.write_text(\"json\")\n        yaml_path.write_text(\"yaml\")\n        toml_path.write_text(\"toml\")\n    \n        assert parse_config(json_path) == \"json\"\n>       assert parse_config(yaml_path) == \"yaml\"\n               ^^^^^^^^^^^^^^^^^^^^^^^\n\n__hewn_oracle__/test_behavior.py:18: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = PosixPath('/tmp/pytest-of-bhargavi/pytest-8/test_parser_contract0/config.yaml')\n\n    def parse_config(path: Path) -> str:\n        if path.suffix != \".json\":\n>           raise ValueError(\"unsupported config format\").allow('.yaml')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'ValueError' object has no attribute 'allow'\n\nsrc/parser.py:6: AttributeError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_parser_contract - AttributeErro...\n1 failed in 0.04s\n"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "behavioral_success": false,
+  "category": "cross_file_dependency",
+  "changed_files": [
+    "src/client.py",
+    "src/config.py"
+  ],
+  "committed": true,
+  "condition": "plan_conditioned",
+  "diff_additions": 4,
+  "diff_deletions": 4,
+  "edit_count": 4,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 15.483011779000663,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2369,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 563,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-003",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.6513011429997277,
+    "passed": false,
+    "returncode": 2,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________ ERROR collecting __hewn_oracle__/test_behavior.py _______________\nImportError while importing test module '/tmp/tmp46aqj530/__hewn_oracle__/test_behavior.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/home/bhargavi/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n__hewn_oracle__/test_behavior.py:2: in <module>\n    from client import timeout_seconds\nE   ImportError: cannot import name 'timeout_seconds' from 'client' (/tmp/tmp46aqj530/src/client.py)\n=========================== short test summary info ============================\nERROR __hewn_oracle__/test_behavior.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.21s\n"
+  }
+}

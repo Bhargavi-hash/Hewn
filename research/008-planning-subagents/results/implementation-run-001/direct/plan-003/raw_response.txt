@@ -1,0 +1,15 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/client.py",
+      "old": "REQUEST_TIMEOUT",
+      "new": "NETWORK_TIMEOUT"
+    },
+    {
+      "path": "src/config.py",
+      "old": "REQUEST_TIMEOUT",
+      "new": "NETWORK_TIMEOUT"
+    }
+  ]
+}

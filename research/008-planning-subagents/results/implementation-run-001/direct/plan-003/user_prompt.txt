@@ -1,0 +1,20 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Rename the request timeout setting to NETWORK_TIMEOUT everywhere it is part of the runtime timeout behavior. Preserve the configured timeout value and keep the client behavior working.
+
+Visible repository:
+[File 1]
+path: src/client.py
+from config import REQUEST_TIMEOUT
+
+
+def timeout_seconds() -> int:
+    return REQUEST_TIMEOUT
+
+
+[File 2]
+path: src/config.py
+NETWORK_RETRIES = 3
+REQUEST_TIMEOUT = 10
+

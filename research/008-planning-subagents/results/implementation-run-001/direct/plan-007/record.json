@@ -1,0 +1,41 @@
+{
+  "behavioral_success": false,
+  "category": "dependency_reasoning",
+  "changed_files": [
+    "src/documents.py",
+    "src/report.py",
+    "src/search.py"
+  ],
+  "committed": true,
+  "condition": "direct",
+  "diff_additions": 3,
+  "diff_deletions": 0,
+  "edit_count": 3,
+  "max_tokens": 512,
+  "model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+  "model_seconds": 13.218077407998862,
+  "outcome": "verification_failure",
+  "preflight": {
+    "error": null,
+    "failed_edit_index": null,
+    "valid": true
+  },
+  "prompt_chars": 2096,
+  "protocol_error": null,
+  "protocol_valid": true,
+  "required_file_precision": 1.0,
+  "required_file_recall": 1.0,
+  "response_chars": 484,
+  "syntax_error": null,
+  "syntax_valid": true,
+  "task_id": "plan-007",
+  "temperature": 0.0,
+  "unnecessary_changed_files": 0,
+  "verification": {
+    "duration_seconds": 0.4985056789992086,
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_document_identifier_contract _______________________\n\ntmp_path = PosixPath('/tmp/pytest-of-bhargavi/pytest-9/test_document_identifier_contr0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71dea377b8c0>\n\n    def test_document_identifier_contract(tmp_path: Path, monkeypatch) -> None:\n        repo = tmp_path / \"repo\"\n        nested = repo / \"docs\" / \"chapter.txt\"\n        nested.parent.mkdir(parents=True)\n        nested.write_text(\"chapter\")\n        monkeypatch.chdir(repo)\n    \n>       assert document_id(nested) == \"docs/chapter.txt\"\nE       AssertionError: assert '/tmp/pytest-...s/chapter.txt' == 'docs/chapter.txt'\nE         \nE         - docs/chapter.txt\nE         + /tmp/pytest-of-bhargavi/pytest-9/test_document_identifier_contr0/repo/docs/chapter.txt\n\n/tmp/tmp0qfq__xv/__hewn_oracle__/test_behavior.py:15: AssertionError\n=========================== short test summary info ============================\nFAILED __hewn_oracle__/test_behavior.py::test_document_identifier_contract - ...\n1 failed in 0.06s\n"
+  }
+}

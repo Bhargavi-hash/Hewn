@@ -1,0 +1,77 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Change normalized document identifiers so they use repository-relative POSIX paths instead of platform-specific path strings. Update every downstream formatter that exposes the identifier.
+
+Visible repository:
+[File 1]
+path: src/documents.py
+from pathlib import Path
+
+
+def document_id(path: Path) -> str:
+    return str(path)
+
+
+[File 2]
+path: src/report.py
+from pathlib import Path
+
+from search import search_label
+
+
+def report_line(path: Path, score: float) -> str:
+    return f"result={search_label(path, score)}"
+
+
+[File 3]
+path: src/search.py
+from pathlib import Path
+
+from documents import document_id
+
+
+def search_label(path: Path, score: float) -> str:
+    return f"{document_id(path)}:{score:.2f}"
+
+
+
+Explicit plan produced by the planning stage:
+{
+  "files": [
+    {
+      "operations": [
+        "change the required behavior"
+      ],
+      "path": "src/documents.py",
+      "symbols": [
+        "document_id"
+      ]
+    },
+    {
+      "operations": [
+        "change the required behavior"
+      ],
+      "path": "src/report.py",
+      "symbols": [
+        "report_line"
+      ]
+    },
+    {
+      "operations": [
+        "change the required behavior"
+      ],
+      "path": "src/search.py",
+      "symbols": [
+        "search_label"
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_documents.py",
+    "tests/test_report.py",
+    "tests/test_search.py"
+  ]
+}
+
+Use the plan as implementation guidance, but the task and repository remain the source of truth.

@@ -1,0 +1,20 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/agent.py",
+      "old": "class Agent:",
+      "new": "class Agent:\n    verbose_mode = False\n"
+    },
+    {
+      "path": "src/session.py",
+      "old": "class Session:",
+      "new": "class Session:\n    verbose_mode = False\n"
+    },
+    {
+      "path": "src/tools.py",
+      "old": "def run_command(command: str) -> str:",
+      "new": "def run_command(command: str) -> str:\n    if self.verbose_mode:\n        print(f'Executing: {command}')\n    return f'run:{command}'\n"
+    }
+  ]
+}

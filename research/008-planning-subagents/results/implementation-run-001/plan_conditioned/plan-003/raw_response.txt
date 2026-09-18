@@ -1,0 +1,25 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/client.py",
+      "old": "from config import REQUEST_TIMEOUT",
+      "new": "from config import NETWORK_TIMEOUT"
+    },
+    {
+      "path": "src/client.py",
+      "old": "def timeout_seconds() -> int:",
+      "new": "def network_timeout_seconds() -> int:"
+    },
+    {
+      "path": "src/config.py",
+      "old": "NETWORK_RETRIES = 3",
+      "new": "NETWORK_TIMEOUT = 3"
+    },
+    {
+      "path": "src/config.py",
+      "old": "REQUEST_TIMEOUT = 10",
+      "new": "NETWORK_TIMEOUT = 10"
+    }
+  ]
+}

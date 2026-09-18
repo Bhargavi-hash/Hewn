@@ -1,0 +1,46 @@
+Produce the complete edit batch required to satisfy this task.
+
+Task:
+Extend the retry policy so callers can determine whether another attempt is allowed and how long to wait before that attempt. Invalid attempt numbers must be rejected.
+
+Visible repository:
+[File 1]
+path: src/retry.py
+from __future__ import annotations
+
+MAX_ATTEMPTS = 3
+BASE_DELAY_SECONDS = 2
+
+
+def can_retry(attempt: int) -> bool:
+    return attempt < MAX_ATTEMPTS
+
+
+def retry_delay(attempt: int) -> int:
+    return BASE_DELAY_SECONDS * attempt
+
+
+
+Explicit plan produced by the planning stage:
+{
+  "files": [
+    {
+      "operations": [
+        "add the can_retry function",
+        "add the retry_delay function"
+      ],
+      "path": "src/retry.py",
+      "symbols": [
+        "MAX_ATTEMPTS",
+        "BASE_DELAY_SECONDS",
+        "can_retry",
+        "retry_delay"
+      ]
+    }
+  ],
+  "verification": [
+    "tests/test_retry.py"
+  ]
+}
+
+Use the plan as implementation guidance, but the task and repository remain the source of truth.

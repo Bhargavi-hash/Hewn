@@ -1,0 +1,20 @@
+{
+  "type": "edit_batch",
+  "edits": [
+    {
+      "path": "src/auth.py",
+      "old": "def can_access(account: Account) -> bool:",
+      "new": "def can_access(account: Account) -> bool:\n    return account.suspended"
+    },
+    {
+      "path": "src/models.py",
+      "old": "class Account:\n    active: bool",
+      "new": "class Account:\n    active: bool\n    suspended: bool"
+    },
+    {
+      "path": "src/presentation.py",
+      "old": "def account_status(account: Account) -> str:",
+      "new": "def account_status(account: Account) -> str:\n    if account.suspended:\n        return 'suspended'\n    return 'active'"
+    }
+  ]
+}
