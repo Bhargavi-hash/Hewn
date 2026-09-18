@@ -208,3 +208,115 @@ The next experiment will allow multiple sequential `replace_text`
 operations with application feedback while keeping the task set, model,
 temperature, source availability, parser strictness, and deterministic
 editor fixed.
+
+## Experiment 003 — Sequential `replace_text` with application feedback
+
+### Question
+
+Can multiple sequential exact replacements plus application feedback
+recover tasks that were incomplete or rejected under the single-action
+condition?
+
+### Configuration
+
+- Model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- Temperature: 0
+- Maximum output tokens: 256
+- Same six frozen editing fixtures
+- Relevant source supplied initially
+- Editing primitive: `replace_text`
+- Maximum edit attempts: 4
+- Application result returned after each attempt
+- Updated relevant source returned after each attempt
+- Explicit `done` control action
+- Independent evaluator-side verification
+- One run per task
+
+### Results
+
+| Metric | Result |
+|---|---:|
+| Behavioral success | 1/6 |
+| Strict protocol success | 5/6 |
+| Tasks returning `done` | 1/6 |
+| Attempt-limit exhaustion | 4/6 |
+| Total edit attempts | 19 |
+| Successful applications | 8 |
+| Rejected applications | 11 |
+
+### Observed failure modes
+
+#### Edit oscillation
+
+On edit-001, the model made the correct change, reversed it on the next
+turn, then restored the correct change before returning `done`.
+
+On edit-004, the model alternated between two conditions for all four
+allowed attempts. All four operations applied successfully, but the
+final repository was identical to the initial repository.
+
+This demonstrates that additional editing opportunities can introduce
+edit churn when the model does not reliably recognize that an adequate
+change has already been made.
+
+#### Repeated rejected actions
+
+On edit-002, the model proposed the same ambiguous no-op replacement on
+all four attempts despite receiving an ambiguity rejection after each
+attempt.
+
+On edit-003, the model proposed the same nonexistent insertion target
+on all four attempts despite receiving a not-found rejection.
+
+Application feedback therefore did not produce recovery on these tasks
+under this configuration.
+
+#### Natural multi-edit response
+
+On edit-005, the first model response contained two `replace_text`
+objects followed by `done`.
+
+The strict sequential protocol rejected the response because exactly
+one JSON action was required per turn.
+
+The response nevertheless provides evidence that the model represented
+this multi-location task naturally as a set of edits rather than as a
+single edit followed by a conversational continuation.
+
+#### Cross-file targeting
+
+On edit-006, the first replacement correctly renamed the declaration in
+`config.py`. The model then attempted to update `client.py`, showing
+awareness that another file required modification.
+
+However, it selected the repeated identifier `DEFAULT_TIMEOUT` as the
+exact replacement target on each remaining attempt. All three attempts
+were rejected as ambiguous.
+
+### Interpretation
+
+The sequential-control configuration did not recover the multi-location
+failures from Experiment 002 on this six-task run.
+
+The traces show three important behaviors: oscillation after successful
+edits, repetition after deterministic rejection, and difficulty deciding
+when editing is complete.
+
+Because Experiment 003 changed multiple factors relative to Experiment
+002 — number of turns, application feedback, updated-source messages,
+and an explicit completion decision — the difference in behavioral
+success must not be attributed to sequential editing alone.
+
+The edit-005 response also suggests a cleaner next experiment: allow the
+model to express multiple exact replacements in one structured response
+while removing the conversational control loop.
+
+### Decision
+
+Retain exact replacement as the underlying editing operation.
+
+Do not promote the Experiment 003 conversational sequential loop.
+
+Before introducing a patch-based editing primitive, test whether a
+single structured batch of exact replacements can handle multi-location
+tasks while preserving deterministic validation.
