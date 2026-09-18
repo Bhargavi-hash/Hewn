@@ -112,3 +112,57 @@ framework noise, and multiple competing signals.
 The next experiment tests whether a deterministic normalized representation
 can preserve mechanically recoverable failure evidence while reducing that
 context.
+
+## Module 7 conclusions
+
+Module 7 separated execution feedback into distinct subsystems rather than
+treating "run the tests and let the model fix it" as a single capability.
+
+In the frozen six-task repair diagnostic, deterministic execution reliably
+identified behavioral failures, but additional model-visible failure evidence
+did not monotonically improve repair success for Qwen2.5-Coder-1.5B. Failure
+signal only, raw pytest output, and normalized pytest evidence produced 4/6,
+3/6, and 2/6 behavioral successes respectively in single temperature-zero
+runs. These results are diagnostic rather than estimates of general model
+performance.
+
+Deterministic normalization reduced pytest feedback from 5,410 to 2,609
+characters across the six fixtures, a 51.8% reduction, while preserving
+mechanically extracted failure information. The smaller representation did
+not improve behavioral repair success in this run.
+
+Conservative deterministic edit grounding recovered one of two previously
+rejected normalized-feedback batches, increasing preflight acceptance from
+4/6 to 5/6, but behavioral success remained 2/6. The recovered proposal then
+failed syntactically because its replacement lost indentation, separating
+target identification from replacement placement and semantic correctness.
+
+One additional normalized execution-feedback repair iteration was attempted
+for the two eligible failed-but-applied repairs. Both model responses followed
+the edit-batch protocol, but neither produced an applicable repair, yielding
+0/2 recoveries. One retained an undefined identifier already reported by
+pytest and targeted nonexistent source; the other proposed a deterministic
+no-op. This does not establish that iterative repair is generally ineffective.
+
+A deterministic reverse-import selector was also evaluated as a candidate
+targeted-verification mechanism. Across eight frozen production modules,
+transitive selection ranged from 3/31 to 25/31 test files and found
+potentially impacted tests beyond direct imports in seven of eight cases.
+However, a subsequent frozen eight-mutation failure-recall experiment was
+non-diagnostic: none of the eight syntactically valid semantic mutations was
+detected by the complete existing test suite. Consequently, this module
+provides evidence for structural test-scope reduction, but not for preserved
+regression-detection recall.
+
+The resulting architectural direction is therefore conservative: execution
+is a reliable detector and verifier; deterministic normalization can reduce
+feedback context; deterministic validation should reject ambiguous or invalid
+repairs; and dependency-aware targeted tests may serve as fast intermediate
+feedback. Targeted verification is not promoted as completion-grade evidence
+without a future recall study against a mutation corpus for which the full
+suite detects regressions.
+
+More broadly, the experiments show that execution feedback, evidence
+normalization, model diagnosis, repair formulation, edit grounding, edit
+application, and final verification should remain separate components. A
+failure in one should not be attributed automatically to another.
