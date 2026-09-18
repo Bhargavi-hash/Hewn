@@ -1,0 +1,22 @@
+{
+  "category": "dependency_reasoning",
+  "condition": "source_only",
+  "latency_seconds": 21.416539654999724,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1447,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/agent.py\",\n      \"symbols\": [\"Agent\", \"execute\"],\n      \"operations\": [\n        \"Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag.\"\n      ]\n    },\n    {\n      \"path\": \"src/session.py\",\n      \"symbols\": [\"Session\", \"execute\"],\n      \"operations\": [\n        \"Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag.\"\n      ]\n    }\n  ],\n  \"verification\": [\n    \"src/agent.py: Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag.\"\n  ]\n}\n```",
+  "response_chars": 969,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-008"
+}

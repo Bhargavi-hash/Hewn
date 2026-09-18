@@ -1,0 +1,17 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/retry.py",
+      "symbols": ["can_retry", "retry_delay"],
+      "operations": [
+        "Add a new method `can_retry` that returns `True` if the attempt number is less than `MAX_ATTEMPTS`, otherwise `False`.",
+        "Add a new method `retry_delay` that returns the delay in seconds for the given attempt number, calculated as `BASE_DELAY_SECONDS * attempt`."
+      ]
+    }
+  ],
+  "verification": [
+    "src/retry.py"
+  ]
+}
+```

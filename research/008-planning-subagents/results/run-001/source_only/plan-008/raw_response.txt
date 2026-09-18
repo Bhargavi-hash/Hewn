@@ -1,0 +1,23 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/agent.py",
+      "symbols": ["Agent", "execute"],
+      "operations": [
+        "Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag."
+      ]
+    },
+    {
+      "path": "src/session.py",
+      "symbols": ["Session", "execute"],
+      "operations": [
+        "Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag."
+      ]
+    }
+  ],
+  "verification": [
+    "src/agent.py: Add a new method `verbose_execute` that takes a boolean parameter `verbose` and returns a string. If `verbose` is True, the command is executed with the `--verbose` flag. Otherwise, it is executed without the flag."
+  ]
+}
+```

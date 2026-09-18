@@ -1,0 +1,22 @@
+{
+  "category": "same_file_multi_operation",
+  "condition": "source_plus_structure",
+  "latency_seconds": 8.002353943999879,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1340,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/retry.py\",\n      \"symbols\": [\"MAX_ATTEMPTS\", \"BASE_DELAY_SECONDS\", \"can_retry\", \"retry_delay\"],\n      \"operations\": [\"Added can_retry function to check if another attempt is allowed\", \"Added retry_delay function to calculate the delay for the next attempt\"]\n    }\n  ],\n  \"verification\": [\n    \"src/retry.py\"\n  ]\n}\n```",
+  "response_chars": 365,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-001"
+}

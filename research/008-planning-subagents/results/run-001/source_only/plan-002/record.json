@@ -1,0 +1,22 @@
+{
+  "category": "same_file_multi_operation",
+  "condition": "source_only",
+  "latency_seconds": 8.174418184000388,
+  "planned_files": null,
+  "planned_symbols": null,
+  "planned_verification": null,
+  "prompt_chars": 1081,
+  "protocol_error": "invalid JSON: Expecting value",
+  "raw_response": "```json\n{\n  \"files\": [\n    {\n      \"path\": \"src/users.py\",\n      \"symbols\": [\"display_name\"],\n      \"operations\": [\n        \"Add a new parameter 'admin' to the function 'display_name' to indicate if the user is an administrator.\"\n      ]\n    }\n  ],\n  \"verification\": [\n    \"src/users.py\"\n  ]\n}\n```",
+  "response_chars": 297,
+  "score": {
+    "protocol_valid": false,
+    "required_file_precision": null,
+    "required_file_recall": null,
+    "required_symbol_recall": null,
+    "unnecessary_files": null,
+    "verification_precision": null,
+    "verification_recall": null
+  },
+  "task_id": "plan-002"
+}

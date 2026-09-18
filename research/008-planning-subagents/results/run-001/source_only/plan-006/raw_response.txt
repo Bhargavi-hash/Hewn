@@ -1,0 +1,20 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/parser.py",
+      "symbols": ["parse_config"],
+      "operations": ["Add support for .yaml files"]
+    },
+    {
+      "path": "tests/test_parser.py",
+      "symbols": ["test_json_supported", "test_other_format_rejected"],
+      "operations": ["Add support for .yaml files"]
+    }
+  ],
+  "verification": [
+    "src/parser.py",
+    "tests/test_parser.py"
+  ]
+}
+```

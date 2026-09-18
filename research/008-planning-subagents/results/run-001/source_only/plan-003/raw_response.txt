@@ -1,0 +1,24 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/client.py",
+      "symbols": ["timeout_seconds"],
+      "operations": [
+        "Change the function to return NETWORK_TIMEOUT instead of REQUEST_TIMEOUT."
+      ]
+    },
+    {
+      "path": "src/config.py",
+      "symbols": ["REQUEST_TIMEOUT"],
+      "operations": [
+        "Change the value of REQUEST_TIMEOUT to NETWORK_TIMEOUT."
+      ]
+    }
+  ],
+  "verification": [
+    "src/client.py: Ensure that timeout_seconds() returns NETWORK_TIMEOUT."
+    "src/config.py: Ensure that REQUEST_TIMEOUT is set to NETWORK_TIMEOUT."
+  ]
+}
+```

@@ -1,0 +1,32 @@
+```json
+{
+  "files": [
+    {
+      "path": "src/documents.py",
+      "symbols": ["document_id"],
+      "operations": [
+        "Replace `Path` with `str` in the `document_id` function."
+      ]
+    },
+    {
+      "path": "src/report.py",
+      "symbols": ["report_line"],
+      "operations": [
+        "Replace `Path` with `str` in the `report_line` function."
+      ]
+    },
+    {
+      "path": "src/search.py",
+      "symbols": ["search_label"],
+      "operations": [
+        "Replace `Path` with `str` in the `search_label` function."
+      ]
+    }
+  ],
+  "verification": [
+    "src/documents.py",
+    "src/report.py",
+    "src/search.py"
+  ]
+}
+```
