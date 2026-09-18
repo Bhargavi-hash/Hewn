@@ -1,0 +1,63 @@
+[
+  {
+    "id": "feedback-001",
+    "category": "assertion_value_mismatch",
+    "task": "Fix multiply so that it returns the mathematical product of a and b.",
+    "source_files": [
+      "calculator.py"
+    ],
+    "test_file": "test_calculator.py",
+    "verification": "pytest"
+  },
+  {
+    "id": "feedback-002",
+    "category": "runtime_key_error",
+    "task": "Fix display_name so that it returns nickname when present and otherwise falls back to name.",
+    "source_files": [
+      "profile.py"
+    ],
+    "test_file": "test_profile.py",
+    "verification": "pytest"
+  },
+  {
+    "id": "feedback-003",
+    "category": "boolean_semantic_error",
+    "task": "Fix can_delete so that authenticated owners and authenticated admins can delete, while unauthenticated users cannot.",
+    "source_files": [
+      "access.py"
+    ],
+    "test_file": "test_access.py",
+    "verification": "pytest"
+  },
+  {
+    "id": "feedback-004",
+    "category": "incomplete_same_file_behavior",
+    "task": "Fix retry normalization so that values are clamped to the configured MIN_RETRIES and MAX_RETRIES range.",
+    "source_files": [
+      "limits.py"
+    ],
+    "test_file": "test_limits.py",
+    "verification": "pytest"
+  },
+  {
+    "id": "feedback-005",
+    "category": "runtime_name_error",
+    "task": "Complete the timeout rename so that request_timeout uses REQUEST_TIMEOUT and existing behavior is preserved.",
+    "source_files": [
+      "config.py",
+      "client.py"
+    ],
+    "test_file": "test_client.py",
+    "verification": "pytest"
+  },
+  {
+    "id": "feedback-006",
+    "category": "expression_grouping_error",
+    "task": "Fix fahrenheit_to_celsius so that it correctly converts Fahrenheit temperatures to Celsius.",
+    "source_files": [
+      "temperature.py"
+    ],
+    "test_file": "test_temperature.py",
+    "verification": "pytest"
+  }
+]
