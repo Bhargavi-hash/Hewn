@@ -320,3 +320,148 @@ Do not promote the Experiment 003 conversational sequential loop.
 Before introducing a patch-based editing primitive, test whether a
 single structured batch of exact replacements can handle multi-location
 tasks while preserving deterministic validation.
+
+## Experiment 004 — Atomic batch of exact replacements
+
+### Question
+
+Can a small coding model express complete multi-location changes more
+reliably as one structured batch of exact replacements than through a
+single-edit or conversational sequential-edit protocol?
+
+### Configuration
+
+- Model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- Temperature: 0
+- Maximum output tokens: 512
+- Same six frozen editing fixtures
+- One model call per task
+- Maximum six exact replacements per batch
+- Relevant source supplied
+- No conversational application feedback
+- Atomic application
+- Independent evaluator-side verification
+- One run per task
+
+The output-token limit differs from Experiments 002 and 003 because a
+multi-edit batch can require a larger structured response. Therefore the
+experiment is not a strict one-variable comparison with those runs.
+
+### Results
+
+| Metric | Result |
+|---|---:|
+| Behavioral success | 2/6 |
+| Strict protocol success | 6/6 |
+| Tasks producing an application attempt | 6/6 |
+| Atomically applied batches | 5/6 |
+| Total proposed edits | 9 |
+
+Behaviorally correct tasks were edit-001 and edit-003.
+
+### Observations
+
+#### Unique localized edit
+
+edit-001 passed, although the proposed replacement inserted a correct
+return before the existing incorrect return rather than replacing the
+incorrect expression directly.
+
+The resulting function contained unreachable old code. The behavioral
+test passed, but this demonstrates that behavioral success alone does
+not imply a minimal or clean patch.
+
+#### Repeated expression
+
+edit-002 proposed two replacements. The second targeted
+`return "pending"`, which occurred more than once.
+
+Atomic preflight rejected the complete batch and left the repository
+unchanged.
+
+The first proposed edit also introduced a reference to `complete`,
+which was not present in the supplied function. Therefore this task
+contains both proposal-quality and exact-targeting problems.
+
+#### Insertion
+
+edit-003 passed.
+
+The model used the existing function signature as a unique anchor and
+replaced it with the same signature followed by the required validation
+block.
+
+This demonstrates that exact replacement was expressive enough to
+represent insertion for this frozen task without a dedicated insertion
+primitive.
+
+#### Conditional reasoning
+
+edit-004 produced and successfully applied:
+
+`authenticated and owner or admin`
+
+The resulting behavior incorrectly allowed an unauthenticated admin.
+
+The observed failure was in the proposed condition rather than in edit
+application. A more expressive text mutation primitive would not by
+itself correct this proposal.
+
+#### Multiple changes in one file
+
+edit-005 correctly changed both retry constants using one exact
+replacement but omitted the corresponding changes required inside
+`normalize_retries`.
+
+The batch applied successfully but failed behavioral verification.
+
+The representation was capable of expressing additional edits; the
+model did not propose the complete required transformation.
+
+#### Multiple files
+
+edit-006 proposed three replacements across two files.
+
+It correctly renamed the declaration in `config.py` and the import in
+`client.py`, but the third replacement was a no-op on the function
+signature. The model failed to replace the remaining
+`DEFAULT_TIMEOUT` reference in the function body.
+
+The complete batch applied atomically, but verification failed with a
+NameError caused by the stale reference.
+
+This shows that the batch representation could carry a coordinated
+cross-file edit set, while the proposed transformation remained
+incomplete.
+
+### Interpretation
+
+The atomic batch representation achieved 2/6 behavioral success on
+this six-task diagnostic, the same aggregate count as the controlled
+single-action condition, but on a different task set.
+
+Most importantly, the batch condition successfully represented the
+previously failing insertion task and successfully carried multiple
+coordinated replacements across files.
+
+The remaining failures do not provide clear evidence that a more
+expressive mutation primitive such as a general patch operation is
+required. edit-004, edit-005, and edit-006 were successfully applicable
+but semantically incomplete or incorrect proposals.
+
+edit-002 remains an exact-targeting failure and is a candidate for
+deterministic preflight feedback.
+
+The run also exposed no-op proposals, suggesting that a future editing
+validator should explicitly detect replacements where `old == new`.
+
+### Decision
+
+Do not introduce a general patch primitive yet.
+
+Retain exact replacement as the underlying mutation operation and
+retain atomic edit batches as a candidate higher-level representation.
+
+Run one final Module 6 experiment testing whether deterministic
+preflight errors can repair an invalid batch without introducing an
+open-ended conversational editing loop.
