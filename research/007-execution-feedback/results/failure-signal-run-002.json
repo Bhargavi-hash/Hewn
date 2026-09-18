@@ -1,0 +1,404 @@
+{
+  "experiment": "module_7_failure_signal",
+  "configuration": {
+    "condition": "failure_signal",
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "temperature": 0.0,
+    "max_tokens": 512,
+    "context_window": 4096,
+    "editing_representation": "atomic_edit_batch",
+    "underlying_primitive": "exact_replace_text",
+    "max_batch_edits": 6,
+    "model_calls_per_task": 1,
+    "feedback": "FAILED",
+    "verification": "pytest",
+    "task_count": 6,
+    "runs_per_task": 1,
+    "repeated_trials": false
+  },
+  "summary": {
+    "behavior_successes": 4,
+    "protocol_successes": 6,
+    "preflight_successes": 5,
+    "committed_batches": 5,
+    "outcomes": {
+      "success": 4,
+      "application_failure": 1,
+      "verification_failure": 1
+    },
+    "total_seconds": 48.59171491700545
+  },
+  "records": [
+    {
+      "task_id": "feedback-001",
+      "category": "assertion_value_mismatch",
+      "task": "Fix multiply so that it returns the mathematical product of a and b.",
+      "condition": "failure_signal",
+      "source_files": [
+        "calculator.py"
+      ],
+      "test_file": "test_calculator.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_multiply_positive_values _________________________\n\n    def test_multiply_positive_values() -> None:\n>       assert multiply(4, 3) == 12\nE       assert 7 == 12\nE        +  where 7 = multiply(4, 3)\n\ntest_calculator.py:5: AssertionError\n_________________________ test_multiply_negative_value _________________________\n\n    def test_multiply_negative_value() -> None:\n>       assert multiply(-2, 5) == -10\nE       assert 3 == -10\nE        +  where 3 = multiply(-2, 5)\n\ntest_calculator.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED test_calculator.py::test_multiply_positive_values - assert 7 == 12\nFAILED test_calculator.py::test_multiply_negative_value - assert 3 == -10\n2 failed in 0.03s\n",
+        "stderr": "",
+        "raw_output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_multiply_positive_values _________________________\n\n    def test_multiply_positive_values() -> None:\n>       assert multiply(4, 3) == 12\nE       assert 7 == 12\nE        +  where 7 = multiply(4, 3)\n\ntest_calculator.py:5: AssertionError\n_________________________ test_multiply_negative_value _________________________\n\n    def test_multiply_negative_value() -> None:\n>       assert multiply(-2, 5) == -10\nE       assert 3 == -10\nE        +  where 3 = multiply(-2, 5)\n\ntest_calculator.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED test_calculator.py::test_multiply_positive_values - assert 7 == 12\nFAILED test_calculator.py::test_multiply_negative_value - assert 3 == -10\n2 failed in 0.03s\n",
+        "raw_output_characters": 941,
+        "raw_output_lines": 22,
+        "seconds": 0.42002527300064685
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"calculator.py\",\n      \"old\": \"return a + b\",\n      \"new\": \"return a * b\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "calculator.py",
+          "old": "return a + b",
+          "new": "return a * b"
+        }
+      ],
+      "preflight_valid": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "committed": true,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+        "stderr": "",
+        "raw_output": "..                                                                       [100%]\n2 passed in 0.00s\n",
+        "raw_output_characters": 98,
+        "raw_output_lines": 2,
+        "seconds": 0.27042289699602406
+      },
+      "behavior_correct": true,
+      "files_modified": [
+        "calculator.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 1,
+      "diff": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,2 +1,2 @@\n def multiply(a: int, b: int) -> int:\n-    return a + b+    return a * b",
+      "outcome": "success",
+      "model_seconds": 5.33675081399997
+    },
+    {
+      "task_id": "feedback-002",
+      "category": "runtime_key_error",
+      "task": "Fix display_name so that it returns nickname when present and otherwise falls back to name.",
+      "condition": "failure_signal",
+      "source_files": [
+        "profile.py"
+      ],
+      "test_file": "test_profile.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_falls_back_to_name ____________________________\n\n    def test_falls_back_to_name() -> None:\n>       assert display_name(\n            {\"name\": \"Ada\"}\n        ) == \"Ada\"\n\ntest_profile.py:11: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nprofile = {'name': 'Ada'}\n\n    def display_name(profile: dict[str, str]) -> str:\n>       return profile[\"nickname\"]\n               ^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'nickname'\n\nprofile.py:2: KeyError\n=========================== short test summary info ============================\nFAILED test_profile.py::test_falls_back_to_name - KeyError: 'nickname'\n1 failed, 1 passed in 0.02s\n",
+        "stderr": "",
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_falls_back_to_name ____________________________\n\n    def test_falls_back_to_name() -> None:\n>       assert display_name(\n            {\"name\": \"Ada\"}\n        ) == \"Ada\"\n\ntest_profile.py:11: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nprofile = {'name': 'Ada'}\n\n    def display_name(profile: dict[str, str]) -> str:\n>       return profile[\"nickname\"]\n               ^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'nickname'\n\nprofile.py:2: KeyError\n=========================== short test summary info ============================\nFAILED test_profile.py::test_falls_back_to_name - KeyError: 'nickname'\n1 failed, 1 passed in 0.02s\n",
+        "raw_output_characters": 850,
+        "raw_output_lines": 23,
+        "seconds": 0.29681896100373706
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"profile.py\",\n      \"old\": \"return profile['nickname']\",\n      \"new\": \"if 'nickname' in profile: return profile['nickname'] else: return profile['name']\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "profile.py",
+          "old": "return profile['nickname']",
+          "new": "if 'nickname' in profile: return profile['nickname'] else: return profile['name']"
+        }
+      ],
+      "preflight_valid": false,
+      "failed_edit_index": 0,
+      "application_error": "Text to replace was not found",
+      "committed": false,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_falls_back_to_name ____________________________\n\n    def test_falls_back_to_name() -> None:\n>       assert display_name(\n            {\"name\": \"Ada\"}\n        ) == \"Ada\"\n\ntest_profile.py:11: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nprofile = {'name': 'Ada'}\n\n    def display_name(profile: dict[str, str]) -> str:\n>       return profile[\"nickname\"]\n               ^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'nickname'\n\nprofile.py:2: KeyError\n=========================== short test summary info ============================\nFAILED test_profile.py::test_falls_back_to_name - KeyError: 'nickname'\n1 failed, 1 passed in 0.06s\n",
+        "stderr": "",
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_falls_back_to_name ____________________________\n\n    def test_falls_back_to_name() -> None:\n>       assert display_name(\n            {\"name\": \"Ada\"}\n        ) == \"Ada\"\n\ntest_profile.py:11: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nprofile = {'name': 'Ada'}\n\n    def display_name(profile: dict[str, str]) -> str:\n>       return profile[\"nickname\"]\n               ^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'nickname'\n\nprofile.py:2: KeyError\n=========================== short test summary info ============================\nFAILED test_profile.py::test_falls_back_to_name - KeyError: 'nickname'\n1 failed, 1 passed in 0.06s\n",
+        "raw_output_characters": 850,
+        "raw_output_lines": 23,
+        "seconds": 0.609929074998945
+      },
+      "behavior_correct": false,
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "outcome": "application_failure",
+      "model_seconds": 5.642839572996309
+    },
+    {
+      "task_id": "feedback-003",
+      "category": "boolean_semantic_error",
+      "task": "Fix can_delete so that authenticated owners and authenticated admins can delete, while unauthenticated users cannot.",
+      "condition": "failure_signal",
+      "source_files": [
+        "access.py"
+      ],
+      "test_file": "test_access.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "...F                                                                     [100%]\n=================================== FAILURES ===================================\n___________________ test_unauthenticated_admin_cannot_delete ___________________\n\n    def test_unauthenticated_admin_cannot_delete() -> None:\n>       assert not can_delete(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\nE       assert not True\nE        +  where True = can_delete(authenticated=False, owner=False, admin=True)\n\ntest_access.py:29: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_unauthenticated_admin_cannot_delete - assert not ...\n1 failed, 3 passed in 0.04s\n",
+        "stderr": "",
+        "raw_output": "...F                                                                     [100%]\n=================================== FAILURES ===================================\n___________________ test_unauthenticated_admin_cannot_delete ___________________\n\n    def test_unauthenticated_admin_cannot_delete() -> None:\n>       assert not can_delete(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\nE       assert not True\nE        +  where True = can_delete(authenticated=False, owner=False, admin=True)\n\ntest_access.py:29: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_unauthenticated_admin_cannot_delete - assert not ...\n1 failed, 3 passed in 0.04s\n",
+        "raw_output_characters": 757,
+        "raw_output_lines": 17,
+        "seconds": 0.45747237100295024
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"access.py\",\n      \"old\": \"authenticated and owner or admin\",\n      \"new\": \"authenticated and (owner or admin)\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "access.py",
+          "old": "authenticated and owner or admin",
+          "new": "authenticated and (owner or admin)"
+        }
+      ],
+      "preflight_valid": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "committed": true,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "....                                                                     [100%]\n4 passed in 0.01s\n",
+        "stderr": "",
+        "raw_output": "....                                                                     [100%]\n4 passed in 0.01s\n",
+        "raw_output_characters": 98,
+        "raw_output_lines": 2,
+        "seconds": 0.46886387300037313
+      },
+      "behavior_correct": true,
+      "files_modified": [
+        "access.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 1,
+      "diff": "--- a/access.py\n+++ b/access.py\n@@ -4,4 +4,4 @@\n     owner: bool,\n     admin: bool,\n ) -> bool:\n-    return authenticated and owner or admin+    return authenticated and (owner or admin)",
+      "outcome": "success",
+      "model_seconds": 5.916794001997914
+    },
+    {
+      "task_id": "feedback-004",
+      "category": "incomplete_same_file_behavior",
+      "task": "Fix retry normalization so that values are clamped to the configured MIN_RETRIES and MAX_RETRIES range.",
+      "condition": "failure_signal",
+      "source_files": [
+        "limits.py"
+      ],
+      "test_file": "test_limits.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 0 == 2\nE        +  where 0 = normalize_retries(1)\n\ntest_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_range - assert 0 == 2\n1 failed, 1 passed in 0.03s\n",
+        "stderr": "",
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 0 == 2\nE        +  where 0 = normalize_retries(1)\n\ntest_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_range - assert 0 == 2\n1 failed, 1 passed in 0.03s\n",
+        "raw_output_characters": 585,
+        "raw_output_lines": 13,
+        "seconds": 0.4061198510025861
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"limits.py\",\n      \"old\": \"def normalize_retries(value: int) -> int:\",\n      \"new\": \"def normalize_retries(value: int) -> int:\\n    if value < MIN_RETRIES:\\n        return MIN_RETRIES\\n    if value > MAX_RETRIES:\\n        return MAX_RETRIES\\n    return value\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "limits.py",
+          "old": "def normalize_retries(value: int) -> int:",
+          "new": "def normalize_retries(value: int) -> int:\n    if value < MIN_RETRIES:\n        return MIN_RETRIES\n    if value > MAX_RETRIES:\n        return MAX_RETRIES\n    return value"
+        }
+      ],
+      "preflight_valid": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "committed": true,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+        "stderr": "",
+        "raw_output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+        "raw_output_characters": 98,
+        "raw_output_lines": 2,
+        "seconds": 0.49890371499350294
+      },
+      "behavior_correct": true,
+      "files_modified": [
+        "limits.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 5,
+      "lines_deleted": 0,
+      "diff": "--- a/limits.py\n+++ b/limits.py\n@@ -3,6 +3,11 @@\n \n \n def normalize_retries(value: int) -> int:\n+    if value < MIN_RETRIES:\n+        return MIN_RETRIES\n+    if value > MAX_RETRIES:\n+        return MAX_RETRIES\n+    return value\n     if value < MIN_RETRIES:\n         return 0\n \n",
+      "outcome": "success",
+      "model_seconds": 10.983414554000774
+    },
+    {
+      "task_id": "feedback-005",
+      "category": "runtime_name_error",
+      "task": "Complete the timeout rename so that request_timeout uses REQUEST_TIMEOUT and existing behavior is preserved.",
+      "condition": "failure_signal",
+      "source_files": [
+        "config.py",
+        "client.py"
+      ],
+      "test_file": "test_client.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________________ test_timeout_behavior _____________________________\n\n    def test_timeout_behavior() -> None:\n>       assert request_timeout() == 10\n               ^^^^^^^^^^^^^^^^^\n\ntest_client.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def request_timeout() -> int:\n>       return DEFAULT_TIMEOUT\n               ^^^^^^^^^^^^^^^\nE       NameError: name 'DEFAULT_TIMEOUT' is not defined\n\nclient.py:5: NameError\n=========================== short test summary info ============================\nFAILED test_client.py::test_timeout_behavior - NameError: name 'DEFAULT_TIMEO...\n1 failed, 1 passed in 0.03s\n",
+        "stderr": "",
+        "raw_output": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________________ test_timeout_behavior _____________________________\n\n    def test_timeout_behavior() -> None:\n>       assert request_timeout() == 10\n               ^^^^^^^^^^^^^^^^^\n\ntest_client.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def request_timeout() -> int:\n>       return DEFAULT_TIMEOUT\n               ^^^^^^^^^^^^^^^\nE       NameError: name 'DEFAULT_TIMEOUT' is not defined\n\nclient.py:5: NameError\n=========================== short test summary info ============================\nFAILED test_client.py::test_timeout_behavior - NameError: name 'DEFAULT_TIMEO...\n1 failed, 1 passed in 0.03s\n",
+        "raw_output_characters": 826,
+        "raw_output_lines": 20,
+        "seconds": 0.40043488800438354
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"config.py\",\n      \"old\": \"REQUEST_TIMEOUT = 10\",\n      \"new\": \"REQUEST_TIMEOUT = DEFAULT_TIMEOUT\"\n    },\n    {\n      \"path\": \"client.py\",\n      \"old\": \"from config import REQUEST_TIMEOUT\",\n      \"new\": \"from config import DEFAULT_TIMEOUT\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "config.py",
+          "old": "REQUEST_TIMEOUT = 10",
+          "new": "REQUEST_TIMEOUT = DEFAULT_TIMEOUT"
+        },
+        {
+          "path": "client.py",
+          "old": "from config import REQUEST_TIMEOUT",
+          "new": "from config import DEFAULT_TIMEOUT"
+        }
+      ],
+      "preflight_valid": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "committed": true,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": false,
+        "returncode": 2,
+        "stdout": "\n==================================== ERRORS ====================================\n_______________________ ERROR collecting test_client.py ________________________\ntest_client.py:1: in <module>\n    from client import request_timeout\nclient.py:1: in <module>\n    from config import DEFAULT_TIMEOUT\nconfig.py:1: in <module>\n    REQUEST_TIMEOUT = DEFAULT_TIMEOUT\n                      ^^^^^^^^^^^^^^^\nE   NameError: name 'DEFAULT_TIMEOUT' is not defined\n=========================== short test summary info ============================\nERROR test_client.py - NameError: name 'DEFAULT_TIMEOUT' is not defined\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.27s\n",
+        "stderr": "",
+        "raw_output": "\n==================================== ERRORS ====================================\n_______________________ ERROR collecting test_client.py ________________________\ntest_client.py:1: in <module>\n    from client import request_timeout\nclient.py:1: in <module>\n    from config import DEFAULT_TIMEOUT\nconfig.py:1: in <module>\n    REQUEST_TIMEOUT = DEFAULT_TIMEOUT\n                      ^^^^^^^^^^^^^^^\nE   NameError: name 'DEFAULT_TIMEOUT' is not defined\n=========================== short test summary info ============================\nERROR test_client.py - NameError: name 'DEFAULT_TIMEOUT' is not defined\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.27s\n",
+        "raw_output_characters": 701,
+        "raw_output_lines": 15,
+        "seconds": 0.7006379079975886
+      },
+      "behavior_correct": false,
+      "files_modified": [
+        "client.py",
+        "config.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 2,
+      "diff": "--- a/client.py\n+++ b/client.py\n@@ -1,4 +1,4 @@\n-from config import REQUEST_TIMEOUT\n+from config import DEFAULT_TIMEOUT\n \n \n def request_timeout() -> int:\n--- a/config.py\n+++ b/config.py\n@@ -1 +1 @@\n-REQUEST_TIMEOUT = 10+REQUEST_TIMEOUT = DEFAULT_TIMEOUT",
+      "outcome": "verification_failure",
+      "model_seconds": 8.443027909001103
+    },
+    {
+      "task_id": "feedback-006",
+      "category": "expression_grouping_error",
+      "task": "Fix fahrenheit_to_celsius so that it correctly converts Fahrenheit temperatures to Celsius.",
+      "condition": "failure_signal",
+      "source_files": [
+        "temperature.py"
+      ],
+      "test_file": "test_temperature.py",
+      "feedback_text": "FAILED",
+      "feedback_characters": 6,
+      "feedback_lines": 1,
+      "verification_before": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_freezing_point ______________________________\n\n    def test_freezing_point() -> None:\n>       assert fahrenheit_to_celsius(32) == 0\nE       assert 14.222222222222221 == 0\nE        +  where 14.222222222222221 = fahrenheit_to_celsius(32)\n\ntest_temperature.py:5: AssertionError\n______________________________ test_boiling_point ______________________________\n\n    def test_boiling_point() -> None:\n>       assert fahrenheit_to_celsius(212) == 100\nE       assert 194.22222222222223 == 100\nE        +  where 194.22222222222223 = fahrenheit_to_celsius(212)\n\ntest_temperature.py:9: AssertionError\n__________________________ test_negative_temperature ___________________________\n\n    def test_negative_temperature() -> None:\n>       assert fahrenheit_to_celsius(-40) == -40\nE       assert -57.77777777777778 == -40\nE        +  where -57.77777777777778 = fahrenheit_to_celsius(-40)\n\ntest_temperature.py:13: AssertionError\n=========================== short test summary info ============================\nFAILED test_temperature.py::test_freezing_point - assert 14.222222222222221 == 0\nFAILED test_temperature.py::test_boiling_point - assert 194.22222222222223 ==...\nFAILED test_temperature.py::test_negative_temperature - assert -57.7777777777...\n3 failed in 0.03s\n",
+        "stderr": "",
+        "raw_output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_freezing_point ______________________________\n\n    def test_freezing_point() -> None:\n>       assert fahrenheit_to_celsius(32) == 0\nE       assert 14.222222222222221 == 0\nE        +  where 14.222222222222221 = fahrenheit_to_celsius(32)\n\ntest_temperature.py:5: AssertionError\n______________________________ test_boiling_point ______________________________\n\n    def test_boiling_point() -> None:\n>       assert fahrenheit_to_celsius(212) == 100\nE       assert 194.22222222222223 == 100\nE        +  where 194.22222222222223 = fahrenheit_to_celsius(212)\n\ntest_temperature.py:9: AssertionError\n__________________________ test_negative_temperature ___________________________\n\n    def test_negative_temperature() -> None:\n>       assert fahrenheit_to_celsius(-40) == -40\nE       assert -57.77777777777778 == -40\nE        +  where -57.77777777777778 = fahrenheit_to_celsius(-40)\n\ntest_temperature.py:13: AssertionError\n=========================== short test summary info ============================\nFAILED test_temperature.py::test_freezing_point - assert 14.222222222222221 == 0\nFAILED test_temperature.py::test_boiling_point - assert 194.22222222222223 ==...\nFAILED test_temperature.py::test_negative_temperature - assert -57.7777777777...\n3 failed in 0.03s\n",
+        "raw_output_characters": 1451,
+        "raw_output_lines": 31,
+        "seconds": 0.35053652500209864
+      },
+      "model_failure": false,
+      "model_error": null,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"temperature.py\",\n      \"old\": \"return value - 32 * 5 / 9\",\n      \"new\": \"return (value - 32) * 5 / 9\"\n    }\n  ]\n}",
+      "proposed_edits": [
+        {
+          "path": "temperature.py",
+          "old": "return value - 32 * 5 / 9",
+          "new": "return (value - 32) * 5 / 9"
+        }
+      ],
+      "preflight_valid": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "committed": true,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification_after": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+        "stderr": "",
+        "raw_output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+        "raw_output_characters": 98,
+        "raw_output_lines": 2,
+        "seconds": 0.5416255140007706
+      },
+      "behavior_correct": true,
+      "files_modified": [
+        "temperature.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 1,
+      "diff": "--- a/temperature.py\n+++ b/temperature.py\n@@ -1,2 +1,2 @@\n def fahrenheit_to_celsius(value: float) -> float:\n-    return value - 32 * 5 / 9+    return (value - 32) * 5 / 9",
+      "outcome": "success",
+      "model_seconds": 6.8228914979990805
+    }
+  ]
+}
