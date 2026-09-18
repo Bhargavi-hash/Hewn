@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -70,8 +71,10 @@ def load_json(path: Path) -> Any:
 
 
 def load_normalizer() -> Callable[[str], dict[str, Any]]:
+    module_name = "hewn_module7_normalize_pytest"
+
     spec = importlib.util.spec_from_file_location(
-        "hewn_module7_normalize_pytest",
+        module_name,
         NORMALIZER_PATH,
     )
 
@@ -81,7 +84,17 @@ def load_normalizer() -> Callable[[str], dict[str, Any]]:
         )
 
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+
+    # Python 3.12 dataclass processing expects the module that owns a
+    # dataclass to already be registered in sys.modules while the module
+    # body is executing.
+    sys.modules[module_name] = module
+
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(module_name, None)
+        raise
 
     function = getattr(
         module,
