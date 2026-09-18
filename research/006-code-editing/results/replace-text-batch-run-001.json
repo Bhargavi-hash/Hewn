@@ -1,0 +1,331 @@
+{
+  "experiment": "module_6_replace_text_batch",
+  "configuration": {
+    "coding_model": "Qwen2.5-Coder-1.5B-Instruct Q4_K_M",
+    "temperature": 0.0,
+    "max_tokens": 512,
+    "editing_representation": "edit_batch",
+    "underlying_primitive": "exact_replace_text",
+    "max_batch_edits": 6,
+    "model_calls_per_task": 1,
+    "atomic_application": true,
+    "conversational_feedback": false,
+    "source_supplied": true,
+    "verification": "evaluator_side_only",
+    "task_count": 6,
+    "runs_per_task": 1,
+    "repeated_trials": false
+  },
+  "summary": {
+    "behavior_successes": 2,
+    "protocol_successes": 6,
+    "application_attempts": 6,
+    "application_successes": 5,
+    "total_proposed_edits": 9,
+    "outcomes": {
+      "success": 2,
+      "application_failure": 1,
+      "verification_failure": 3
+    },
+    "total_seconds": 56.03994785300165
+  },
+  "records": [
+    {
+      "task_id": "edit-001",
+      "category": "unique_expression",
+      "task": "Fix add so it returns the sum of its two arguments.",
+      "source_files": [
+        "calculator.py"
+      ],
+      "test_file": "test_calculator.py",
+      "outcome": "success",
+      "behavior_correct": true,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"calculator.py\",\n      \"old\": \"def add(a: int, b: int) -> int:\",\n      \"new\": \"def add(a: int, b: int) -> int:\\n    return a + b\"\n    }\n  ]\n}",
+      "proposed_edit_count": 1,
+      "proposed_edits": [
+        {
+          "path": "calculator.py",
+          "old": "def add(a: int, b: int) -> int:",
+          "new": "def add(a: int, b: int) -> int:\n    return a + b"
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+        "stderr": "",
+        "seconds": 0.46945497800334124
+      },
+      "files_modified": [
+        "calculator.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 0,
+      "diff": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,2 +1,3 @@\n def add(a: int, b: int) -> int:\n+    return a + b\n     return a - b\n",
+      "model_seconds": 12.648505716002546,
+      "application_seconds": 0.0006023700043442659
+    },
+    {
+      "task_id": "edit-002",
+      "category": "repeated_expression",
+      "task": "user_status(True) should return \"active\". Preserve the other status behavior.",
+      "source_files": [
+        "status.py"
+      ],
+      "test_file": "test_status.py",
+      "outcome": "application_failure",
+      "behavior_correct": false,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"status.py\",\n      \"old\": \"if active:\",\n      \"new\": \"if active and not complete:\"\n    },\n    {\n      \"path\": \"status.py\",\n      \"old\": \"return \\\"pending\\\"\",\n      \"new\": \"return \\\"active\\\"\"\n    }\n  ]\n}",
+      "proposed_edit_count": 2,
+      "proposed_edits": [
+        {
+          "path": "status.py",
+          "old": "if active:",
+          "new": "if active and not complete:"
+        },
+        {
+          "path": "status.py",
+          "old": "return \"pending\"",
+          "new": "return \"active\""
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": false,
+      "failed_edit_index": 1,
+      "application_error": "Text to replace occurs more than once",
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_user_status _______________________________\n\n    def test_user_status() -> None:\n>       assert user_status(True) == \"active\"\nE       AssertionError: assert 'pending' == 'active'\nE         \nE         - active\nE         + pending\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-002/test_status.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED test_status.py::test_user_status - AssertionError: assert 'pending' ==...\n1 failed, 1 passed in 0.05s\n",
+        "stderr": "",
+        "seconds": 0.7097699119985919
+      },
+      "files_modified": [],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 0,
+      "lines_deleted": 0,
+      "diff": "",
+      "model_seconds": 8.260382486994786,
+      "application_seconds": 0.0005949550031800754
+    },
+    {
+      "task_id": "edit-003",
+      "category": "insertion",
+      "task": "Reject discounts below 0 or above 1 by raising ValueError. Preserve valid discount behavior.",
+      "source_files": [
+        "pricing.py"
+      ],
+      "test_file": "test_pricing.py",
+      "outcome": "success",
+      "behavior_correct": true,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"pricing.py\",\n      \"old\": \"def discounted_price(price: float, discount: float) -> float:\",\n      \"new\": \"def discounted_price(price: float, discount: float) -> float:\\n    if discount < 0 or discount > 1:\\n        raise ValueError('Discount must be between 0 and 1')\"\n    }\n  ]\n}",
+      "proposed_edit_count": 1,
+      "proposed_edits": [
+        {
+          "path": "pricing.py",
+          "old": "def discounted_price(price: float, discount: float) -> float:",
+          "new": "def discounted_price(price: float, discount: float) -> float:\n    if discount < 0 or discount > 1:\n        raise ValueError('Discount must be between 0 and 1')"
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": true,
+        "returncode": 0,
+        "stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+        "stderr": "",
+        "seconds": 0.4546433319992502
+      },
+      "files_modified": [
+        "pricing.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 2,
+      "lines_deleted": 0,
+      "diff": "--- a/pricing.py\n+++ b/pricing.py\n@@ -1,2 +1,4 @@\n def discounted_price(price: float, discount: float) -> float:\n+    if discount < 0 or discount > 1:\n+        raise ValueError('Discount must be between 0 and 1')\n     return price * (1 - discount)\n",
+      "model_seconds": 8.971585598003003,
+      "application_seconds": 0.000497470005939249
+    },
+    {
+      "task_id": "edit-004",
+      "category": "conditional",
+      "task": "Authenticated administrators should also be allowed to edit. Unauthenticated users must remain denied.",
+      "source_files": [
+        "access.py"
+      ],
+      "test_file": "test_access.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"access.py\",\n      \"old\": \"authenticated and owner\",\n      \"new\": \"authenticated and owner or admin\"\n    }\n  ]\n}",
+      "proposed_edit_count": 1,
+      "proposed_edits": [
+        {
+          "path": "access.py",
+          "old": "authenticated and owner",
+          "new": "authenticated and owner or admin"
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "..F.                                                                     [100%]\n=================================== FAILURES ===================================\n____________________ test_unauthenticated_admin_cannot_edit ____________________\n\n    def test_unauthenticated_admin_cannot_edit() -> None:\n>       assert not can_edit(\n            authenticated=False,\n            owner=False,\n            admin=True,\n        )\nE       assert not True\nE        +  where True = can_edit(authenticated=False, owner=False, admin=True)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-004/test_access.py:21: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_unauthenticated_admin_cannot_edit - assert not True\n1 failed, 3 passed in 0.03s\n",
+        "stderr": "",
+        "seconds": 0.4846588209984475
+      },
+      "files_modified": [
+        "access.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "diff": "--- a/access.py\n+++ b/access.py\n@@ -1,5 +1,5 @@\n def can_edit(*, authenticated: bool, owner: bool, admin: bool) -> bool:\n-    if authenticated and owner:\n+    if authenticated and owner or admin:\n         return True\n \n     return False\n",
+      "model_seconds": 5.053436062997207,
+      "application_seconds": 0.00047525799891445786
+    },
+    {
+      "task_id": "edit-005",
+      "category": "multiple_same_file",
+      "task": "Change the supported retry range to 2 through 5. Values below the range should normalize to 2 and values above it should normalize to 5.",
+      "source_files": [
+        "limits.py"
+      ],
+      "test_file": "test_limits.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"limits.py\",\n      \"old\": \"MIN_RETRIES = 1\\nMAX_RETRIES = 3\",\n      \"new\": \"MIN_RETRIES = 2\\nMAX_RETRIES = 5\"\n    }\n  ]\n}",
+      "proposed_edit_count": 1,
+      "proposed_edits": [
+        {
+          "path": "limits.py",
+          "old": "MIN_RETRIES = 1\nMAX_RETRIES = 3",
+          "new": "MIN_RETRIES = 2\nMAX_RETRIES = 5"
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________________ test_retry_range _______________________________\n\n    def test_retry_range() -> None:\n>       assert normalize_retries(1) == 2\nE       assert 0 == 2\nE        +  where 0 = normalize_retries(1)\n\n/home/bhargavi/Documents/Hewn/research/006-code-editing/fixtures/edit-005/test_limits.py:14: AssertionError\n=========================== short test summary info ============================\nFAILED test_limits.py::test_retry_range - assert 0 == 2\n1 failed, 1 passed in 0.03s\n",
+        "stderr": "",
+        "seconds": 0.4783677900049952
+      },
+      "files_modified": [
+        "limits.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 2,
+      "lines_deleted": 2,
+      "diff": "--- a/limits.py\n+++ b/limits.py\n@@ -1,5 +1,5 @@\n-MIN_RETRIES = 1\n-MAX_RETRIES = 3\n+MIN_RETRIES = 2\n+MAX_RETRIES = 5\n \n \n def normalize_retries(value: int) -> int:\n",
+      "model_seconds": 7.378110218000074,
+      "application_seconds": 0.0005413249964476563
+    },
+    {
+      "task_id": "edit-006",
+      "category": "multiple_files",
+      "task": "Rename the timeout constant to REQUEST_TIMEOUT while preserving the value and behavior.",
+      "source_files": [
+        "config.py",
+        "client.py"
+      ],
+      "test_file": "test_client.py",
+      "outcome": "verification_failure",
+      "behavior_correct": false,
+      "model_failure": false,
+      "model_error": null,
+      "protocol_failure": false,
+      "protocol_error": null,
+      "raw_model_response": "{\n  \"type\": \"edit_batch\",\n  \"edits\": [\n    {\n      \"path\": \"config.py\",\n      \"old\": \"DEFAULT_TIMEOUT = 10\",\n      \"new\": \"REQUEST_TIMEOUT = 10\"\n    },\n    {\n      \"path\": \"client.py\",\n      \"old\": \"from config import DEFAULT_TIMEOUT\",\n      \"new\": \"from config import REQUEST_TIMEOUT\"\n    },\n    {\n      \"path\": \"client.py\",\n      \"old\": \"def request_timeout() -> int:\",\n      \"new\": \"def request_timeout() -> int:\"\n    }\n  ]\n}",
+      "proposed_edit_count": 3,
+      "proposed_edits": [
+        {
+          "path": "config.py",
+          "old": "DEFAULT_TIMEOUT = 10",
+          "new": "REQUEST_TIMEOUT = 10"
+        },
+        {
+          "path": "client.py",
+          "old": "from config import DEFAULT_TIMEOUT",
+          "new": "from config import REQUEST_TIMEOUT"
+        },
+        {
+          "path": "client.py",
+          "old": "def request_timeout() -> int:",
+          "new": "def request_timeout() -> int:"
+        }
+      ],
+      "application_attempted": true,
+      "application_succeeded": true,
+      "failed_edit_index": null,
+      "application_error": null,
+      "syntax_valid": true,
+      "syntax_error": null,
+      "verification": {
+        "passed": false,
+        "returncode": 1,
+        "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n____________________________ test_timeout_behavior _____________________________\n\n    def test_timeout_behavior() -> None:\n>       assert request_timeout() == 10\n               ^^^^^^^^^^^^^^^^^\n\ntest_client.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def request_timeout() -> int:\n>       return DEFAULT_TIMEOUT\n               ^^^^^^^^^^^^^^^\nE       NameError: name 'DEFAULT_TIMEOUT' is not defined\n\nclient.py:5: NameError\n=========================== short test summary info ============================\nFAILED test_client.py::test_timeout_behavior - NameError: name 'DEFAULT_TIMEO...\n1 failed, 1 passed in 0.04s\n",
+        "stderr": "",
+        "seconds": 0.4721335789945442
+      },
+      "files_modified": [
+        "client.py",
+        "config.py"
+      ],
+      "unexpected_files_modified": [],
+      "tests_modified": false,
+      "lines_added": 2,
+      "lines_deleted": 2,
+      "diff": "--- a/client.py\n+++ b/client.py\n@@ -1,4 +1,4 @@\n-from config import DEFAULT_TIMEOUT\n+from config import REQUEST_TIMEOUT\n \n \n def request_timeout() -> int:\n--- a/config.py\n+++ b/config.py\n@@ -1 +1 @@\n-DEFAULT_TIMEOUT = 10\n+REQUEST_TIMEOUT = 10\n",
+      "model_seconds": 10.634293482995417,
+      "application_seconds": 0.0009437980043003336
+    }
+  ]
+}
