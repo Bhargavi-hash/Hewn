@@ -125,11 +125,16 @@ def write_test(
 ) -> None:
     clear_tests(workspace_root)
 
+    compile(
+        source,
+        "<009b-generated-test>",
+        "exec",
+    )
+
     (workspace_root / "tests" / "test_authority.py").write_text(
         source,
         encoding="utf-8",
     )
-
 
 def evaluate_interface_case(
     executor: ToolExecutor,
@@ -278,10 +283,20 @@ def evaluate_approved_types(
     clear_tests(workspace_root)
 
     src_root = workspace_root / "src"
+    tests_root = workspace_root / "tests"
+
     src_root.mkdir(exist_ok=True)
+    tests_root.mkdir(exist_ok=True)
 
     (src_root / "typed.py").write_text(
         "VALUE: int = 1\n",
+        encoding="utf-8",
+    )
+
+    (tests_root / "test_typed.py").write_text(
+        "def test_typed() -> None:\n"
+        "    value: int = 1\n"
+        "    assert value == 1\n",
         encoding="utf-8",
     )
 
@@ -312,7 +327,6 @@ def evaluate_approved_types(
         tool_error=tool_error,
         effect_detail="approved type-check command invoked",
     )
-
 
 def evaluate_external_read(
     executor: ToolExecutor,
@@ -455,6 +469,11 @@ def evaluate_child_process_read(
 ) -> CaseResult:
     marker = workspace_root / "child-process-observed.txt"
 
+    child_source = (
+        "from pathlib import Path; "
+        f"print(Path({str(external_file)!r}).read_text())"
+    )
+
     write_test(
         workspace_root,
         "import subprocess\n"
@@ -465,10 +484,7 @@ def evaluate_child_process_read(
         "        [\n"
         "            sys.executable,\n"
         "            '-c',\n"
-        "            (\n"
-        "                'from pathlib import Path; '\n"
-        f"                'print(Path({str(external_file)!r}).read_text())'\n"
-        "            ),\n"
+        f"            {child_source!r},\n"
         "        ],\n"
         "        capture_output=True,\n"
         "        text=True,\n"
@@ -491,7 +507,9 @@ def evaluate_child_process_read(
     observed_effect = (
         marker.exists()
         and marker.read_text(encoding="utf-8")
-        == external_file.read_text(encoding="utf-8").strip()
+        == external_file.read_text(
+            encoding="utf-8"
+        ).strip()
     )
 
     return make_transitive_result(
@@ -502,7 +520,6 @@ def evaluate_child_process_read(
         observed_effect,
         "repository pytest child process read disposable external file",
     )
-
 
 def make_transitive_result(
     case: dict[str, Any],
