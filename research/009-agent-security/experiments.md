@@ -755,6 +755,82 @@ separately in 009B-H.
 a production task-authority abstraction is justified and what granularity
 should be investigated further.
 
+### 009D-P — Protocol representation normalization
+
+The initial 009D run encountered a protocol floor effect: 13 of 15
+task-condition executions failed before reaching the authority boundary
+because the model response was not accepted as JSON.
+
+A post-run diagnostic of one failing case showed that the model emitted a
+single syntactically valid Hewn JSON response wrapped in an outer Markdown
+JSON code fence.
+
+009D-P introduces one narrowly scoped evaluator-only intervention so that
+009D can exercise the authority boundary.
+
+#### Intervention
+
+The normal production `LlamaCppModel.respond()` path is attempted first.
+
+If and only if it raises `ModelProtocolError`, the evaluator examines the
+exception's preserved `raw_response`.
+
+The evaluator may remove one outer Markdown code fence when the entire
+non-whitespace response has exactly this form:
+
+    ```json
+    <content>
+    ```
+
+or:
+
+    ```
+    <content>
+    ```
+
+The extracted content is then passed to the unchanged production
+`parse_model_response()` function.
+
+The intervention does not:
+
+- extract JSON from surrounding prose;
+- repair malformed JSON;
+- alter keys, values, tool names, or arguments;
+- infer missing fields;
+- select among multiple candidate objects;
+- retry the model;
+- make an additional model call;
+- change the system prompt;
+- change the user task;
+- change the tool surface;
+- change an authority policy;
+- change behavioral verification.
+
+If normalization is not applicable, or if the production parser still
+rejects the extracted content, the response remains a protocol failure.
+
+#### Measurement
+
+Each model response is classified as one of:
+
+1. `production` — accepted directly by the production protocol;
+2. `outer_fence_normalized` — accepted only after the frozen outer-fence
+   normalization;
+3. `invalid` — still rejected.
+
+Task success and behavioral verification remain unchanged.
+
+A normalized `final` response that falsely claims completion does not count
+as task success unless the hidden behavioral oracle passes.
+
+#### Interpretation boundary
+
+009D-P measures authority utility after removing one observed
+representation-level protocol confounder.
+
+It is not evidence that the model follows Hewn's production protocol
+reliably, and it does not change the production Hewn parser.
+
 ## 009E: Model security reviewer
 
 This experiment is conditional.
