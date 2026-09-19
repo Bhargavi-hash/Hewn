@@ -12,9 +12,17 @@ from typing import Any, cast
 
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.llama_cpp import LlamaCppModel
-from hewn.model_protocol import ModelProtocolError
+from hewn.model_protocol import (
+    ModelProtocolError,
+    parse_model_response,
+)
 from hewn.models import FinalResponse, Message
-from hewn.tools import ToolCall, ToolExecutor, ToolResult
+from hewn.tools import (
+    ToolCall,
+    ToolDefinition,
+    ToolExecutor,
+    ToolResult,
+)
 from hewn.workspace import Workspace, WorkspaceViolationError
 
 RESEARCH_ROOT = Path(__file__).resolve().parent
@@ -68,6 +76,12 @@ class AuthorityDecision:
     capability: str
     reason: str
 
+@dataclass(frozen=True)
+class ModelTurnResult:
+    response: FinalResponse | ToolCall | None
+    protocol_mode: str
+    protocol_error: str | None
+
 
 @dataclass(frozen=True)
 class ProposalObservation:
@@ -90,6 +104,7 @@ class ConditionResult:
     condition: str
     protocol_valid: bool
     protocol_error: str | None
+    protocol_modes: tuple[str, ...]
     model_calls: int
     model_seconds: float
     tool_proposals: int
@@ -535,7 +550,7 @@ def classify_legitimate_action(
     approved_check.
     """
 
-    capability = classify_capability(call)
+    # capability = classify_capability(call)
 
     if call.name == "read_file":
         path = normalized_workspace_path(
@@ -585,7 +600,7 @@ def classify_legitimate_action(
             in task.required_capabilities
         )
 
-    return capability != "unknown_capability" and False
+    return False
 
 
 def build_initial_message(task: UtilityTask) -> str:
@@ -785,6 +800,101 @@ def append_tool_exchange(
         )
     )
 
+def strip_single_outer_code_fence(
+    raw_response: str,
+) -> str | None:
+    """
+    Remove one whole-response Markdown code fence.
+
+    This is deliberately representation-only normalization. It does not
+    search for JSON inside prose or repair the enclosed content.
+    """
+
+    stripped = raw_response.strip()
+
+    if stripped.startswith("```json"):
+        opening = "```json"
+    elif stripped.startswith("```"):
+        opening = "```"
+    else:
+        return None
+
+    if not stripped.endswith("```"):
+        return None
+
+    inner = stripped[
+        len(opening):-3
+    ]
+
+    if inner.startswith("\r\n"):
+        inner = inner[2:]
+    elif inner.startswith("\n"):
+        inner = inner[1:]
+
+    if inner.endswith("\r\n"):
+        inner = inner[:-2]
+    elif inner.endswith("\n"):
+        inner = inner[:-1]
+
+    if "```" in inner:
+        return None
+
+    if not inner.strip():
+        return None
+
+    return inner
+
+
+def respond_with_protocol_normalization(
+    model: LlamaCppModel,
+    messages: list[Message],
+    tools: list[ToolDefinition],
+) -> ModelTurnResult:
+    """
+    Use the production model path first.
+
+    Only a production protocol failure may trigger the frozen 009D-P
+    outer-fence normalization.
+    """
+
+    try:
+        response = model.respond(
+            messages=messages,
+            tools=tools,
+        )
+    except ModelProtocolError as original_error:
+        normalized = strip_single_outer_code_fence(
+            original_error.raw_response
+        )
+
+        if normalized is None:
+            return ModelTurnResult(
+                response=None,
+                protocol_mode="invalid",
+                protocol_error=str(original_error),
+            )
+
+        try:
+            response = parse_model_response(normalized)
+        except ModelProtocolError as normalized_error:
+            return ModelTurnResult(
+                response=None,
+                protocol_mode="invalid",
+                protocol_error=str(normalized_error),
+            )
+
+        return ModelTurnResult(
+            response=response,
+            protocol_mode="outer_fence_normalized",
+            protocol_error=None,
+        )
+
+    return ModelTurnResult(
+        response=response,
+        protocol_mode="production",
+        protocol_error=None,
+    )
+
 
 def run_condition(
     task: UtilityTask,
@@ -839,6 +949,7 @@ def run_condition(
 
         protocol_valid = True
         protocol_error: str | None = None
+        protocol_modes: list[str] = []
         final_text: str | None = None
 
         files_read: set[str] = set()
@@ -848,17 +959,21 @@ def run_condition(
 
             started = time.monotonic()
 
-            try:
-                response = model.respond(
-                    messages=messages,
-                    tools=tools,
-                )
-            except ModelProtocolError as exc:
-                model_seconds += (
-                    time.monotonic() - started
-                )
+            turn_result = respond_with_protocol_normalization(
+                model,
+                messages,
+                tools,
+            )
+
+            model_seconds += time.monotonic() - started
+
+            protocol_modes.append(
+                turn_result.protocol_mode
+            )
+
+            if turn_result.response is None:
                 protocol_valid = False
-                protocol_error = str(exc)
+                protocol_error = turn_result.protocol_error
 
                 proposals.append(
                     ProposalObservation(
@@ -877,7 +992,7 @@ def run_condition(
                 )
                 break
 
-            model_seconds += time.monotonic() - started
+            response = turn_result.response
 
             if isinstance(response, FinalResponse):
                 final_text = response.text
@@ -1045,6 +1160,7 @@ def run_condition(
             condition=condition,
             protocol_valid=protocol_valid,
             protocol_error=protocol_error,
+            protocol_modes=tuple(protocol_modes),
             model_calls=model_calls,
             model_seconds=model_seconds,
             tool_proposals=tool_proposals,
@@ -1264,9 +1380,41 @@ def run_preflight(tasks: list[UtilityTask]) -> None:
                     "broad search"
                 )
 
+    normalization_cases = (
+        (
+            '```json\n{"type":"final","text":"ok"}\n```',
+            '{"type":"final","text":"ok"}',
+        ),
+        (
+            '```\n{"type":"final","text":"ok"}\n```',
+            '{"type":"final","text":"ok"}',
+        ),
+        ('{"type":"final","text":"ok"}', None),
+        (
+            'prefix\n```json\n{"type":"final","text":"ok"}\n```',
+            None,
+        ),
+        ('```json\n{"type":"final","text":"ok"}', None),
+        (
+            '```json\n{"type":"final","text":"ok"}\n```\nextra',
+            None,
+        ),
+        ('```json\n```oops```\n```', None),
+    )
+
+    for raw, expected in normalization_cases:
+        actual = strip_single_outer_code_fence(raw)
+        if actual != expected:
+            raise RuntimeError(
+                "009D-P normalization preflight failed: "
+                f"raw={raw!r} expected={expected!r} "
+                f"actual={actual!r}"
+            )
+
     print(
         "009D preflight passed: frozen fixtures, oracle "
-        "resources, tool surface, and policy boundaries verified."
+        "resources, tool surface, policy boundaries, and "
+        "protocol normalization verified."
     )
 
 
@@ -1341,6 +1489,20 @@ def summarize_condition(
         ),
         "unnecessary_file_modifications": sum(
             len(result.unnecessary_files_modified)
+            for result in selected
+        ),
+        "production_protocol_turns": sum(
+            result.protocol_modes.count("production")
+            for result in selected
+        ),
+        "normalized_protocol_turns": sum(
+            result.protocol_modes.count(
+                "outer_fence_normalized"
+            )
+            for result in selected
+        ),
+        "invalid_protocol_turns": sum(
+            result.protocol_modes.count("invalid")
             for result in selected
         ),
     }
@@ -1431,6 +1593,18 @@ def write_results(
                     f"{condition_summary['task_count']}"
                 ),
                 (
+                    "- production protocol turns: "
+                    f"{condition_summary['production_protocol_turns']}"
+                ),
+                (
+                    "- normalized protocol turns: "
+                    f"{condition_summary['normalized_protocol_turns']}"
+                ),
+                (
+                    "- invalid protocol turns: "
+                    f"{condition_summary['invalid_protocol_turns']}"
+                ),
+                (
                     "- behavioral verification: "
                     f"{condition_summary['behavioral_verification_passes']}/"
                     f"{condition_summary['task_count']}"
@@ -1494,6 +1668,10 @@ def write_results(
                 (
                     "- protocol valid: "
                     f"{result.protocol_valid}"
+                ),
+                (
+                    "- protocol modes: "
+                    f"{list(result.protocol_modes)!r}"
                 ),
                 (
                     "- model calls: "
@@ -1615,6 +1793,18 @@ def print_results(
             "    task success: "
             f"{condition_summary['task_successes']}/"
             f"{condition_summary['task_count']}"
+        )
+        print(
+            "    production protocol turns: "
+            f"{condition_summary['production_protocol_turns']}"
+        )
+        print(
+            "    normalized protocol turns: "
+            f"{condition_summary['normalized_protocol_turns']}"
+        )
+        print(
+            "    invalid protocol turns: "
+            f"{condition_summary['invalid_protocol_turns']}"
         )
         print(
             "    behavioral verification: "
