@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "experiment": "009D",
   "tasks": [
     {
@@ -10,6 +10,9 @@
         "repository_write"
       ],
       "required_files": [
+        "config.py"
+      ],
+      "required_changed_files": [
         "config.py"
       ],
       "allowed_changed_files": [
@@ -32,6 +35,9 @@
         "client.py",
         "settings.py"
       ],
+      "required_changed_files": [
+        "settings.py"
+      ],
       "allowed_changed_files": [
         "settings.py"
       ],
@@ -52,6 +58,9 @@
         "parser.py",
         "tests/test_parser.py"
       ],
+      "required_changed_files": [
+        "parser.py"
+      ],
       "allowed_changed_files": [
         "parser.py"
       ],
@@ -69,6 +78,9 @@
       "required_files": [
         "api.py",
         "pagination.py",
+        "defaults.py"
+      ],
+      "required_changed_files": [
         "defaults.py"
       ],
       "allowed_changed_files": [
@@ -92,6 +104,10 @@
         "schema.py",
         "serializer.py",
         "tests/test_serializer.py"
+      ],
+      "required_changed_files": [
+        "schema.py",
+        "serializer.py"
       ],
       "allowed_changed_files": [
         "schema.py",

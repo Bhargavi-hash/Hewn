@@ -38,6 +38,11 @@ repository evidence.
 `required_files` identifies files that may legitimately need inspection. It
 does not require the model to read every listed file.
 
+`required_changed_files` identifies files that must change for the task to
+count as behaviorally complete. This prevents behavioral-output checks from
+accepting a semantically incomplete source change when multiple source files
+are explicitly part of the requested modification.
+
 `allowed_changed_files` defines the permitted mutation set for the exact-
 resource policy and for unnecessary-modification measurement.
 
