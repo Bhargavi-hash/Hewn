@@ -1419,3 +1419,447 @@ output.
 If the evaluator implementation contains a defect, preserve the
 affected run, document the defect, correct only the evaluator, and
 execute a new run.
+
+## 011F — Hewn Bench synthesis
+
+### Research question
+
+What minimum production evaluation contract is justified by the evidence
+from 011A–011E?
+
+### Purpose
+
+011F synthesizes the evaluation rules established by Module 11 into a
+reusable production benchmark representation.
+
+011F does not introduce a new empirical comparison.
+
+Its purpose is to convert validated evaluation methodology into the
+minimum `hewn.bench` API needed by later modules.
+
+### Evidence being synthesized
+
+#### 011A — Metric disagreement
+
+011A demonstrated that protocol correctness, edit application, task
+correctness, regression correctness, and behavioral success can disagree.
+
+Therefore these measurements must remain separate.
+
+#### 011B — Repeated-run stability
+
+011B showed that repeated runs can reveal stable failure modes even when
+behavioral success never changes.
+
+It also showed that protocol-valid runs can remain behaviorally
+unsuccessful.
+
+Therefore individual run records must be preserved and repeated runs
+must not be collapsed prematurely into one result.
+
+#### 011C — Regression-aware scoring
+
+011C demonstrated a deliberately constructed false success under
+task-only evaluation.
+
+Therefore primary behavioral success requires both requested behavior
+and required regression checks.
+
+#### 011D — Efficiency accounting
+
+011D established that correctness and resource consumption answer
+different questions.
+
+Therefore efficiency fields remain separate from behavioral success and
+no universal weighted quality/cost score is introduced.
+
+#### 011E — Benchmark integrity
+
+011E established an explicit boundary between agent-visible and
+evaluator-only benchmark information.
+
+Therefore benchmark construction must preserve that separation and
+validate assembled agent-visible payloads for direct benchmark-owned
+hidden-marker exposure.
+
+### Production principles
+
+Hewn Bench follows these rules:
+
+1. Behavioral correctness is primary.
+2. Protocol correctness is diagnostic.
+3. Mechanical correctness is diagnostic.
+4. Task correctness and regression correctness remain separately visible.
+5. Behavioral success requires task correctness and required regression
+   correctness.
+6. Structural requirements, when present, are also required for
+   behavioral success.
+7. Failures remain in the denominator.
+8. Repeated runs remain individually inspectable.
+9. Resource usage is reported separately from correctness.
+10. No universal weighted quality/cost score is produced.
+11. Agent-visible and evaluator-only benchmark information remain
+    structurally separate.
+12. Benchmark provenance is recorded.
+13. Hidden benchmark information must not participate in agent-input
+    construction.
+14. Expected patches and expected changed files are diagnostic metadata,
+    not model-visible hints.
+
+### Minimum production package
+
+011F introduces:
+
+```text
+src/hewn/bench/
+    __init__.py
+    models.py
+    scoring.py
+    integrity.py
+    aggregation.py
+```
+
+No CLI is required in 011F.
+
+No benchmark fixture loader is required in 011F.
+
+No model runner is required in 011F.
+
+Those can be added when later modules need them.
+
+### Benchmark case representation
+
+A benchmark case contains two explicitly separated branches.
+
+```text
+BenchmarkCase
+├── agent_visible
+└── evaluator_only
+```
+
+#### Agent-visible branch
+
+The minimum representation contains:
+
+```text
+task_request
+repository_context
+tool_names
+```
+
+These fields may participate in agent-input construction.
+
+#### Evaluator-only branch
+
+The minimum representation contains:
+
+```text
+behavioral_oracle_id
+regression_oracle_ids
+structural_oracle_ids
+expected_changed_files
+expected_patch_markers
+hidden_markers
+```
+
+Oracle IDs identify evaluator-owned checks.
+
+011F does not serialize executable Python callables into benchmark
+records.
+
+### Benchmark provenance
+
+Each benchmark case records:
+
+```text
+benchmark_name
+benchmark_version
+task_id
+```
+
+Each benchmark run records:
+
+```text
+hewn_commit
+model_id
+model_configuration
+hardware_description
+repetition
+```
+
+These fields are descriptive provenance.
+
+011F does not attempt to discover Git state or hardware automatically.
+
+The caller supplies them explicitly.
+
+### Run measurements
+
+Each run record contains separate fields for:
+
+```text
+protocol_valid
+edit_applied
+task_passes
+regression_passes
+structural_passes
+behavioral_success
+```
+
+`structural_passes` is optional.
+
+If no structural oracle is required:
+
+```text
+structural_passes = None
+```
+
+### Behavioral scoring rule
+
+Primary behavioral success is derived rather than supplied independently.
+
+Without a structural requirement:
+
+```text
+behavioral_success =
+    task_passes
+    AND regression_passes
+```
+
+With a structural requirement:
+
+```text
+behavioral_success =
+    task_passes
+    AND regression_passes
+    AND structural_passes
+```
+
+Protocol validity and edit application do not participate in this
+formula.
+
+This is intentional.
+
+For example, an externally applied candidate patch may be evaluated for
+behavior even when it was not produced through Hewn's normal editing
+protocol.
+
+### Failure accounting
+
+A run may include:
+
+```text
+terminal_status
+error
+```
+
+Examples include:
+
+```text
+completed
+protocol_failure
+stagnation
+limit
+model_error
+execution_error
+```
+
+A failed run remains a run record.
+
+The aggregation layer must not silently remove failed or
+protocol-invalid runs.
+
+### Resource accounting
+
+Each run may record:
+
+```text
+model_calls
+tool_calls
+execution_calls
+context_chars
+wall_time_seconds
+```
+
+These are raw resource measurements.
+
+Token fields are not required in the initial production contract because
+the current model abstraction does not expose uniform measured token
+usage.
+
+No character-to-token conversion is performed.
+
+### Repeated-run aggregation
+
+For a collection of runs, Hewn Bench reports at minimum:
+
+```text
+total_runs
+behavioral_successes
+protocol_valid_runs
+runs_with_edits
+terminal_status_counts
+```
+
+When resource measurements are available, it also reports their totals
+and ranges.
+
+Individual run records remain available.
+
+Aggregation does not reinterpret repeated runs as statistically
+independent samples from a universal population.
+
+### Resource dominance
+
+Resource dominance may be evaluated only between runs with the same
+behavioral classification.
+
+Run X resource-dominates run Y when X uses no more of every measured
+resource and strictly less of at least one measured resource.
+
+If behavioral classifications differ, the relation is undefined.
+
+The API represents this as:
+
+```text
+None
+```
+
+rather than `False`.
+
+### Integrity validation
+
+The agent-input builder accepts only the agent-visible benchmark
+representation.
+
+The integrity checker compares the resulting payload against the frozen
+hidden markers owned by the evaluator-only representation.
+
+An integrity result records:
+
+```text
+passes
+exposed_markers
+```
+
+The initial production checker detects exact direct exposure only.
+
+It is not described as a semantic contamination detector.
+
+### Expected changed files
+
+Expected changed files remain evaluator-only metadata.
+
+A repository path may legitimately be visible to the agent.
+
+Therefore the raw path itself is not automatically treated as a hidden
+marker.
+
+If benchmark construction needs to detect direct leakage of
+expected-file metadata, it must use an evaluator-specific namespaced
+marker rather than treating ordinary repository path visibility as
+contamination.
+
+### Mechanical correctness
+
+`edit_applied` remains a diagnostic field rather than part of primary
+behavioral success.
+
+011F does not define one universal mechanical-success formula because
+different benchmark execution modes may apply candidates differently.
+
+Later benchmark runners may add more detailed mechanical fields without
+changing the behavioral scoring contract.
+
+### No headline score
+
+011F deliberately does not define:
+
+```text
+overall_score
+quality_score
+efficiency_score
+quality_per_cost
+```
+
+The benchmark should expose the underlying measurements.
+
+Any later summary statistic must be justified by a separate experiment
+and must not replace the raw measurements.
+
+### Tests required
+
+Production tests must cover at least:
+
+1. task + regression success produces behavioral success;
+2. task success + regression failure does not;
+3. structural failure prevents behavioral success when structural
+   verification is required;
+4. structural `None` does not prevent success when no structural
+   requirement exists;
+5. protocol failure does not alter the behavioral formula;
+6. aggregation keeps failed runs in the denominator;
+7. aggregation counts protocol-valid runs separately;
+8. aggregation counts runs with edits separately;
+9. resource dominance works within successful runs;
+10. resource dominance works within unsuccessful runs;
+11. resource dominance is undefined across correctness classes;
+12. clean agent payload passes integrity validation;
+13. hidden marker exposure fails integrity validation;
+14. raw expected-file path visibility is not automatically contamination;
+15. benchmark provenance remains attached to cases and runs.
+
+### Validation requirement
+
+Before Module 11 is concluded:
+
+```text
+ruff check
+mypy
+focused Hewn Bench tests
+full pytest suite
+git diff --check
+```
+
+must pass.
+
+### Interpretation constraint
+
+011F is a production synthesis of the measurement rules validated by
+011A–011E.
+
+Passing its tests will show that the implementation matches those rules.
+
+It will not establish that Hewn Bench is a universal or complete coding
+agent benchmark.
+
+The benchmark task distribution, oracle quality, regression coverage,
+hardware controls, model controls, and external-agent adapters remain
+separate concerns.
+
+### Production decision
+
+Module 11 earns a small production benchmark core.
+
+It does not yet earn:
+
+- a public leaderboard;
+- a universal coding-agent score;
+- statistical significance machinery;
+- automatic cloud-agent comparison;
+- semantic contamination detection;
+- automatic benchmark generation;
+- model-specific token estimation.
+
+Those features require evidence from later modules or the final
+cross-agent evaluation.
+
+### Frozen implementation rule
+
+After this synthesis is committed, the production behavioral scoring
+rule, correctness dimensions, integrity boundary, resource-dominance
+semantics, and minimum provenance fields must not be changed merely to
+make later benchmark results look better.
+
+Any future change to these semantics must be documented as a benchmark
+version change.
