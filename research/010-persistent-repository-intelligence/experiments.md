@@ -52,44 +52,127 @@ weaker.
 
 ### Question
 
-Does a small structured memory reduce rediscovery on later related tasks?
+Can a small set of structured repository-specific claims established
+during an earlier task improve a related later task or reduce repeated
+discovery compared with stateless repository retrieval?
 
-### Intervention
+### Hypothesis
 
-Persist a bounded set of repository claims learned during earlier tasks.
+Bounded structured memory can provide reusable repository relationships
+that current stateless retrieval would otherwise need to reconstruct.
+Memory may reduce repeated discovery and may improve behavioral success,
+but either outcome is measured independently.
 
-Memory must be:
+### Conditions
 
-- repository-scoped,
-- structured,
-- provenance-bearing,
-- selectively retrieved.
+Each frozen 010A task pair is executed twice from an independent copy of
+the same V0 fixture:
 
-Do not inject the entire memory store.
+1. `stateless`
+   - current repository retrieval only
+   - no persistent records
 
-### Compare
+2. `structured_memory`
+   - identical current repository retrieval
+   - bounded structured records established after task 1
+   - records supplied to task 2 as explicitly labeled historical evidence
 
-A. Stateless execution.
+Task 2 begins from the actual filesystem produced by task 1 within its
+own condition.
 
-B. Structured-memory execution.
+### Memory source
 
-### Measure
+010B uses a deterministic hidden research oracle for memory records.
+The model does not generate or edit memory.
 
-All 010A metrics plus:
+This deliberately separates two questions:
 
-- memory records stored,
-- memory records retrieved,
-- memory records used in context,
-- relevant-memory precision,
-- relevant-memory recall where oracle labels are available,
-- memory context characters/tokens.
+1. whether structured persistent repository knowledge is useful;
+2. whether a small model can reliably decide what should be persisted.
 
-### Primary diagnostic
+The second question is not tested in 010B.
 
-Does memory reduce repeated repository discovery?
+### Memory semantics
 
-Behavioral success is reported separately.
+A memory record contains:
 
+- record ID
+- kind
+- claim
+- evidence paths
+- establishing task
+- repository fingerprint metadata
+
+010B does not perform freshness validation. Staleness is tested
+separately in 010C.
+
+Memory is evidence, not authority.
+
+A memory record cannot:
+
+- grant tool capability;
+- expand workspace authority;
+- authorize a write;
+- suppress verification;
+- override current repository or execution evidence.
+
+Current evidence outranks persisted memory on conflict.
+
+### Retrieval
+
+010B uses no memory embedding index or vector database.
+
+All bounded records established by task 1 are supplied to the related
+task 2 in the structured-memory condition. Relevance is scored using a
+hidden evaluator oracle.
+
+### Measurements
+
+For each task:
+
+- behavioral success
+- protocol validity
+- model calls
+- tool calls
+- successful and failed tool calls
+- discovery calls
+- current context paths
+- current context character count
+- current evidence count
+- memory records available
+- memory records supplied
+- memory evidence paths
+- relevant and irrelevant supplied records
+- memory character count
+- total evidence character count
+- changed files
+- required-file recall
+- allowed-file precision
+
+For each sequence:
+
+- repeated discovery operations between task 1 and task 2
+
+### Interpretation constraints
+
+A reduction in tool calls is not automatically an improvement.
+
+An increase in context is an explicit cost.
+
+Memory is not credited with behavioral improvement unless the hidden
+behavior oracle passes.
+
+A protocol-valid response is not behavioral success.
+
+A repeated current-repository read may be legitimate revalidation rather
+than waste.
+
+Because this is a three-pair, single-run diagnostic using a small local
+model at temperature 0, results are descriptive rather than estimates of
+general performance.
+
+No 010B result is used to claim that persistent memory should enter
+production until the mechanism demonstrates measurable value.
 ---
 
 ## 010C — Stale memory
