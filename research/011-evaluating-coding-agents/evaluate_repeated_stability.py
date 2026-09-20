@@ -5,8 +5,9 @@ import difflib
 import hashlib
 import json
 import shutil
+import sys
 import tempfile
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from time import perf_counter
 from typing import Any
@@ -20,7 +21,10 @@ from hewn.authority import AuthorityGrant, AuthorityPolicy
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionRequirement
 from hewn.context.builder import ContextBuilder
-from hewn.execution import BubblewrapExecutionBackend
+from hewn.execution import (
+    BubblewrapExecutionBackend,
+    ExecutionError,
+)
 from hewn.llama_cpp import LlamaCppModel
 from hewn.model_protocol import ModelProtocolError
 from hewn.models import Message, ModelError, ModelResponse
@@ -44,7 +48,7 @@ FIXTURES_ROOT = MODULE_ROOT / "fixtures-011b"
 MANIFEST_PATH = FIXTURES_ROOT / "manifest.json"
 RESULTS_ROOT = MODULE_ROOT / "results"
 
-OUTPUT_PATH = RESULTS_ROOT / "011b-repeated-stability-run001.json"
+OUTPUT_PATH = RESULTS_ROOT / "011b-repeated-stability-run002.json"
 
 DEFAULT_EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 CODING_MODEL = "Qwen2.5-Coder-1.5B-Instruct Q4_K_M"
@@ -70,6 +74,9 @@ class RecordingModel:
     protocol_failures: int = 0
     last_protocol_error: str | None = None
     last_raw_response: str | None = None
+    parsed_responses: list[str] = field(
+        default_factory=list
+    )
 
     def respond(
         self,
@@ -79,7 +86,7 @@ class RecordingModel:
         self.model_calls += 1
 
         try:
-            return self.delegate.respond(
+            response = self.delegate.respond(
                 messages=messages,
                 tools=tools,
             )
@@ -88,6 +95,12 @@ class RecordingModel:
             self.last_protocol_error = str(exc)
             self.last_raw_response = exc.raw_response
             raise
+
+        self.parsed_responses.append(
+            repr(response)
+        )
+
+        return response
 
 
 class RecordingToolExecutor(ToolExecutor):
@@ -143,6 +156,7 @@ class RunResult:
     protocol_valid: bool
     protocol_error: str | None
     raw_protocol_response: str | None
+    parsed_model_responses: tuple[str, ...]
 
     final_response_observed: bool
     agent_text: str
@@ -257,7 +271,9 @@ def changed_files(
     )
 
 
-def decode_for_diff(content: bytes | None) -> list[str]:
+def decode_for_diff(
+    content: bytes | None,
+) -> list[str]:
     if content is None:
         return []
 
@@ -295,157 +311,214 @@ def build_normalized_diff(
     return "".join(sections)
 
 
-def diff_hash(diff: str) -> str:
+def diff_hash(
+    diff: str,
+) -> str:
     return hashlib.sha256(
         diff.encode("utf-8")
     ).hexdigest()
 
 
-def load_python_namespace(
-    path: Path,
-) -> dict[str, Any]:
-    source = path.read_text(encoding="utf-8")
-    namespace: dict[str, Any] = {}
+def run_hidden_python_oracle(
+    root: Path,
+    source: str,
+) -> OracleResult:
+    workspace = Workspace(root)
+    backend = BubblewrapExecutionBackend()
 
-    # The evaluated source is confined to frozen 011B fixture
-    # repositories created by this research module. Production Hewn
-    # Bench must execute untrusted repository code through the
-    # sandboxed execution boundary instead.
-    exec(  # noqa: S102
-        compile(
-            source,
-            str(path),
-            "exec",
+    command = [
+        sys.executable,
+        "-c",
+        (
+            "import sys\n"
+            "sys.path.insert(0, '/workspace/src')\n"
+            + source
         ),
-        namespace,
-    )
+    ]
 
-    return namespace
+    try:
+        result = backend.run(
+            command,
+            workspace=workspace,
+            timeout_seconds=10.0,
+        )
+    except ExecutionError as exc:
+        return OracleResult(
+            passed=False,
+            detail=(
+                "oracle_execution_error="
+                f"{type(exc).__name__}: {exc}"
+            ),
+        )
+
+    stdout = result.stdout.strip()
+    stderr = result.stderr.strip()
+
+    if result.returncode != 0:
+        return OracleResult(
+            passed=False,
+            detail=(
+                f"oracle_returncode={result.returncode}; "
+                f"stdout={stdout!r}; "
+                f"stderr={stderr!r}"
+            ),
+        )
+
+    try:
+        payload = json.loads(stdout)
+    except json.JSONDecodeError as exc:
+        return OracleResult(
+            passed=False,
+            detail=(
+                "oracle_output_error="
+                f"{type(exc).__name__}: {exc}; "
+                f"stdout={stdout!r}"
+            ),
+        )
+
+    passed = payload.get("passed")
+    detail = payload.get("detail")
+
+    if not isinstance(passed, bool):
+        return OracleResult(
+            passed=False,
+            detail=(
+                "oracle_output_error="
+                "missing boolean 'passed'"
+            ),
+        )
+
+    if not isinstance(detail, str):
+        return OracleResult(
+            passed=False,
+            detail=(
+                "oracle_output_error="
+                "missing string 'detail'"
+            ),
+        )
+
+    return OracleResult(
+        passed=passed,
+        detail=detail,
+    )
 
 
 def evaluate_task_oracle(
     task_id: str,
     root: Path,
 ) -> OracleResult:
-    try:
-        if task_id == "stability-001":
-            namespace = load_python_namespace(
-                root / "src/sample/greeting.py"
-            )
-            greeting = namespace["greeting"]
+    if task_id == "stability-001":
+        return run_hidden_python_oracle(
+            root,
+            """
+import json
+from sample.greeting import greeting
 
-            passed = greeting() == "hi"
+observed = greeting()
+expected = "hi"
 
-            return OracleResult(
-                passed=passed,
-                detail=f"greeting()={greeting()!r}",
-            )
-
-        if task_id == "stability-002":
-            settings_namespace = load_python_namespace(
-                root / "src/sample/settings.py"
-            )
-
-            default_retries = settings_namespace[
-                "DEFAULT_RETRIES"
-            ]
-
-            client_source = (
-                root / "src/sample/client.py"
-            ).read_text(encoding="utf-8")
-
-            # Evaluate request_policy semantics without importing
-            # the fixture as a package. Its implementation is frozen
-            # and intentionally simple.
-            consumer_uses_setting = (
-                "return DEFAULT_RETRIES" in client_source
-            )
-
-            passed = (
-                default_retries == 4
-                and consumer_uses_setting
-            )
-
-            return OracleResult(
-                passed=passed,
-                detail=(
-                    f"DEFAULT_RETRIES={default_retries!r}; "
-                    f"consumer_uses_setting={consumer_uses_setting}"
-                ),
-            )
-
-        if task_id == "stability-003":
-            namespace = load_python_namespace(
-                root / "src/sample/normalization.py"
-            )
-            normalize_name = namespace["normalize_name"]
-
-            observed = (
-                normalize_name(" Alice "),
-                normalize_name(" BOB "),
-                normalize_name("   "),
-            )
-
-            expected = (
-                "alice",
-                "bob",
-                None,
-            )
-
-            return OracleResult(
-                passed=observed == expected,
-                detail=(
-                    f"observed={observed!r}; "
-                    f"expected={expected!r}"
-                ),
-            )
-
-    except Exception as exc:  # noqa: BLE001
-        return OracleResult(
-            passed=False,
-            detail=(
-                f"oracle_error={type(exc).__name__}: {exc}"
-            ),
+print(json.dumps({
+    "passed": observed == expected,
+    "detail": (
+        f"greeting()={observed!r}; "
+        f"expected={expected!r}"
+    ),
+}))
+""",
         )
 
-    raise ValueError(f"Unknown 011B task: {task_id}")
+    if task_id == "stability-002":
+        return run_hidden_python_oracle(
+            root,
+            """
+import json
+from sample.client import request_policy
+from sample.settings import DEFAULT_RETRIES
+
+observed_setting = DEFAULT_RETRIES
+observed_policy = request_policy()
+
+passed = (
+    observed_setting == 4
+    and observed_policy == 4
+)
+
+print(json.dumps({
+    "passed": passed,
+    "detail": (
+        f"DEFAULT_RETRIES={observed_setting!r}; "
+        f"request_policy()={observed_policy!r}"
+    ),
+}))
+""",
+        )
+
+    if task_id == "stability-003":
+        return run_hidden_python_oracle(
+            root,
+            """
+import json
+from sample.normalization import normalize_name
+
+observed = [
+    normalize_name(" Alice "),
+    normalize_name(" BOB "),
+    normalize_name("   "),
+]
+expected = [
+    "alice",
+    "bob",
+    None,
+]
+
+print(json.dumps({
+    "passed": observed == expected,
+    "detail": (
+        f"observed={observed!r}; "
+        f"expected={expected!r}"
+    ),
+}))
+""",
+        )
+
+    raise ValueError(
+        f"Unknown 011B task: {task_id}"
+    )
 
 
 def evaluate_regression_oracle(
     task_id: str,
     root: Path,
 ) -> OracleResult:
-    try:
-        if task_id == "stability-001":
-            path = root / "src/sample/greeting.py"
-        elif task_id == "stability-002":
-            path = root / "src/sample/client.py"
-        elif task_id == "stability-003":
-            path = root / "src/sample/normalization.py"
-        else:
-            raise ValueError(
-                f"Unknown 011B task: {task_id}"
-            )
-
-        namespace = load_python_namespace(path)
-        stable_identifier = namespace["stable_identifier"]
-        observed = stable_identifier("Alice")
-        expected = "user:Alice"
-
-        return OracleResult(
-            passed=observed == expected,
-            detail=(
-                f"stable_identifier('Alice')={observed!r}"
-            ),
+    if task_id == "stability-001":
+        module = "sample.greeting"
+    elif task_id == "stability-002":
+        module = "sample.client"
+    elif task_id == "stability-003":
+        module = "sample.normalization"
+    else:
+        raise ValueError(
+            f"Unknown 011B task: {task_id}"
         )
 
-    except Exception as exc:  # noqa: BLE001
-        return OracleResult(
-            passed=False,
-            detail=(
-                f"oracle_error={type(exc).__name__}: {exc}"
-            ),
-        )
+    return run_hidden_python_oracle(
+        root,
+        f"""
+import json
+from {module} import stable_identifier
+
+observed = stable_identifier("Alice")
+expected = "user:Alice"
+
+print(json.dumps({{
+    "passed": observed == expected,
+    "detail": (
+        f"stable_identifier('Alice')={{observed!r}}; "
+        f"expected={{expected!r}}"
+    ),
+}}))
+""",
+    )
 
 
 def evaluate_structural_oracle(
@@ -559,7 +632,9 @@ def run_one(
         for path in task["expected_changed_files"]
     )
 
-    source_fixture = FIXTURES_ROOT / str(task["fixture"])
+    source_fixture = (
+        FIXTURES_ROOT / str(task["fixture"])
+    )
 
     with tempfile.TemporaryDirectory(
         prefix=f"hewn-011b-{task_id}-"
@@ -580,8 +655,10 @@ def run_one(
         ) = build_session(root)
 
         # Prepare retrieval exactly once. Do not call session.run(),
-        # because session.run() would prepare the context internally.
-        prepared = session.prepare_context(request)
+        # because session.run() would prepare context internally.
+        prepared = session.prepare_context(
+            request
+        )
 
         context_character_count = (
             prepared.context.character_count
@@ -730,6 +807,9 @@ def run_one(
             raw_protocol_response=(
                 recording_model.last_raw_response
             ),
+            parsed_model_responses=tuple(
+                recording_model.parsed_responses
+            ),
             final_response_observed=(
                 final_response_observed
             ),
@@ -737,7 +817,9 @@ def run_one(
             terminal_status=terminal_status,
             terminal_error=terminal_error,
             model_calls=recording_model.model_calls,
-            tool_calls=len(recording_executor.calls),
+            tool_calls=len(
+                recording_executor.calls
+            ),
             tool_names=tool_names,
             successful_tool_calls=sum(
                 call.ok
@@ -763,9 +845,13 @@ def run_one(
             changed_files=changed,
             expected_changed_files=expected_changed,
             changed_expected_files=changed_expected,
-            unexpected_changed_files=unexpected_changed,
+            unexpected_changed_files=(
+                unexpected_changed
+            ),
             normalized_diff=normalized_diff,
-            diff_sha256=diff_hash(normalized_diff),
+            diff_sha256=diff_hash(
+                normalized_diff
+            ),
         )
 
 
@@ -838,7 +924,9 @@ def aggregate_task(
     )
 
 
-def print_run(result: RunResult) -> None:
+def print_run(
+    result: RunResult,
+) -> None:
     print(
         f"{result.task_id} "
         f"rep={result.repetition}: "
@@ -872,44 +960,53 @@ def print_aggregate(
     aggregate: TaskAggregate,
 ) -> None:
     print(f"\n[{aggregate.task_id}]")
+
     print(
         "behavioral successes: "
         f"{aggregate.behavioral_successes}/"
         f"{aggregate.repetitions}"
     )
+
     print(
         "protocol-valid runs: "
         f"{aggregate.protocol_valid_runs}/"
         f"{aggregate.repetitions}"
     )
+
     print(
         "runs producing edits: "
         f"{aggregate.runs_producing_edits}/"
         f"{aggregate.repetitions}"
     )
+
     print(
         "distinct patch hashes: "
         f"{aggregate.distinct_patch_hashes}"
     )
+
     print(
         "model calls range: "
         f"{aggregate.model_calls_min}-"
         f"{aggregate.model_calls_max}"
     )
+
     print(
         "tool calls range: "
         f"{aggregate.tool_calls_min}-"
         f"{aggregate.tool_calls_max}"
     )
+
     print(
         "wall time range: "
         f"{aggregate.wall_time_min_seconds:.2f}-"
         f"{aggregate.wall_time_max_seconds:.2f}s"
     )
+
     print(
         "behaviorally variable: "
         f"{aggregate.behaviorally_variable}"
     )
+
     print(
         "patch variable: "
         f"{aggregate.patch_variable}"
@@ -939,7 +1036,9 @@ def validate_fixture(
     task: dict[str, Any],
 ) -> None:
     task_id = str(task["task_id"])
-    fixture = FIXTURES_ROOT / str(task["fixture"])
+    fixture = (
+        FIXTURES_ROOT / str(task["fixture"])
+    )
 
     if not fixture.is_dir():
         raise FileNotFoundError(
@@ -947,9 +1046,14 @@ def validate_fixture(
         )
 
     request = task.get("request")
-    expected = task.get("expected_changed_files")
+    expected = task.get(
+        "expected_changed_files"
+    )
 
-    if not isinstance(request, str) or not request.strip():
+    if (
+        not isinstance(request, str)
+        or not request.strip()
+    ):
         raise ValueError(
             f"{task_id} has invalid request"
         )
@@ -963,10 +1067,13 @@ def validate_fixture(
         )
     ):
         raise ValueError(
-            f"{task_id} has invalid expected_changed_files"
+            f"{task_id} has invalid "
+            "expected_changed_files"
         )
 
-    before = snapshot_files(fixture)
+    before = snapshot_files(
+        fixture
+    )
 
     if not before:
         raise ValueError(
@@ -987,7 +1094,8 @@ def main() -> None:
             "011B dry run passed: "
             f"{len(tasks)} frozen tasks, "
             f"{REPETITIONS} repetitions each, "
-            f"{len(tasks) * REPETITIONS} planned runs."
+            f"{len(tasks) * REPETITIONS} "
+            "planned runs."
         )
         return
 
@@ -998,12 +1106,18 @@ def main() -> None:
 
     results: list[RunResult] = []
 
-    print("===== 011B REPEATED-RUN STABILITY =====")
+    print(
+        "===== 011B REPEATED-RUN STABILITY ====="
+    )
 
     for task in tasks:
-        task_id = str(task["task_id"])
+        task_id = str(
+            task["task_id"]
+        )
 
-        print(f"\n===== {task_id} =====")
+        print(
+            f"\n===== {task_id} ====="
+        )
 
         for repetition in range(
             1,
@@ -1013,13 +1127,23 @@ def main() -> None:
                 task,
                 repetition,
             )
-            results.append(result)
-            print_run(result)
 
-    aggregates: list[TaskAggregate] = []
+            results.append(
+                result
+            )
+
+            print_run(
+                result
+            )
+
+    aggregates: list[
+        TaskAggregate
+    ] = []
 
     for task in tasks:
-        task_id = str(task["task_id"])
+        task_id = str(
+            task["task_id"]
+        )
 
         task_runs = [
             result
@@ -1034,33 +1158,46 @@ def main() -> None:
             )
         )
 
-    overall_runs = len(results)
+    overall_runs = len(
+        results
+    )
+
     overall_behavioral_successes = sum(
         result.behavioral_success
         for result in results
     )
+
     overall_protocol_valid_runs = sum(
         result.protocol_valid
         for result in results
     )
+
     overall_runs_producing_edits = sum(
         bool(result.changed_files)
         for result in results
     )
-    
+
     payload: dict[str, Any] = {
         "experiment": "011B",
-        "run": "run001",
+        "run": "run002",
         "model": CODING_MODEL,
-        "embedding_model": DEFAULT_EMBEDDING_MODEL,
-        "repetitions_per_task": REPETITIONS,
+        "embedding_model": (
+            DEFAULT_EMBEDDING_MODEL
+        ),
+        "repetitions_per_task": (
+            REPETITIONS
+        ),
         "max_turns": MAX_TURNS,
-        "completion_requirement": "VERIFIED",
+        "completion_requirement": (
+            "VERIFIED"
+        ),
         "model_configuration": {
             "temperature": 0.0,
             "context_window": 4096,
             "llama_cpp_threads": 4,
-            "endpoint": "http://127.0.0.1:8080",
+            "endpoint": (
+                "http://127.0.0.1:8080"
+            ),
         },
         "runs": [
             asdict(result)
@@ -1083,7 +1220,7 @@ def main() -> None:
             ),
         },
     }
-    
+
     OUTPUT_PATH.write_text(
         json.dumps(
             payload,
@@ -1092,29 +1229,42 @@ def main() -> None:
         + "\n",
         encoding="utf-8",
     )
-    
-    print("\n===== 011B AGGREGATE =====")
-    
+
+    print(
+        "\n===== 011B AGGREGATE ====="
+    )
+
     for aggregate in aggregates:
-        print_aggregate(aggregate)
-    
-    print("\n===== OVERALL =====")
+        print_aggregate(
+            aggregate
+        )
+
+    print(
+        "\n===== OVERALL ====="
+    )
+
     print(
         "behavioral successes: "
         f"{overall_behavioral_successes}/"
         f"{overall_runs}"
     )
+
     print(
         "protocol-valid runs: "
         f"{overall_protocol_valid_runs}/"
         f"{overall_runs}"
     )
+
     print(
         "runs producing edits: "
         f"{overall_runs_producing_edits}/"
         f"{overall_runs}"
     )
-    
-    print(f"\nWrote results to {OUTPUT_PATH}")
+
+    print(
+        f"\nWrote results to {OUTPUT_PATH}"
+    )
+
+
 if __name__ == "__main__":
     main()
