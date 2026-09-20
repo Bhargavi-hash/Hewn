@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "experiment": "010A",
+  "pairs": [
+    {
+      "id": "configuration",
+      "fixture": "configuration",
+      "tasks": [
+        {
+          "id": "config-001",
+          "request": "Increase the default retry count from 2 to 4 without changing request timeout behavior.",
+          "required_changed_files": [
+            "src/sample/settings.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/settings.py"
+          ],
+          "reusable_files": [
+            "src/sample/settings.py",
+            "src/sample/client.py",
+            "tests/test_client.py"
+          ],
+          "expected_after": {
+            "src/sample/settings.py": "DEFAULT_RETRY_COUNT = 4\nDEFAULT_REQUEST_TIMEOUT_SECONDS = 5\n"
+          }
+        },
+        {
+          "id": "config-002",
+          "request": "Increase the default request timeout from 5 seconds to 10 seconds without changing retry behavior.",
+          "required_changed_files": [
+            "src/sample/settings.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/settings.py"
+          ],
+          "reusable_files": [
+            "src/sample/settings.py",
+            "src/sample/client.py",
+            "tests/test_client.py"
+          ],
+          "expected_after": {
+            "src/sample/settings.py": "DEFAULT_RETRY_COUNT = 4\nDEFAULT_REQUEST_TIMEOUT_SECONDS = 10\n"
+          }
+        }
+      ]
+    },
+    {
+      "id": "serialization",
+      "fixture": "serialization",
+      "tasks": [
+        {
+          "id": "serialization-001",
+          "request": "Rename the serialized user identifier from user_id to account_id while keeping the serializer input parameter named user_id.",
+          "required_changed_files": [
+            "src/sample/schema.py",
+            "src/sample/serializer.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/schema.py",
+            "src/sample/serializer.py"
+          ],
+          "reusable_files": [
+            "src/sample/schema.py",
+            "src/sample/serializer.py",
+            "tests/test_serializer.py"
+          ],
+          "expected_after": {
+            "src/sample/schema.py": "ACCOUNT_ID_FIELD = \"account_id\"\n",
+            "src/sample/serializer.py": "from sample.schema import ACCOUNT_ID_FIELD\n\n\ndef serialize_user(user_id: int) -> dict[str, object]:\n    return {\n        ACCOUNT_ID_FIELD: user_id,\n    }\n"
+          }
+        },
+        {
+          "id": "serialization-002",
+          "request": "Add the serialized field active with the boolean value passed to serialize_user. Keep the existing account_id field unchanged.",
+          "required_changed_files": [
+            "src/sample/serializer.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/serializer.py"
+          ],
+          "reusable_files": [
+            "src/sample/schema.py",
+            "src/sample/serializer.py",
+            "tests/test_serializer.py"
+          ],
+          "expected_contains": {
+            "src/sample/serializer.py": [
+              "def serialize_user(user_id: int, active: bool)",
+              "\"active\": active"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "parser",
+      "fixture": "parser",
+      "tasks": [
+        {
+          "id": "parser-001",
+          "request": "Make normalized parser values case-insensitive by lowercasing them after trimming whitespace.",
+          "required_changed_files": [
+            "src/sample/parser.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/parser.py"
+          ],
+          "reusable_files": [
+            "src/sample/parser.py",
+            "tests/test_parser.py"
+          ],
+          "expected_after": {
+            "src/sample/parser.py": "def normalize_value(value: str) -> str:\n    return value.strip().lower()\n"
+          }
+        },
+        {
+          "id": "parser-002",
+          "request": "Treat an empty normalized value as None while preserving the existing normalization behavior for non-empty values.",
+          "required_changed_files": [
+            "src/sample/parser.py"
+          ],
+          "allowed_changed_files": [
+            "src/sample/parser.py"
+          ],
+          "reusable_files": [
+            "src/sample/parser.py",
+            "tests/test_parser.py"
+          ],
+          "expected_contains": {
+            "src/sample/parser.py": [
+              "str | None",
+              "return normalized or None"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
