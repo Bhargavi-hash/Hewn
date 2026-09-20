@@ -1,9 +1,8 @@
-
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Protocol
 
 from jsonschema import ValidationError, validate
 
@@ -11,35 +10,56 @@ from jsonschema import ValidationError, validate
 class ToolError(Exception):
     """Expected failure while executing a tool."""
 
-# This isn't a class or a function.
-# It's a type alias.
-# We are giving a name to a particular shape of function.
-ToolHandler = Callable[[dict[str, Any]], "ToolResult"] # A function that takes a dictionary of arguments and returns a ToolResult.
 
-# This is the complete description of one available capability.
-# ToolDefinition = Tool's ID card + Instruction Manual + Implementation Pointer
+ToolHandler = Callable[[dict[str, Any]], "ToolResult"]
+
+
 @dataclass(frozen=True)
 class ToolDefinition:
-    name: str                   # Name exposed to the model. Example: read_file
-    description: str            # Model needs to know what the tool is for. A weak description might cause a small model to choose the wrong tool.
-    input_schema: dict[str, Any] # Describes what arguments are legal
-    handler: ToolHandler        # The actual python function that will be called when the model chooses this tool. It must match the input_schema.
+    """Complete description and implementation of one model-visible tool."""
 
-# A request to execute a tool. This is the input to the ToolExecutor.
+    name: str
+    description: str
+    input_schema: dict[str, Any]
+    handler: ToolHandler
+
+
 @dataclass(frozen=True)
 class ToolCall:
+    """A model proposal to execute one tool."""
+
     name: str
     arguments: dict[str, Any]
 
 
 @dataclass(frozen=True)
 class ToolResult:
+    """Result returned to the agent after attempting a tool action."""
+
     ok: bool
     output: str | None = None
     error: str | None = None
 
-# Hewn's Tool Catalog. This is where all the tools are registered and looked up by name.
+
+class AuthorizationDecision(Protocol):
+    """Minimum decision interface required by ToolExecutor."""
+
+    @property
+    def allowed(self) -> bool: ...
+
+    @property
+    def reason(self) -> str: ...
+
+
+class ToolAuthorityPolicy(Protocol):
+    """Authorization boundary used by ToolExecutor."""
+
+    def authorize(self, call: ToolCall) -> AuthorizationDecision: ...
+
+
 class ToolRegistry:
+    """Catalog of tools available to the agent."""
+
     def __init__(self) -> None:
         self._tools: dict[str, ToolDefinition] = {}
 
@@ -55,11 +75,18 @@ class ToolRegistry:
     def definitions(self) -> list[ToolDefinition]:
         return list(self._tools.values())
 
-# ToolHandler = Employee who knows how to do one job
-# ToolExecutor = Manager who knows how to find the right employee and give them the right job to do.
+
 class ToolExecutor:
-    def __init__(self, registry: ToolRegistry) -> None:
+    """Validate, authorize, and execute model-proposed tool calls."""
+
+    def __init__(
+        self,
+        registry: ToolRegistry,
+        *,
+        authority_policy: ToolAuthorityPolicy | None = None,
+    ) -> None:
         self._registry = registry
+        self._authority_policy = authority_policy
 
     def execute(self, call: ToolCall) -> ToolResult:
         tool = self._registry.get(call.name)
@@ -72,14 +99,23 @@ class ToolExecutor:
 
         try:
             validate(
-                instance=call.arguments,    # Actual Data I want to chec
-                schema=tool.input_schema,   # Check it against this contract
+                instance=call.arguments,
+                schema=tool.input_schema,
             )
         except ValidationError as exc:
             return ToolResult(
                 ok=False,
                 error=f"Invalid tool arguments: {exc.message}",
             )
+
+        if self._authority_policy is not None:
+            decision = self._authority_policy.authorize(call)
+
+            if not decision.allowed:
+                return ToolResult(
+                    ok=False,
+                    error=f"Authority denied: {decision.reason}",
+                )
 
         try:
             return tool.handler(call.arguments)
