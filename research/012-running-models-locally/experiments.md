@@ -1275,3 +1275,17 @@ this quantization
 this workload
 this five-repetition experiment
 ```
+
+### Workload token probe
+
+Before observing any thread-scaling results, the frozen workload was
+measured using the cache-disabled 4-thread baseline.
+
+Observed:
+
+```text
+prompt_tokens = 321
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = 321
+prompt_seconds = 5.718660
+prompt_tokens_per_second = 56.132031
