@@ -659,3 +659,212 @@ prompt_evaluated_tokens
 
 Subsequent performance experiments must control prompt caching or make
 cache state an explicit experimental variable.
+
+## 012C — Prompt-cache behavior
+
+### Research question
+
+How does llama.cpp prompt caching change the amount of prompt work
+performed for repeated requests, and what measurement protocol should
+later Module 12 performance experiments use?
+
+### Motivation
+
+012B observed the following repeated-prompt request:
+
+```text
+prompt_tokens = 47
+cached_prompt_tokens = 46
+prompt_evaluated_tokens = 1
+```
+
+Only one of 47 logical prompt tokens was evaluated.
+
+Therefore prompt-cache state is a potential confounder for latency and
+throughput experiments.
+
+Before context, thread, quantization, or model-size comparisons, Hewn
+must establish how prompt caching will be handled.
+
+### Runtime controls discovered
+
+The inspected llama.cpp build exposes:
+
+```text
+--cache-prompt
+--no-cache-prompt
+```
+
+with prompt caching enabled by default.
+
+It also exposes related controls including:
+
+```text
+--cache-reuse
+--cache-idle-slots
+--slot-prompt-similarity
+--parallel
+--slots
+```
+
+012C does not attempt to characterize all of these mechanisms.
+
+The controlled variable in this experiment is only whether prompt
+caching is enabled.
+
+### Important distinction
+
+012C distinguishes prompt reuse from other caches and memory mechanisms,
+including:
+
+```text
+KV cache datatype
+SWA cache
+speculative decoding caches
+model artifact cache
+operating-system page cache
+```
+
+Those mechanisms are outside the scope of this experiment.
+
+### Frozen model
+
+```text
+Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M
+```
+
+### Frozen runtime
+
+```text
+llama.cpp commit:
+930e2fa5995789efbf249a8bf61325bb626e417b
+
+build:
+10991
+
+threads:
+4
+
+configured context:
+4096
+
+temperature:
+0
+
+max completion tokens:
+64
+```
+
+### Frozen prompt
+
+```text
+Write a Python function add(a, b) that returns the sum of a and b.
+```
+
+### Conditions
+
+Two server conditions will be compared.
+
+#### Condition A — Prompt caching enabled
+
+Start the server with:
+
+```text
+--cache-prompt
+```
+
+Run the identical frozen request three times sequentially.
+
+#### Condition B — Prompt caching disabled
+
+Start a fresh server with:
+
+```text
+--no-cache-prompt
+```
+
+Run the identical frozen request three times sequentially.
+
+### Measurements
+
+For every request record:
+
+```text
+prompt_tokens
+cached_prompt_tokens
+prompt_evaluated_tokens
+prompt_seconds
+prompt_tokens_per_second
+
+completion_tokens
+generation_seconds
+generation_tokens_per_second
+
+wall_time_seconds
+```
+
+The experiment focuses primarily on:
+
+```text
+cached_prompt_tokens
+prompt_evaluated_tokens
+```
+
+because those fields directly describe how much prompt work llama.cpp
+reports performing.
+
+### Primary expectation
+
+With prompt caching enabled, later identical requests may reuse most of
+the prompt.
+
+With prompt caching disabled, repeated requests should require
+substantially more prompt evaluation.
+
+This expectation is tested rather than assumed.
+
+### Interpretation rule
+
+Prompt throughput is interpreted together with the number of prompt
+tokens actually evaluated.
+
+For example, throughput measured from one evaluated token must not be
+directly compared with throughput measured from a full prompt as though
+they represented equivalent work.
+
+### Performance protocol decision
+
+If `--no-cache-prompt` prevents repeated-request prompt reuse reliably,
+later controlled inference-performance experiments will use:
+
+```text
+--no-cache-prompt
+```
+
+unless prompt caching itself is the experimental variable.
+
+This provides comparable request-level prompt work without requiring a
+server restart between every repetition.
+
+### Non-goals
+
+012C does not attempt to measure:
+
+- cold model loading;
+- operating-system page-cache effects;
+- KV-cache datatype effects;
+- continuous batching;
+- multiple simultaneous slots;
+- production throughput under repeated workloads;
+- whether prompt caching is desirable in normal Hewn operation.
+
+The experiment is about benchmark control, not production policy.
+
+### Decision rule
+
+Adopt `--no-cache-prompt` for subsequent controlled latency experiments
+if repeated requests under that condition consistently report no
+substantial prompt reuse.
+
+Otherwise, establish a stronger cache-isolation procedure before
+continuing with performance experiments.
