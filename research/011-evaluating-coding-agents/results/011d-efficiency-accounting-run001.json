@@ -1,0 +1,106 @@
+{
+  "experiment": "011D",
+  "run": "run001",
+  "kind": "deterministic_efficiency_accounting_validation",
+  "runs": [
+    {
+      "condition": "A_correct_lower_cost",
+      "behavioral_success": true,
+      "model_calls": 2,
+      "tool_calls": 2,
+      "execution_calls": 1,
+      "context_chars": 1000,
+      "wall_time_seconds": 4.0
+    },
+    {
+      "condition": "B_correct_higher_cost",
+      "behavioral_success": true,
+      "model_calls": 5,
+      "tool_calls": 6,
+      "execution_calls": 3,
+      "context_chars": 3000,
+      "wall_time_seconds": 12.0
+    },
+    {
+      "condition": "C_incorrect_lower_cost",
+      "behavioral_success": false,
+      "model_calls": 1,
+      "tool_calls": 0,
+      "execution_calls": 0,
+      "context_chars": 500,
+      "wall_time_seconds": 2.0
+    },
+    {
+      "condition": "D_incorrect_higher_cost",
+      "behavioral_success": false,
+      "model_calls": 4,
+      "tool_calls": 5,
+      "execution_calls": 2,
+      "context_chars": 2500,
+      "wall_time_seconds": 10.0
+    }
+  ],
+  "dominance": {
+    "A_over_B": true,
+    "C_over_D": true,
+    "C_over_A": null
+  },
+  "aggregates": {
+    "all": {
+      "count": 4,
+      "totals": {
+        "model_calls": 12,
+        "tool_calls": 13,
+        "execution_calls": 6,
+        "context_chars": 7000,
+        "wall_time_seconds": 28.0
+      },
+      "means": {
+        "model_calls": 3.0,
+        "tool_calls": 3.25,
+        "execution_calls": 1.5,
+        "context_chars": 1750.0,
+        "wall_time_seconds": 7.0
+      }
+    },
+    "successful": {
+      "count": 2,
+      "totals": {
+        "model_calls": 7,
+        "tool_calls": 8,
+        "execution_calls": 4,
+        "context_chars": 4000,
+        "wall_time_seconds": 16.0
+      },
+      "means": {
+        "model_calls": 3.5,
+        "tool_calls": 4.0,
+        "execution_calls": 2.0,
+        "context_chars": 2000.0,
+        "wall_time_seconds": 8.0
+      }
+    },
+    "unsuccessful": {
+      "count": 2,
+      "totals": {
+        "model_calls": 5,
+        "tool_calls": 5,
+        "execution_calls": 2,
+        "context_chars": 3000,
+        "wall_time_seconds": 12.0
+      },
+      "means": {
+        "model_calls": 2.5,
+        "tool_calls": 2.5,
+        "execution_calls": 1.0,
+        "context_chars": 1500.0,
+        "wall_time_seconds": 6.0
+      }
+    }
+  },
+  "validation": {
+    "behavioral_classifications_matched": 4,
+    "behavioral_classifications_total": 4,
+    "aggregate_accounting_matched": true
+  }
+}

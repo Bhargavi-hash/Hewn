@@ -264,3 +264,174 @@ correctness dimension must not compensate for failing the other.
 The primary 011C artifact is:
 
 `results/011c-regression-aware-scoring-run001.json`
+
+## 011D — Efficiency accounting
+
+### Question
+
+Can Hewn Bench account for the additional computational and interaction
+cost of an agent strategy without allowing lower cost to compensate for
+incorrect behavior or higher cost to masquerade as greater capability?
+
+### Method
+
+011D used four deterministic synthetic run records.
+
+No language model was invoked. The experiment validates the accounting
+and comparison rules rather than measuring the real efficiency of a
+Hewn configuration.
+
+Each run recorded:
+
+- model calls;
+- tool calls;
+- execution calls;
+- context characters;
+- wall time.
+
+Correctness was represented independently by `behavioral_success`.
+
+No combined quality/cost score was used.
+
+### Results
+
+| Condition | Behavioral class | Model calls | Tool calls | Execution calls | Context chars | Wall time |
+|---|---|---:|---:|---:|---:|---:|
+| A — correct, lower cost | successful | 2 | 2 | 1 | 1000 | 4.0 s |
+| B — correct, higher cost | successful | 5 | 6 | 3 | 3000 | 12.0 s |
+| C — incorrect, lower cost | unsuccessful | 1 | 0 | 0 | 500 | 2.0 s |
+| D — incorrect, higher cost | unsuccessful | 4 | 5 | 2 | 2500 | 10.0 s |
+
+All four behavioral classifications matched the frozen expectations.
+
+### Resource accounting
+
+Across all four records:
+
+```text
+model_calls = 12
+tool_calls = 13
+execution_calls = 6
+context_chars = 7000
+wall_time_seconds = 28.0
+```
+
+Arithmetic means were:
+
+```text
+model_calls = 3.0
+tool_calls = 3.25
+execution_calls = 1.5
+context_chars = 1750.0
+wall_time_seconds = 7.0
+```
+
+Successful-run totals were:
+
+```text
+model_calls = 7
+tool_calls = 8
+execution_calls = 4
+context_chars = 4000
+wall_time_seconds = 16.0
+```
+
+Unsuccessful-run totals were:
+
+```text
+model_calls = 5
+tool_calls = 5
+execution_calls = 2
+context_chars = 3000
+wall_time_seconds = 12.0
+```
+
+The observed accounting matched every frozen expected aggregate.
+
+### Resource dominance
+
+011D defines resource dominance only between runs with the same
+behavioral classification.
+
+A run resource-dominates another run when it uses no more of every
+measured resource and strictly less of at least one.
+
+Observed:
+
+```text
+A dominates B within successful class: true
+C dominates D within unsuccessful class: true
+C dominates A across correctness classes: not evaluated
+```
+
+The final comparison is intentionally undefined rather than false.
+
+C consumes fewer resources than A, but C is behaviorally unsuccessful
+while A is successful. The resource relation therefore does not apply
+across those correctness classes.
+
+This prevents lower-cost failure from being interpreted as superior to
+a successful solution.
+
+### Interpretation
+
+011D validates the separation between correctness and efficiency.
+
+The benchmark should first ask:
+
+```text
+Did the agent solve the requested task without a detected regression?
+```
+
+It can then ask:
+
+```text
+What resources did the agent consume to obtain that outcome?
+```
+
+Resource measurements explain the cost of an outcome. They do not
+change the correctness classification.
+
+This distinction is important for mechanisms such as planning,
+reviewing, retrieval, repair, and execution feedback. Adding such a
+mechanism may increase model calls, context, tool usage, execution, or
+latency. Those additional costs should be visible even when behavioral
+success improves, remains unchanged, or decreases.
+
+Likewise, an inexpensive failure should remain a failure.
+
+### Measurement limitations
+
+The synthetic records do not establish that any real Hewn strategy is
+faster or cheaper.
+
+The measured dimensions are also not interchangeable:
+
+- model calls can have different inference costs;
+- tool calls can perform different amounts of work;
+- execution calls can have different runtimes;
+- context characters are not tokenizer-level token counts;
+- wall time depends on hardware and runtime conditions.
+
+011D therefore does not justify collapsing these dimensions into one
+universal efficiency score.
+
+Token usage was deliberately omitted because the current model
+interface does not expose a uniform measured token-usage field.
+Character counts were not converted into estimated tokens.
+
+### Conclusion
+
+Hewn Bench should preserve correctness and efficiency as separate
+measurement dimensions.
+
+Primary behavioral success should not contain a cost adjustment.
+
+Raw efficiency fields should remain available for comparison, and
+resource dominance should only be interpreted within equivalent
+behavioral outcome classes unless correctness is explicitly reported
+alongside the resource comparison.
+
+The primary 011D artifact is:
+
+`results/011d-efficiency-accounting-run001.json`
