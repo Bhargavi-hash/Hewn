@@ -1039,3 +1039,383 @@ output.
 If an evaluator implementation defect is discovered, preserve the
 affected run, document the defect, correct only the evaluator, and
 execute a new run.
+
+## 011E — Benchmark integrity and contamination
+
+### Research question
+
+Can Hewn Bench mechanically separate agent-visible task information from
+evaluator-only information so that hidden oracles, expected outputs, and
+benchmark metadata cannot accidentally become part of the agent's
+evaluation context?
+
+### Motivation
+
+A benchmark result is not meaningful if information used to evaluate a
+solution is accidentally exposed to the system being evaluated.
+
+For a coding-agent benchmark, information can reach the agent through
+multiple surfaces:
+
+- the user request;
+- repository files;
+- retrieved repository context;
+- tool definitions;
+- tool results;
+- generated system or control instructions.
+
+Evaluator-only information may include:
+
+- hidden behavioral assertions;
+- hidden regression assertions;
+- expected outputs;
+- expected changed files;
+- expected patches;
+- benchmark classifications;
+- scoring metadata.
+
+011E tests whether the benchmark representation can make that boundary
+explicit and mechanically enforceable.
+
+### Scope
+
+011E is a deterministic benchmark-instrument experiment.
+
+No language model is invoked.
+
+The experiment does not attempt to detect contamination in arbitrary
+external benchmark datasets or model pretraining.
+
+It tests only contamination introduced by Hewn's own benchmark
+construction and agent-input assembly.
+
+### Principle
+
+Benchmark data is classified before execution as either:
+
+```text
+agent-visible
+```
+
+or:
+
+```text
+evaluator-only
+```
+
+Evaluator-only fields must not be included in the assembled
+agent-visible benchmark payload.
+
+The evaluator may consume both classes after the agent run.
+
+### Frozen benchmark record
+
+The synthetic benchmark case contains the following agent-visible
+information.
+
+#### Agent-visible task
+
+```text
+Normalize non-empty names by stripping surrounding whitespace and
+converting them to lowercase. Empty or whitespace-only names should
+return None. Preserve all other behavior.
+```
+
+#### Agent-visible repository context
+
+```text
+src/sample/normalization.py
+
+def normalize_name(value: str) -> str | None:
+    normalized = value.strip()
+    if not normalized:
+        return None
+    return normalized
+```
+
+#### Agent-visible tool names
+
+```text
+read_file
+search_text
+replace_text
+run_check
+```
+
+The same benchmark case also contains evaluator-only information.
+
+#### Hidden behavioral assertions
+
+```text
+normalize_name(" Alice ") == "alice"
+normalize_name(" BOB ") == "bob"
+normalize_name("   ") is None
+```
+
+#### Hidden regression assertions
+
+```text
+stable_identifier("Alice") == "user:Alice"
+stable_identifier("BOB") == "user:BOB"
+```
+
+#### Hidden expected changed files
+
+```text
+src/sample/normalization.py
+```
+
+#### Hidden expected patch marker
+
+```text
+return normalized.lower()
+```
+
+#### Hidden scoring metadata
+
+```text
+primary_success = task_passes AND regression_passes
+```
+
+### Benchmark representation
+
+The deterministic evaluator must represent the benchmark using two
+separate structures:
+
+```text
+AgentVisibleCase
+EvaluatorOnlyCase
+```
+
+`AgentVisibleCase` may contain only:
+
+- task request;
+- repository context;
+- tool names.
+
+`EvaluatorOnlyCase` may contain:
+
+- behavioral assertions;
+- regression assertions;
+- expected changed files;
+- expected patch markers;
+- scoring metadata.
+
+The agent payload builder accepts only `AgentVisibleCase`.
+
+It must not accept `EvaluatorOnlyCase`.
+
+### Frozen conditions
+
+Four deterministic assembly conditions are evaluated.
+
+#### A — clean assembly
+
+The payload is constructed only from `AgentVisibleCase`.
+
+Expected:
+
+```text
+payload constructed = true
+hidden markers exposed = false
+integrity passes = true
+```
+
+#### B — direct hidden-oracle contamination
+
+A hidden behavioral assertion is deliberately appended to the
+agent-visible repository context before the integrity check.
+
+Contamination marker:
+
+```text
+normalize_name(" Alice ") == "alice"
+```
+
+Expected:
+
+```text
+payload constructed = true
+hidden markers exposed = true
+integrity passes = false
+```
+
+#### C — expected-patch contamination
+
+The hidden expected patch marker is deliberately appended to the
+agent-visible task request before the integrity check.
+
+Contamination marker:
+
+```text
+return normalized.lower()
+```
+
+Expected:
+
+```text
+payload constructed = true
+hidden markers exposed = true
+integrity passes = false
+```
+
+#### D — metadata contamination
+
+The hidden scoring rule is deliberately appended to the agent-visible
+context before the integrity check.
+
+Contamination marker:
+
+```text
+primary_success = task_passes AND regression_passes
+```
+
+Expected:
+
+```text
+payload constructed = true
+hidden markers exposed = true
+integrity passes = false
+```
+
+### Contamination detection
+
+The experiment uses exact frozen contamination markers derived from the
+evaluator-only record.
+
+For each assembled agent payload, the integrity checker searches for
+those evaluator-only markers.
+
+The detector is deliberately narrow.
+
+It tests accidental direct exposure of benchmark-owned hidden
+information.
+
+It is not a semantic leakage detector.
+
+### Hidden marker set
+
+The frozen hidden marker set contains:
+
+```text
+normalize_name(" Alice ") == "alice"
+normalize_name(" BOB ") == "bob"
+normalize_name("   ") is None
+stable_identifier("Alice") == "user:Alice"
+stable_identifier("BOB") == "user:BOB"
+src/sample/normalization.py::expected_changed_file
+return normalized.lower()
+primary_success = task_passes AND regression_passes
+```
+
+The expected-changed-file marker is namespaced rather than checking the
+raw file path because the file path legitimately appears in
+agent-visible repository context.
+
+This prevents the integrity checker from treating legitimate repository
+knowledge as contamination merely because the evaluator also expects
+that file to change.
+
+### Integrity classification
+
+For this experiment:
+
+```text
+integrity_passes = NOT hidden_markers_exposed
+```
+
+Behavioral correctness is not evaluated in 011E.
+
+011E tests benchmark-input integrity only.
+
+### Expected matrix
+
+| Condition | Payload constructed | Hidden markers exposed | Integrity passes |
+|---|---:|---:|---:|
+| A — clean | true | false | true |
+| B — hidden oracle | true | true | false |
+| C — expected patch | true | true | false |
+| D — scoring metadata | true | true | false |
+
+### Expected aggregate
+
+```text
+expected matrix matched: 4/4
+clean payloads: 1/4
+contaminated payloads detected: 3/3
+false contamination detections on clean payload: 0
+```
+
+### Success criterion
+
+011E succeeds as an evaluation-methodology experiment if:
+
+1. the clean payload contains no frozen evaluator-only markers;
+2. all three deliberately contaminated payloads are detected;
+3. the clean payload is not falsely rejected;
+4. expected changed-file information is namespaced so that a legitimate
+   repository path does not itself count as contamination;
+5. the agent payload builder operates only on the agent-visible
+   representation;
+6. evaluator-only data remains available separately for post-run
+   scoring;
+7. all four observed classifications match the frozen matrix.
+
+### Interpretation constraints
+
+Passing 011E does not prove that a benchmark is free from every form of
+contamination.
+
+The detector recognizes exact benchmark-owned markers. It does not
+detect paraphrases, semantic hints, information memorized during model
+training, or leakage through external systems.
+
+The experiment also does not establish that hidden tests are inherently
+better than visible tests. Visible tests can be legitimate repository
+evidence.
+
+The relevant distinction is whether information was intentionally
+classified as evaluator-only for a particular benchmark and then
+accidentally exposed to the evaluated agent.
+
+Expected changed files require particular care. A file path can be both
+legitimate repository evidence and evaluator metadata. Therefore raw
+string overlap alone is not sufficient to classify that path as leaked.
+
+### Design implication
+
+Hewn Bench should keep benchmark construction and benchmark execution
+separate.
+
+A benchmark case should conceptually contain:
+
+```text
+BenchmarkCase
+├── agent_visible
+│   ├── task
+│   ├── repository/context
+│   └── allowed tool interface
+└── evaluator_only
+    ├── task oracle
+    ├── regression oracle
+    ├── structural oracle
+    ├── expected-change metadata
+    └── scoring metadata
+```
+
+Only the `agent_visible` branch may participate in agent-input
+construction.
+
+The `evaluator_only` branch is consumed after execution for scoring and
+diagnostics.
+
+### Frozen implementation rule
+
+After this design is committed, the agent-visible fields,
+evaluator-only fields, hidden marker set, four conditions, expected
+matrix, and integrity rule must not be changed in response to evaluator
+output.
+
+If the evaluator implementation contains a defect, preserve the
+affected run, document the defect, correct only the evaluator, and
+execute a new run.
