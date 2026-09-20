@@ -383,3 +383,153 @@ Preserve raw runtime measurements alongside normalized measurements.
 
 > Measure what the runtime actually did, not what the request looked
 > like from outside.
+
+## 012B — Reproducible inference measurement harness
+
+### Research question
+
+Can Hewn capture llama.cpp inference measurements in a reproducible,
+machine-readable form without estimating information already exposed by
+the runtime?
+
+### Hypothesis
+
+A small measurement harness can normalize llama.cpp request-level
+telemetry while preserving the raw runtime response and enough
+provenance to reproduce the run.
+
+### Requirements
+
+The harness must record three distinct categories.
+
+#### Provenance
+
+```text
+runtime
+runtime_commit
+runtime_version
+runtime_build
+model_id
+quantization
+hardware_description
+```
+
+#### Configuration
+
+```text
+base_url
+threads
+configured_context
+temperature
+max_tokens
+```
+
+Configuration fields describe the server/request configuration supplied
+by the caller. The harness must not infer server configuration that it
+cannot observe.
+
+#### Measurements
+
+```text
+prompt_tokens
+completion_tokens
+total_tokens
+cached_prompt_tokens
+prompt_evaluated_tokens
+
+prompt_seconds
+generation_seconds
+prompt_tokens_per_second
+generation_tokens_per_second
+
+wall_time_seconds
+finish_reason
+```
+
+The harness must preserve wall time separately from llama.cpp's internal
+prompt and generation timings.
+
+### Raw evidence
+
+The complete JSON response returned by llama.cpp must be retained in the
+run record.
+
+Normalized fields are a convenience layer over the raw evidence, not a
+replacement for it.
+
+### Validation
+
+When the relevant fields are available, the harness should validate:
+
+```text
+prompt_tokens + completion_tokens == total_tokens
+```
+
+and:
+
+```text
+cached_prompt_tokens + prompt_evaluated_tokens == prompt_tokens
+```
+
+and:
+
+```text
+generated_tokens == completion_tokens
+```
+
+A violated accounting invariant must be visible rather than silently
+corrected.
+
+### Timing conversion
+
+llama.cpp reports prompt and generation timing in milliseconds.
+
+Hewn should normalize those values to seconds while preserving the raw
+response.
+
+### Missing measurements
+
+Missing runtime measurements must remain absent.
+
+The harness must not estimate:
+
+- token counts from characters;
+- memory from model artifact size;
+- prompt time from wall time;
+- generation time from wall time.
+
+### Experimental protocol
+
+After implementation, run the same frozen request used in 012A through
+the harness.
+
+The purpose is not to reproduce identical timing values.
+
+The experiment passes if:
+
+1. the request completes;
+2. the raw response is retained;
+3. directly exposed measurements are normalized correctly;
+4. accounting invariants pass;
+5. wall time is measured separately;
+6. provenance and caller-supplied configuration are retained.
+
+### Non-goals
+
+012B does not yet:
+
+- measure peak memory;
+- benchmark context scaling;
+- benchmark thread scaling;
+- compare quantizations;
+- compare model sizes;
+- integrate inference telemetry into Hewn Bench;
+- provide a general provider abstraction.
+
+### Decision rule
+
+If the harness reliably captures the frozen fields without estimation,
+use it for subsequent Module 12 experiments.
+
+Otherwise, fix the measurement mechanism before collecting performance
+results.
