@@ -210,6 +210,109 @@ C. Current repository evidence explicitly available alongside stale memory.
 A memory system that improves repeated work but silently trusts stale state is
 not sufficient.
 
+## 010C — Stale-memory invalidation
+
+### Question
+
+When repository state changes after a memory record is established, can
+deterministic provenance checking prevent stale repository claims from
+reaching model context while preserving current repository evidence?
+
+### Motivation
+
+010B did not demonstrate behavioral value from structured memory.
+However, any future persistent-memory mechanism still requires a
+fail-safe freshness rule.
+
+A repository claim that was correct when established may become
+incorrect after its supporting files change. The model should not be
+responsible for deciding whether such a record is still current.
+
+### Hypothesis
+
+A memory record can be invalidated deterministically by storing content
+fingerprints for its evidence files when the record is established and
+recomputing those fingerprints before retrieval.
+
+If any supporting file differs from its recorded fingerprint, the record
+is stale and must not reach model context.
+
+### Conditions
+
+For each fixture:
+
+1. `no_freshness`
+   - establish a valid record against V1
+   - mutate its evidence to V2
+   - retrieve without freshness validation
+   - stale record is expected to reach memory context
+
+2. `freshness`
+   - establish the same record against V1
+   - mutate its evidence to V2
+   - validate provenance before retrieval
+   - stale record is expected to be rejected
+
+3. `freshness_with_current_evidence`
+   - perform the same deterministic memory validation
+   - reject the stale record
+   - independently retrieve current repository evidence
+   - current evidence must remain available
+
+### Freshness rule
+
+Each memory record stores SHA-256 content fingerprints for every
+provenance file.
+
+At retrieval time:
+
+- missing evidence file -> stale
+- changed evidence file -> stale
+- unchanged evidence files -> fresh
+
+The experiment deliberately uses exact content identity rather than
+semantic similarity.
+
+This is conservative. A harmless edit can invalidate a still-correct
+claim. 010C measures safety behavior, not optimal invalidation
+granularity.
+
+### Measurements
+
+- records available
+- fresh records
+- stale records
+- stale records rejected
+- stale records reaching memory context
+- memory characters reaching context
+- current repository evidence preserved
+
+### Success criterion
+
+For every fixture:
+
+- `no_freshness` allows the deliberately stale record to reach context;
+- `freshness` rejects it;
+- `freshness_with_current_evidence` rejects it while preserving current
+  repository evidence.
+
+No model behavioral claim is required for 010C success.
+
+### Interpretation constraints
+
+Passing 010C does not demonstrate that persistent memory improves coding
+performance.
+
+It demonstrates only that the tested provenance mechanism can
+deterministically prevent records whose supporting files changed from
+being supplied as current memory.
+
+Content-fingerprint invalidation may over-invalidate.
+
+It does not detect semantic staleness caused by changes outside a
+record's declared provenance.
+
+Current repository evidence remains authoritative.
 ---
 
 ## 010D — What is worth remembering?
