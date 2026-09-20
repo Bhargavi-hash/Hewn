@@ -1,0 +1,88 @@
+{
+  "experiment": "011A",
+  "run": "run001",
+  "model_invoked": false,
+  "results": [
+    {
+      "condition_id": "protocol_failure",
+      "protocol_valid": false,
+      "edit_applied": false,
+      "task_passes": false,
+      "regression_passes": true,
+      "behavioral_success": false,
+      "protocol_proxy_success": false,
+      "edit_proxy_success": false,
+      "task_only_proxy_success": false,
+      "expected": {
+        "protocol_valid": false,
+        "edit_applied": false,
+        "task_passes": false,
+        "regression_passes": true,
+        "behavioral_success": false
+      },
+      "matches_expected": true
+    },
+    {
+      "condition_id": "wrong_valid_patch",
+      "protocol_valid": true,
+      "edit_applied": true,
+      "task_passes": false,
+      "regression_passes": true,
+      "behavioral_success": false,
+      "protocol_proxy_success": true,
+      "edit_proxy_success": true,
+      "task_only_proxy_success": false,
+      "expected": {
+        "protocol_valid": true,
+        "edit_applied": true,
+        "task_passes": false,
+        "regression_passes": true,
+        "behavioral_success": false
+      },
+      "matches_expected": true
+    },
+    {
+      "condition_id": "regression_patch",
+      "protocol_valid": true,
+      "edit_applied": true,
+      "task_passes": true,
+      "regression_passes": false,
+      "behavioral_success": false,
+      "protocol_proxy_success": true,
+      "edit_proxy_success": true,
+      "task_only_proxy_success": true,
+      "expected": {
+        "protocol_valid": true,
+        "edit_applied": true,
+        "task_passes": true,
+        "regression_passes": false,
+        "behavioral_success": false
+      },
+      "matches_expected": true
+    },
+    {
+      "condition_id": "correct_patch",
+      "protocol_valid": true,
+      "edit_applied": true,
+      "task_passes": true,
+      "regression_passes": true,
+      "behavioral_success": true,
+      "protocol_proxy_success": true,
+      "edit_proxy_success": true,
+      "task_only_proxy_success": true,
+      "expected": {
+        "protocol_valid": true,
+        "edit_applied": true,
+        "task_passes": true,
+        "regression_passes": true,
+        "behavioral_success": true
+      },
+      "matches_expected": true
+    }
+  ],
+  "proxy_false_successes": {
+    "protocol_valid": 2,
+    "edit_applied": 2,
+    "task_only": 1
+  }
+}

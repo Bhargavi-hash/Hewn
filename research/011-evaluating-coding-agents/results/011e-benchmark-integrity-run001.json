@@ -1,0 +1,97 @@
+{
+  "experiment": "011E",
+  "run": "run001",
+  "kind": "deterministic_benchmark_integrity_validation",
+  "agent_visible": {
+    "task_request": "Normalize non-empty names by stripping surrounding whitespace and converting them to lowercase. Empty or whitespace-only names should return None. Preserve all other behavior.",
+    "repository_context": "src/sample/normalization.py\n\ndef normalize_name(value: str) -> str | None:\n    normalized = value.strip()\n    if not normalized:\n        return None\n    return normalized\n",
+    "tool_names": [
+      "read_file",
+      "search_text",
+      "replace_text",
+      "run_check"
+    ]
+  },
+  "evaluator_only": {
+    "behavioral_assertions": [
+      "normalize_name(\" Alice \") == \"alice\"",
+      "normalize_name(\" BOB \") == \"bob\"",
+      "normalize_name(\"   \") is None"
+    ],
+    "regression_assertions": [
+      "stable_identifier(\"Alice\") == \"user:Alice\"",
+      "stable_identifier(\"BOB\") == \"user:BOB\""
+    ],
+    "expected_changed_files": [
+      "src/sample/normalization.py"
+    ],
+    "expected_patch_markers": [
+      "return normalized.lower()"
+    ],
+    "scoring_metadata": [
+      "primary_success = task_passes AND regression_passes"
+    ]
+  },
+  "hidden_markers": [
+    "normalize_name(\" Alice \") == \"alice\"",
+    "normalize_name(\" BOB \") == \"bob\"",
+    "normalize_name(\"   \") is None",
+    "stable_identifier(\"Alice\") == \"user:Alice\"",
+    "stable_identifier(\"BOB\") == \"user:BOB\"",
+    "src/sample/normalization.py::expected_changed_file",
+    "return normalized.lower()",
+    "primary_success = task_passes AND regression_passes"
+  ],
+  "results": [
+    {
+      "condition": "A_clean",
+      "payload_constructed": true,
+      "hidden_markers_exposed": false,
+      "integrity_passes": true,
+      "exposed_markers": [],
+      "matches_expected": true
+    },
+    {
+      "condition": "B_hidden_oracle",
+      "payload_constructed": true,
+      "hidden_markers_exposed": true,
+      "integrity_passes": false,
+      "exposed_markers": [
+        "normalize_name(\" Alice \") == \"alice\""
+      ],
+      "matches_expected": true
+    },
+    {
+      "condition": "C_expected_patch",
+      "payload_constructed": true,
+      "hidden_markers_exposed": true,
+      "integrity_passes": false,
+      "exposed_markers": [
+        "return normalized.lower()"
+      ],
+      "matches_expected": true
+    },
+    {
+      "condition": "D_scoring_metadata",
+      "payload_constructed": true,
+      "hidden_markers_exposed": true,
+      "integrity_passes": false,
+      "exposed_markers": [
+        "primary_success = task_passes AND regression_passes"
+      ],
+      "matches_expected": true
+    }
+  ],
+  "expected_file_namespace_check": {
+    "raw_expected_path_visible": true,
+    "namespaced_expected_path_visible": false
+  },
+  "aggregate": {
+    "conditions": 4,
+    "expected_matrix_matches": 4,
+    "clean_payloads": 1,
+    "contaminated_payloads_detected": 3,
+    "contaminated_payloads_total": 3,
+    "false_contamination_detections": 0
+  }
+}

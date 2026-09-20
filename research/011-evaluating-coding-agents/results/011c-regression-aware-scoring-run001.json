@@ -1,0 +1,46 @@
+{
+  "experiment": "011C",
+  "run": "run001",
+  "kind": "deterministic_evaluator_validation",
+  "results": [
+    {
+      "condition": "A_no_op",
+      "task_passes": false,
+      "regression_passes": true,
+      "task_only_success": false,
+      "behavioral_success": false,
+      "matches_expected": true
+    },
+    {
+      "condition": "B_correct_task_regression",
+      "task_passes": true,
+      "regression_passes": false,
+      "task_only_success": true,
+      "behavioral_success": false,
+      "matches_expected": true
+    },
+    {
+      "condition": "C_wrong_task_regression_preserved",
+      "task_passes": false,
+      "regression_passes": true,
+      "task_only_success": false,
+      "behavioral_success": false,
+      "matches_expected": true
+    },
+    {
+      "condition": "D_correct_task_regression_preserved",
+      "task_passes": true,
+      "regression_passes": true,
+      "task_only_success": true,
+      "behavioral_success": true,
+      "matches_expected": true
+    }
+  ],
+  "aggregate": {
+    "conditions": 4,
+    "expected_matrix_matches": 4,
+    "task_only_successes": 2,
+    "behavioral_successes": 1,
+    "task_only_false_successes": 1
+  }
+}
