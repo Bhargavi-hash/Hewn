@@ -415,3 +415,143 @@ This preserves the broader Hewn design principle:
 
 > Use models where reasoning adds information. Use deterministic mechanisms
 > where the answer is already mechanically available.
+
+## Production implementation status
+
+The Module 9 research resulted in three production boundaries.
+
+### Capability authority
+
+Hewn now represents runtime authority explicitly through an immutable
+`AuthorityGrant` and deterministic `AuthorityPolicy`.
+
+Tool execution follows:
+
+1. resolve the registered tool,
+2. validate its argument schema,
+3. classify the required capability,
+4. authorize that capability against the runtime grant,
+5. execute the handler only when authorized.
+
+The initial production capability classes are:
+
+- repository read,
+- repository write,
+- approved development checks.
+
+Unknown tool capabilities are denied when an authority policy is active.
+
+The production CLI constructs the authority grant. Repository content,
+model output, and tool arguments do not grant capabilities.
+
+### Workspace confinement
+
+Repository filesystem tools continue to use `Workspace.resolve()` as the
+path-confinement boundary.
+
+The 009A frozen diagnostic found no failure requiring additional
+production hardening for the tested traversal, absolute-path, sibling
+prefix, and symlink cases.
+
+This remains a scoped path-confinement result rather than a general
+filesystem-security claim.
+
+### Process execution isolation
+
+Approved development checks now support a separate
+`ProcessExecutionBackend`.
+
+The production CLI selects the Linux Bubblewrap backend for approved
+checks. The sandbox uses:
+
+- a writable workspace mounted at `/workspace`,
+- read-only runtime mounts,
+- a private `/tmp`,
+- a cleared and explicitly reconstructed environment,
+- isolated user, PID, IPC, UTS, and network namespaces.
+
+When sandboxed execution is selected and Bubblewrap cannot be used, the
+backend fails closed rather than silently falling back to direct
+execution.
+
+Direct execution remains available as an explicit compatibility backend
+for callers that construct tools independently of the production CLI.
+
+### Integrated boundary
+
+The production CLI now composes the boundaries as:
+
+Model
+→ protocol parser
+→ ToolCall
+→ schema validation
+→ AuthorityPolicy
+→ tool handler
+→ Workspace confinement or ProcessExecutionBackend
+→ deterministic execution result
+
+The `Agent` itself does not own security policy. It receives the tool
+registry and executor through dependency injection and therefore cannot
+expand its own authority.
+
+Integration tests verify that:
+
+- denied repository mutation does not modify the target,
+- granted repository-read authority does not bypass workspace
+  confinement,
+- denied check authority prevents process execution,
+- an authorized approved check executes through Bubblewrap,
+- repository-controlled pytest code running through the sandbox cannot
+  read the tested external file.
+
+These tests establish the studied boundaries on the current environment.
+They do not establish general sandbox security.
+
+## Final Module 9 conclusion
+
+Module 9 supports a layered security architecture rather than a single
+"safe agent" mechanism.
+
+The experiments showed that several questions that initially appear to
+be one security problem are distinct:
+
+- protocol parsing asks whether model output has a valid representation,
+- schema validation asks whether tool arguments have an allowed shape,
+- authority policy asks whether the requested capability was granted,
+- workspace confinement asks whether repository filesystem access stays
+  inside the workspace,
+- process isolation asks what an authorized child process can access,
+- execution verification asks whether the resulting repository behavior
+  is correct.
+
+The strongest architectural conclusion from this module is:
+
+> The model proposes actions. Hewn decides whether those actions are
+> authorized, and authorized process execution receives a separate
+> operating-system boundary.
+
+The experiments do not show that the model reliably resists prompt
+injection. In the frozen 009C corpus, repository-controlled text caused
+an unauthorized mutation proposal and effect in the baseline. The
+deterministic authority intervention preserved the compromised proposal
+but prevented its execution and effect.
+
+The experiments also do not establish a general least-privilege policy.
+The exact-resource policy used in 009D depended on hidden evaluator
+knowledge and remains research-only. Capability-level authority is the
+production candidate because it can be constructed without hidden
+solution knowledge, but the 009D unrestricted baseline achieved 0/5
+behavioral task success, so that experiment cannot quantify an
+end-to-end task-success cost.
+
+The Bubblewrap result is similarly scoped. The 009B-H diagnostic and
+production integration tests establish feasibility on the tested Linux
+environment. They do not establish cross-platform sandbox security,
+kernel-level isolation guarantees, malicious dependency containment,
+network-policy completeness, or protection against malicious model
+weights.
+
+Module 9 therefore closes with deterministic authority, workspace
+confinement, and isolated approved-check execution implemented as
+separate boundaries, while broader sandboxing and authority-inference
+problems remain explicitly deferred.
