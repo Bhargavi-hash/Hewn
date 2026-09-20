@@ -1020,3 +1020,258 @@ prompt_evaluated_tokens
 
 A run showing unexpected prompt reuse should remain visible and should
 not silently enter an uncached-performance aggregate.
+
+## 012D — CPU thread scaling
+
+### Research question
+
+How does llama.cpp CPU thread count affect uncached prompt processing
+and autoregressive generation on the fixed Hewn development machine?
+
+### Motivation
+
+The existing Hewn llama.cpp configuration uses:
+
+```text
+threads = 4
+```
+
+This value was inherited from the initial development setup rather than
+selected through measurement.
+
+The machine has:
+
+```text
+4 physical CPU cores
+8 logical CPU threads
+```
+
+Thread count may affect prompt processing and autoregressive generation
+differently.
+
+If thread count is not controlled, it can confound later context,
+quantization, and model-size experiments.
+
+### Hypothesis
+
+Prompt processing and autoregressive decoding will not necessarily have
+the same thread-scaling behavior.
+
+Increasing thread count may improve throughput up to some point, but
+additional logical threads are not assumed to improve either workload.
+
+### Frozen hardware
+
+```text
+CPU:
+Intel Core i5-10210U
+
+physical cores:
+4
+
+logical threads:
+8
+
+RAM:
+approximately 7.6 GiB
+
+inference:
+CPU
+```
+
+### Frozen runtime
+
+```text
+llama.cpp commit:
+930e2fa5995789efbf249a8bf61325bb626e417b
+
+build:
+10991
+
+prompt caching:
+disabled
+
+configured context:
+4096
+```
+
+### Frozen model
+
+```text
+Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M
+```
+
+### Experimental variable
+
+The only intended server-level variable is:
+
+```text
+threads
+```
+
+Conditions:
+
+```text
+1
+2
+4
+8
+```
+
+### Prompt workload
+
+The thread-scaling experiment should use a fixed prompt substantially
+larger than the 47-token instrumentation prompt used in 012A–012C.
+
+The prompt must be generated deterministically and frozen before thread
+scaling results are observed.
+
+Target:
+
+```text
+approximately 512 actual prompt tokens
+```
+
+The actual token count reported by llama.cpp is authoritative.
+
+The experiment does not require exactly 512 tokens.
+
+### Generation workload
+
+Use:
+
+```text
+max_tokens = 128
+temperature = 0
+```
+
+The actual generated-token count must be recorded for every run.
+
+Generation throughput comparisons must account for differing generated
+token counts or early termination.
+
+### Repetitions
+
+Run:
+
+```text
+5 repetitions per thread condition
+```
+
+for:
+
+```text
+4 thread conditions × 5 repetitions = 20 runs
+```
+
+Every run remains individually inspectable.
+
+### Cache control
+
+All servers must use:
+
+```text
+--no-cache-prompt
+```
+
+Every run must additionally satisfy:
+
+```text
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = prompt_tokens
+```
+
+A run violating this condition remains in the raw results but is not
+treated as an uncached measurement.
+
+### Primary measurements
+
+For prompt processing:
+
+```text
+prompt_evaluated_tokens
+prompt_seconds
+prompt_tokens_per_second
+```
+
+For generation:
+
+```text
+generated_tokens
+generation_seconds
+generation_tokens_per_second
+```
+
+Additional measurements:
+
+```text
+wall_time_seconds
+```
+
+### Aggregation
+
+For each thread condition, report individual observations plus:
+
+```text
+minimum
+median
+maximum
+```
+
+for:
+
+```text
+prompt_tokens_per_second
+generation_tokens_per_second
+wall_time_seconds
+```
+
+The median is the primary descriptive timing statistic for this
+experiment.
+
+No statistical significance claim is made from five repetitions.
+
+### Comparison rule
+
+Prompt throughput and generation throughput remain separate.
+
+Do not select a thread count by averaging the two throughput values.
+
+If one configuration improves prompt processing while another improves
+generation, report the tradeoff explicitly.
+
+### Decision rule
+
+A thread configuration may become the baseline for later Module 12
+experiments if it provides a reasonable measured operating point for
+both prompt processing and generation on this machine.
+
+The decision must be based on observed measurements rather than the
+number of physical or logical CPU threads alone.
+
+### Non-goals
+
+012D does not establish:
+
+- universal optimal llama.cpp thread count;
+- behavior on other CPUs;
+- GPU inference behavior;
+- concurrent-request throughput;
+- production prompt-cache policy;
+- context scaling;
+- quantization scaling;
+- model-size scaling;
+- coding-agent behavioral capability.
+
+### Interpretation scope
+
+All conclusions are scoped to:
+
+```text
+this hardware
+this llama.cpp build
+this model
+this quantization
+this workload
+this five-repetition experiment
+```
