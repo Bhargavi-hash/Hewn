@@ -533,3 +533,129 @@ use it for subsequent Module 12 experiments.
 
 Otherwise, fix the measurement mechanism before collecting performance
 results.
+
+### 012B result
+
+The first live harness run completed successfully.
+
+Observed normalized measurements:
+
+```text
+prompt_tokens = 47
+cached_prompt_tokens = 46
+prompt_evaluated_tokens = 1
+
+completion_tokens = 17
+generated_tokens = 17
+total_tokens = 64
+
+prompt_seconds = 0.097939
+generation_seconds = 1.383797
+wall_time_seconds = 1.585438
+
+prompt_tokens_per_second = 10.210437
+generation_tokens_per_second = 11.562390
+
+finish_reason = stop
+```
+
+All observed accounting invariants passed:
+
+```text
+prompt_tokens + completion_tokens == total_tokens
+47 + 17 == 64
+
+cached_prompt_tokens + prompt_evaluated_tokens == prompt_tokens
+46 + 1 == 47
+
+generated_tokens == completion_tokens
+17 == 17
+```
+
+The complete llama.cpp response was retained in the run record.
+
+Runtime provenance and caller-supplied inference configuration were also
+retained.
+
+#### Important cache observation
+
+This run reused almost the complete prompt:
+
+```text
+46 / 47 prompt tokens cached
+1 / 47 prompt tokens evaluated
+```
+
+Therefore the observed:
+
+```text
+prompt_tokens_per_second = 10.210437
+```
+
+must not be interpreted as representative full-prompt prefill
+throughput.
+
+It measures a request for which only one prompt token required
+evaluation.
+
+This demonstrates that later latency experiments must explicitly control
+or record prompt-cache state.
+
+The harness already preserves enough information to identify this case
+because it records total, cached, and evaluated prompt tokens separately.
+
+#### Wall-time observation
+
+For this run:
+
+```text
+internal prompt time      = 0.097939 s
+internal generation time  = 1.383797 s
+sum                       = 1.481736 s
+wall time                 = 1.585438 s
+```
+
+The difference is approximately:
+
+```text
+0.103702 s
+```
+
+This is consistent with the design decision to preserve wall time
+separately from llama.cpp's internal prompt and generation measurements.
+
+A single run does not establish the source or stability of that
+difference.
+
+#### Experimental outcome
+
+012B passes its frozen decision rule:
+
+1. the request completed;
+2. the raw response was retained;
+3. directly exposed measurements were normalized;
+4. all observed accounting invariants passed;
+5. wall time was recorded separately;
+6. provenance and caller-supplied configuration were retained.
+
+The measurement harness is therefore retained for subsequent Module 12
+experiments.
+
+#### Production decision
+
+Keep the measurement harness.
+
+Do not estimate token counts from characters.
+
+Do not merge prompt and generation latency.
+
+Do not interpret prompt throughput without examining:
+
+```text
+prompt_tokens
+cached_prompt_tokens
+prompt_evaluated_tokens
+```
+
+Subsequent performance experiments must control prompt caching or make
+cache state an explicit experimental variable.
