@@ -618,3 +618,206 @@ metadata without the evaluator-specific meaning being disclosed.
 The primary 011E artifact is:
 
 `results/011e-benchmark-integrity-run001.json`
+
+## 011F — Hewn Bench synthesis
+
+### Purpose
+
+011F translated the evaluation methodology established by 011A–011E
+into a reusable production benchmark core.
+
+Unlike the preceding experiments, 011F introduced no new empirical
+comparison. Its purpose was to encode the measurement rules already
+supported by Module 11.
+
+### Production package
+
+The resulting package is:
+
+```text
+src/hewn/bench/
+    __init__.py
+    models.py
+    scoring.py
+    integrity.py
+    aggregation.py
+```
+
+Focused production tests are implemented in:
+
+```text
+tests/test_bench.py
+```
+
+### Correctness representation
+
+A benchmark run preserves separate measurements for:
+
+```text
+protocol_valid
+edit_applied
+task_passes
+regression_passes
+structural_passes
+```
+
+Primary behavioral success is derived rather than independently stored.
+
+Without a structural requirement:
+
+```text
+behavioral_success =
+    task_passes
+    AND regression_passes
+```
+
+With a structural requirement:
+
+```text
+behavioral_success =
+    task_passes
+    AND regression_passes
+    AND structural_passes
+```
+
+Protocol validity and edit application remain diagnostic measurements
+rather than components of behavioral success.
+
+This preserves the metric separation demonstrated by 011A and the
+regression-aware scoring requirement demonstrated by 011C.
+
+### Benchmark information boundary
+
+Benchmark cases explicitly separate:
+
+```text
+agent_visible
+```
+
+from:
+
+```text
+evaluator_only
+```
+
+Agent-visible information contains the task, repository context, and
+tool interface.
+
+Evaluator-only information contains oracle identifiers and diagnostic
+metadata such as expected changed files, expected patch markers, and
+hidden contamination markers.
+
+Agent payload construction operates only on the agent-visible
+representation.
+
+The production integrity checker detects exact direct exposure of
+evaluator-owned hidden markers.
+
+It is intentionally not described as a semantic contamination detector.
+
+### Repeated runs
+
+Each run preserves explicit provenance including:
+
+```text
+hewn_commit
+model_id
+model_configuration
+hardware_description
+repetition
+```
+
+Individual run records remain available after aggregation.
+
+Failed and protocol-invalid runs remain in the denominator.
+
+This supports the repeated-run methodology established by 011B without
+claiming that repeated observations are universally independent
+statistical samples.
+
+### Efficiency
+
+The production resource representation can record:
+
+```text
+model_calls
+tool_calls
+execution_calls
+context_chars
+wall_time_seconds
+```
+
+Aggregation preserves observed totals and ranges.
+
+Resource dominance is defined only when two runs have the same
+behavioral classification and complete resource measurements.
+
+Across different behavioral classifications, dominance is undefined.
+
+No universal weighted quality/cost score was introduced.
+
+This preserves the separation established by 011D.
+
+### Expected-file handling
+
+Expected changed files remain evaluator-only metadata, but the raw
+repository path is not automatically classified as hidden.
+
+This permits an agent to legitimately observe a repository file without
+being told that the evaluator expects that particular file to change.
+
+This follows the distinction validated by 011E.
+
+### Production scope
+
+Module 11 earns a small benchmark core for:
+
+- benchmark representation;
+- behavioral scoring;
+- regression-aware correctness;
+- provenance;
+- repeated-run accounting;
+- resource accounting;
+- resource dominance;
+- direct hidden-marker integrity checking;
+- aggregation.
+
+It does not yet provide:
+
+- a benchmark CLI;
+- automatic benchmark generation;
+- model runners;
+- cloud-agent adapters;
+- a public leaderboard;
+- statistical significance machinery;
+- semantic contamination detection;
+- universal coding-agent scoring;
+- estimated token accounting.
+
+Those features were not required by the evidence collected in this
+module.
+
+### Conclusion
+
+011F converts the Module 11 methodology into production code without
+introducing a headline score.
+
+Hewn Bench therefore treats evaluation as a collection of explicit
+measurements rather than one number:
+
+```text
+protocol
+mechanics
+task correctness
+regression correctness
+structural correctness
+behavioral success
+resource usage
+provenance
+```
+
+The primary question remains whether the requested behavior was achieved
+without a detected regression.
+
+Efficiency and intermediate agent mechanics explain how that result was
+obtained, but do not redefine whether the result was correct.
