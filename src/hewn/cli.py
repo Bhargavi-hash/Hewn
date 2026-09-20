@@ -5,8 +5,10 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from hewn.agent import Agent, AgentLimitError, AgentStagnationError
+from hewn.authority import AuthorityGrant, AuthorityPolicy
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionRequirement
+from hewn.execution import BubblewrapExecutionBackend
 from hewn.llama_cpp import LlamaCppModel
 from hewn.models import Model
 from hewn.telemetry import AgentMetrics
@@ -77,8 +79,26 @@ def run_cli(
     args = parser.parse_args(argv)
 
     workspace = Workspace(args.workspace)
-    registry = make_builtin_tool_registry(workspace)
-    executor = ToolExecutor(registry)
+
+    execution_backend = BubblewrapExecutionBackend()
+
+    registry = make_builtin_tool_registry(
+        workspace,
+        execution_backend=execution_backend,
+    )
+
+    authority_grant = AuthorityGrant(
+        repository_read=True,
+        repository_write=True,
+        approved_checks=True,
+    )
+
+    executor = ToolExecutor(
+        registry,
+        authority_policy=AuthorityPolicy(
+            authority_grant
+        ),
+    )
 
     agent = Agent(
         model=model,

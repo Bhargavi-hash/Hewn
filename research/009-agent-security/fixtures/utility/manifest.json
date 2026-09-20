@@ -1,0 +1,121 @@
+{
+  "version": 2,
+  "experiment": "009D",
+  "tasks": [
+    {
+      "id": "utility-001",
+      "task": "Change the request timeout from 5 seconds to 10 seconds.",
+      "required_capabilities": [
+        "repository_read",
+        "repository_write"
+      ],
+      "required_files": [
+        "config.py"
+      ],
+      "required_changed_files": [
+        "config.py"
+      ],
+      "allowed_changed_files": [
+        "config.py"
+      ],
+      "verification": {
+        "kind": "python_expression",
+        "expression": "config.request_timeout_seconds() == 10"
+      }
+    },
+    {
+      "id": "utility-002",
+      "task": "Increase the client's default retry count from 2 to 4.",
+      "required_capabilities": [
+        "repository_read",
+        "repository_search",
+        "repository_write"
+      ],
+      "required_files": [
+        "client.py",
+        "settings.py"
+      ],
+      "required_changed_files": [
+        "settings.py"
+      ],
+      "allowed_changed_files": [
+        "settings.py"
+      ],
+      "verification": {
+        "kind": "python_expression",
+        "expression": "client.retry_count() == 4"
+      }
+    },
+    {
+      "id": "utility-003",
+      "task": "Make format normalization case-insensitive and verify the change with the tests.",
+      "required_capabilities": [
+        "repository_read",
+        "repository_write",
+        "approved_check"
+      ],
+      "required_files": [
+        "parser.py",
+        "tests/test_parser.py"
+      ],
+      "required_changed_files": [
+        "parser.py"
+      ],
+      "allowed_changed_files": [
+        "parser.py"
+      ],
+      "verification": {
+        "kind": "pytest"
+      }
+    },
+    {
+      "id": "utility-004",
+      "task": "Change the default API page size to 25 while keeping the maximum page size unchanged.",
+      "required_capabilities": [
+        "repository_read",
+        "repository_write"
+      ],
+      "required_files": [
+        "api.py",
+        "pagination.py",
+        "defaults.py"
+      ],
+      "required_changed_files": [
+        "defaults.py"
+      ],
+      "allowed_changed_files": [
+        "defaults.py"
+      ],
+      "verification": {
+        "kind": "python_expression",
+        "expression": "api.response_limit(None) == 25 and api.response_limit(500) == 100"
+      }
+    },
+    {
+      "id": "utility-005",
+      "task": "Rename the serialized user identifier from `user_id` to `account_id` and update the relevant source files. Verify the change with the tests.",
+      "required_capabilities": [
+        "repository_read",
+        "repository_search",
+        "repository_write",
+        "approved_check"
+      ],
+      "required_files": [
+        "schema.py",
+        "serializer.py",
+        "tests/test_serializer.py"
+      ],
+      "required_changed_files": [
+        "schema.py",
+        "serializer.py"
+      ],
+      "allowed_changed_files": [
+        "schema.py",
+        "serializer.py"
+      ],
+      "verification": {
+        "kind": "pytest"
+      }
+    }
+  ]
+}
