@@ -319,33 +319,135 @@ Current repository evidence remains authoritative.
 
 ### Question
 
-Which repository knowledge classes provide measurable value?
+Which classes of repository knowledge contain information that cannot be
+reliably reconstructed from the current repository state and therefore
+have a defensible reason to be persisted?
+
+### Motivation
+
+010A demonstrated repeated automatic retrieval but no active
+model-directed rediscovery.
+
+010B did not demonstrate behavioral or discovery benefit from supplying
+structured persistent memory.
+
+010C demonstrated that exact provenance fingerprints can prevent stale
+records from reaching memory context for the tested mutation class.
+
+Therefore 010D does not assume that more persistent memory is useful.
+Instead, it asks which information classes, if any, persistence can
+provide that deterministic reconstruction cannot.
+
+### Principle
+
+Do not persist information merely because it may be useful.
+
+Persist it only when its historical information value or reconstruction
+cost justifies its storage, retrieval, context, and staleness costs.
 
 ### Candidate classes
 
-- structural,
-- architectural,
-- operational,
-- historical failure,
-- decision.
+010D evaluates five candidate classes:
 
-### Method
+1. structural
+2. architectural
+3. operational
+4. historical_failure
+5. decision
 
-Use ablations rather than adding all memory categories simultaneously.
+### Reconstruction test
 
-Compare later-task behavior and rediscovery with selected classes removed.
+For each record, the evaluator creates:
 
-### Decision rule
+- a repository state;
+- a candidate memory record;
+- a hidden expected fact;
+- a deterministic reconstruction probe.
 
-Do not promote a memory class merely because it sounds useful.
+The probe receives only the current repository state. It does not receive
+the memory record or historical event stream.
 
-It should either:
+A candidate is classified as reconstructible only when the probe can
+recover the expected information from current repository state.
 
-- reduce rediscovery,
-- improve task behavior,
-- prevent a repeated failure,
-- or materially improve evidence selection.
+### Interpretation
 
+`structural`
+
+Facts directly encoded in current source structure, such as symbol
+location or imports, should normally be reconstructed rather than
+persisted.
+
+`architectural`
+
+Architecture may sometimes be inferable from source, but rationale or
+intended boundaries may not be.
+
+`operational`
+
+Current commands may be recoverable from configuration, but historically
+discovered operational constraints may not be.
+
+`historical_failure`
+
+A failure that occurred in an earlier repository state may disappear
+entirely after its fix. Current source alone cannot necessarily recover
+that event.
+
+`decision`
+
+The current implementation can reveal what was chosen without revealing
+why alternatives were rejected. Decision rationale is therefore a
+candidate for genuinely historical memory.
+
+### Measurements
+
+For every candidate:
+
+- memory class
+- expected fact
+- reconstructible from current state
+- reconstruction evidence
+- historical information required
+- current-state provenance available
+- persistence candidate
+
+Aggregate measurements:
+
+- reconstructible records by class
+- non-reconstructible records by class
+- persistence candidates by class
+
+### Persistence rule
+
+A class is not promoted merely because one example is
+non-reconstructible.
+
+010D identifies candidate information classes. It does not establish
+end-to-end behavioral value.
+
+Production persistence still requires evidence that the information is
+useful enough to justify its costs.
+
+### Success criterion
+
+010D succeeds if the evaluator distinguishes mechanically reconstructible
+repository facts from facts requiring historical information.
+
+No model invocation is required.
+
+### Interpretation constraints
+
+This is a small deterministic taxonomy experiment, not an estimate of
+the prevalence or utility of each memory class in real repositories.
+
+Non-reconstructibility does not imply usefulness.
+
+Reconstructibility does not imply that reconstruction is always cheaper
+than persistence.
+
+No 010D result alone justifies production persistent-memory
+infrastructure.
 ---
 
 ## 010E — Synthesis
