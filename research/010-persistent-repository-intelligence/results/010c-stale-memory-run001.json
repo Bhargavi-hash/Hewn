@@ -1,0 +1,158 @@
+{
+  "experiment": "010C",
+  "run": "run001",
+  "mechanism": "SHA-256 provenance-file content invalidation",
+  "model_invoked": false,
+  "results": [
+    {
+      "pair_id": "configuration",
+      "no_freshness": {
+        "pair_id": "configuration",
+        "condition": "no_freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 0,
+        "stale_records_reaching_context": 1,
+        "stale_paths": [
+          "src/sample/settings.py"
+        ],
+        "memory_character_count": 445,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness": {
+        "pair_id": "configuration",
+        "condition": "freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/settings.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness_with_current_evidence": {
+        "pair_id": "configuration",
+        "condition": "freshness_with_current_evidence",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/settings.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [
+          "src/sample/settings.py"
+        ],
+        "current_evidence_preserved": true
+      }
+    },
+    {
+      "pair_id": "serialization",
+      "no_freshness": {
+        "pair_id": "serialization",
+        "condition": "no_freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 0,
+        "stale_records_reaching_context": 1,
+        "stale_paths": [
+          "src/sample/schema.py"
+        ],
+        "memory_character_count": 489,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness": {
+        "pair_id": "serialization",
+        "condition": "freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/schema.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness_with_current_evidence": {
+        "pair_id": "serialization",
+        "condition": "freshness_with_current_evidence",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/schema.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [
+          "src/sample/schema.py"
+        ],
+        "current_evidence_preserved": true
+      }
+    },
+    {
+      "pair_id": "parser",
+      "no_freshness": {
+        "pair_id": "parser",
+        "condition": "no_freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 0,
+        "stale_records_reaching_context": 1,
+        "stale_paths": [
+          "src/sample/parser.py"
+        ],
+        "memory_character_count": 424,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness": {
+        "pair_id": "parser",
+        "condition": "freshness",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/parser.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [],
+        "current_evidence_preserved": true
+      },
+      "freshness_with_current_evidence": {
+        "pair_id": "parser",
+        "condition": "freshness_with_current_evidence",
+        "records_available": 1,
+        "fresh_records": 0,
+        "stale_records": 1,
+        "stale_records_rejected": 1,
+        "stale_records_reaching_context": 0,
+        "stale_paths": [
+          "src/sample/parser.py"
+        ],
+        "memory_character_count": 0,
+        "current_evidence_expected": [
+          "src/sample/parser.py"
+        ],
+        "current_evidence_preserved": true
+      }
+    }
+  ]
+}

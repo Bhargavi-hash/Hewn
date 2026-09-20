@@ -1,0 +1,68 @@
+{
+  "experiment": "010D",
+  "run": "run001",
+  "model_invoked": false,
+  "question": "Which repository knowledge classes contain information not recoverable from current repository state?",
+  "results": [
+    {
+      "case_id": "structural-001",
+      "memory_class": "structural",
+      "expected_fact": "request_policy depends on RETRY_COUNT from sample.settings",
+      "reconstructible_from_current_state": true,
+      "reconstruction_evidence": [
+        "src/sample/client.py imports RETRY_COUNT from sample.settings"
+      ],
+      "historical_information_required": false,
+      "current_state_provenance_available": true,
+      "persistence_candidate": false
+    },
+    {
+      "case_id": "architectural-001",
+      "memory_class": "architectural",
+      "expected_fact": "direct storage access was rejected to preserve the service/repository boundary",
+      "reconstructible_from_current_state": false,
+      "reconstruction_evidence": [
+        "src/sample/service.py currently calls sample.repository.load_user"
+      ],
+      "historical_information_required": true,
+      "current_state_provenance_available": true,
+      "persistence_candidate": true
+    },
+    {
+      "case_id": "operational-001",
+      "memory_class": "operational",
+      "expected_fact": "the repository's pytest suite is rooted under tests/",
+      "reconstructible_from_current_state": true,
+      "reconstruction_evidence": [
+        "pyproject.toml declares pytest testpaths=tests"
+      ],
+      "historical_information_required": false,
+      "current_state_provenance_available": true,
+      "persistence_candidate": false
+    },
+    {
+      "case_id": "historical-failure-001",
+      "memory_class": "historical_failure",
+      "expected_fact": "a previous parser implementation failed because it stripped whitespace but did not lowercase values",
+      "reconstructible_from_current_state": false,
+      "reconstruction_evidence": [
+        "current parser contains the corrected strip-and-lower implementation"
+      ],
+      "historical_information_required": true,
+      "current_state_provenance_available": true,
+      "persistence_candidate": true
+    },
+    {
+      "case_id": "decision-001",
+      "memory_class": "decision",
+      "expected_fact": "Redis was rejected because the project intentionally avoids an external runtime dependency for this cache",
+      "reconstructible_from_current_state": false,
+      "reconstruction_evidence": [
+        "src/sample/cache.py currently implements an in-memory cache"
+      ],
+      "historical_information_required": true,
+      "current_state_provenance_available": true,
+      "persistence_candidate": true
+    }
+  ]
+}
