@@ -490,3 +490,228 @@ Repeated failure is stability, not capability.
 
 Repeated success is evidence of consistency on the tested fixture, not
 general competence.
+
+## 011C — Regression-aware scoring
+
+### Research question
+
+Can task-local verification incorrectly classify a patch as successful
+when the requested behavior passes but existing behavior outside the
+requested change regresses?
+
+### Purpose
+
+011A established that task correctness and regression correctness are
+distinct evaluation layers.
+
+011C tests that distinction directly by comparing two scoring rules over
+controlled patches:
+
+1. task-only success;
+2. regression-aware behavioral success.
+
+The experiment is deterministic and does not use a language model. Its
+purpose is to validate the benchmark scoring rule, not to estimate how
+frequently coding agents introduce regressions.
+
+### Frozen fixture
+
+The fixture contains a small normalization module:
+
+```python
+def normalize_name(value: str) -> str | None:
+    normalized = value.strip()
+    if not normalized:
+        return None
+    return normalized
+
+
+def stable_identifier(value: str) -> str:
+    return f"user:{value}"
+```
+
+The requested task is:
+
+> Normalize non-empty names by stripping surrounding whitespace and
+> converting them to lowercase. Empty or whitespace-only names should
+> continue to return `None`. Preserve all other behavior.
+
+### Hidden evaluator oracles
+
+The requested-behavior oracle checks:
+
+```python
+normalize_name(" Alice ") == "alice"
+normalize_name(" BOB ") == "bob"
+normalize_name("   ") is None
+```
+
+The regression oracle checks:
+
+```python
+stable_identifier("Alice") == "user:Alice"
+stable_identifier("BOB") == "user:BOB"
+```
+
+The regression oracle is evaluator-only. It is not part of the task
+description supplied to an agent in any later model-based experiment.
+
+### Frozen conditions
+
+Four deterministic candidate implementations are evaluated.
+
+#### A — no-op
+
+`normalize_name` remains unchanged and `stable_identifier` remains
+unchanged.
+
+Expected:
+
+- task passes: false
+- regression passes: true
+- task-only success: false
+- behavioral success: false
+
+#### B — correct task, regression introduced
+
+`normalize_name` correctly strips and lowercases non-empty values and
+preserves the empty-input behavior.
+
+`stable_identifier` is incorrectly changed to lowercase its value:
+
+```python
+def stable_identifier(value: str) -> str:
+    return f"user:{value.lower()}"
+```
+
+Expected:
+
+- task passes: true
+- regression passes: false
+- task-only success: true
+- behavioral success: false
+
+This condition is the central false-success case.
+
+#### C — wrong task, regression preserved
+
+`normalize_name` strips whitespace but does not lowercase non-empty
+values.
+
+`stable_identifier` remains unchanged.
+
+Expected:
+
+- task passes: false
+- regression passes: true
+- task-only success: false
+- behavioral success: false
+
+#### D — correct task, regression preserved
+
+`normalize_name` correctly strips and lowercases non-empty values and
+preserves the empty-input behavior.
+
+`stable_identifier` remains unchanged.
+
+Expected:
+
+- task passes: true
+- regression passes: true
+- task-only success: true
+- behavioral success: true
+
+### Scoring rules
+
+Task-only scoring is:
+
+```text
+task_only_success = task_passes
+```
+
+Regression-aware behavioral scoring is:
+
+```text
+behavioral_success = task_passes AND regression_passes
+```
+
+No weighted score is used.
+
+A task failure cannot be compensated for by passing regressions, and a
+regression cannot be compensated for by satisfying the requested
+behavior.
+
+### Expected matrix
+
+| Condition | Task passes | Regression passes | Task-only success | Behavioral success |
+|---|---:|---:|---:|---:|
+| A — no-op | false | true | false | false |
+| B — task correct, regression | true | false | true | false |
+| C — task wrong, regression preserved | false | true | false | false |
+| D — fully correct | true | true | true | true |
+
+### Primary measurement
+
+Count false successes produced by task-only scoring relative to the
+frozen regression-aware behavioral classification.
+
+Expected:
+
+```text
+task-only false successes: 1
+```
+
+The false success should be condition B.
+
+Also record:
+
+- expected matrix matches;
+- task-only successes;
+- behavioral successes;
+- false successes caused by omitted regression checking.
+
+### Success criterion
+
+011C succeeds as an evaluation-methodology experiment if:
+
+1. all four observed task/regression classifications match the frozen
+   expected matrix;
+2. task-only scoring counts condition B as successful;
+3. regression-aware behavioral scoring rejects condition B;
+4. condition D remains successful under regression-aware scoring.
+
+Expected aggregate:
+
+```text
+expected matrix matched: 4/4
+task-only successes: 2/4
+behavioral successes: 1/4
+task-only false successes: 1
+```
+
+### Interpretation constraints
+
+This experiment demonstrates that task-local verification can produce a
+false success when a deliberately constructed regression is outside the
+task oracle.
+
+It does not estimate the frequency with which coding agents introduce
+regressions.
+
+The fixture contains one deliberately selected unrelated behavior.
+Passing the regression oracle does not establish absence of all possible
+regressions.
+
+The experiment therefore supports regression-aware evaluation as a
+measurement requirement, not a claim that any finite regression suite
+proves complete correctness.
+
+### Frozen implementation rule
+
+After this design is committed, the candidate implementations, task
+oracle, regression oracle, expected matrix, and scoring definitions must
+not be changed in response to observed evaluator output.
+
+If the evaluator itself contains a defect, preserve the affected run,
+document the defect, correct only the evaluator implementation, and
+execute a new run.
