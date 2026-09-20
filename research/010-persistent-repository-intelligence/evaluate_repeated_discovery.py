@@ -866,6 +866,11 @@ def print_summary(
                 task.behavior_passed
             )
 
+            total_protocol_valid += int(
+                task.protocol_valid
+            )
+
+
             print(
                 f"{task.task_id}: "
                 f"behavior={task.behavior_passed} "
