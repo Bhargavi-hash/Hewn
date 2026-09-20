@@ -1,0 +1,29 @@
+{
+  "experiment": "011B",
+  "tasks": [
+    {
+      "task_id": "stability-001",
+      "request": "Change greeting() so it returns \"hi\" instead of \"hello\". Preserve all other behavior.",
+      "fixture": "stability-001",
+      "expected_changed_files": [
+        "src/sample/greeting.py"
+      ]
+    },
+    {
+      "task_id": "stability-002",
+      "request": "Increase the default request retry count from 2 to 4. Preserve request_policy() as the consumer of the shared setting.",
+      "fixture": "stability-002",
+      "expected_changed_files": [
+        "src/sample/settings.py"
+      ]
+    },
+    {
+      "task_id": "stability-003",
+      "request": "Normalize names by stripping surrounding whitespace and converting non-empty names to lowercase. Empty or whitespace-only names should return None.",
+      "fixture": "stability-003",
+      "expected_changed_files": [
+        "src/sample/normalization.py"
+      ]
+    }
+  ]
+}
