@@ -435,3 +435,186 @@ alongside the resource comparison.
 The primary 011D artifact is:
 
 `results/011d-efficiency-accounting-run001.json`
+
+## 011E — Benchmark integrity and contamination
+
+### Question
+
+Can Hewn Bench mechanically separate agent-visible task information from
+evaluator-only information so that hidden oracles, expected outputs, and
+benchmark metadata cannot accidentally become part of the agent's
+evaluation context?
+
+### Method
+
+011E used a deterministic synthetic benchmark case divided into two
+representations:
+
+```text
+AgentVisibleCase
+EvaluatorOnlyCase
+```
+
+The agent-visible representation contained:
+
+- task request;
+- repository context;
+- available tool names.
+
+The evaluator-only representation contained:
+
+- behavioral assertions;
+- regression assertions;
+- expected changed files;
+- expected patch markers;
+- scoring metadata.
+
+The payload builder accepted only the agent-visible representation.
+
+Four assembly conditions were evaluated:
+
+1. clean payload;
+2. payload contaminated with a hidden behavioral assertion;
+3. payload contaminated with an expected patch marker;
+4. payload contaminated with hidden scoring metadata.
+
+No language model was invoked.
+
+### Results
+
+| Condition | Payload constructed | Hidden markers exposed | Integrity passes |
+|---|---:|---:|---:|
+| A — clean | true | false | true |
+| B — hidden oracle | true | true | false |
+| C — expected patch | true | true | false |
+| D — scoring metadata | true | true | false |
+
+The observed matrix matched the frozen expected matrix:
+
+```text
+expected matrix matched: 4/4
+clean payloads: 1/4
+contaminated payloads detected: 3/3
+false contamination detections on clean payload: 0
+```
+
+### Detected contamination
+
+Condition B exposed:
+
+```text
+normalize_name(" Alice ") == "alice"
+```
+
+Condition C exposed:
+
+```text
+return normalized.lower()
+```
+
+Condition D exposed:
+
+```text
+primary_success = task_passes AND regression_passes
+```
+
+All three were rejected by the integrity classification.
+
+The clean condition exposed none of the frozen hidden markers.
+
+### Expected-file namespace check
+
+The raw repository path:
+
+```text
+src/sample/normalization.py
+```
+
+was visible in the clean agent payload.
+
+This is legitimate repository information and was not classified as
+contamination.
+
+The evaluator-specific marker:
+
+```text
+src/sample/normalization.py::expected_changed_file
+```
+
+was not visible.
+
+Observed:
+
+```text
+raw expected path visible as legitimate repository context: true
+namespaced expected-file marker visible: false
+```
+
+This distinction matters because information overlap alone does not
+establish benchmark leakage. An agent may legitimately know that a file
+exists while remaining unaware that the evaluator expects that file to
+change.
+
+### Interpretation
+
+011E validates an explicit representation boundary between information
+used to run an agent and information used to score it.
+
+For this frozen diagnostic, direct exposure of benchmark-owned hidden
+information was detected in all three deliberately contaminated
+payloads, while the clean payload was not falsely rejected.
+
+This does not prove absence of every form of benchmark contamination.
+
+The detector operates on exact frozen markers. It does not detect:
+
+- semantic paraphrases of hidden information;
+- indirect hints;
+- information memorized during model training;
+- leakage through external systems;
+- equivalent information expressed in an unrecognized representation.
+
+The experiment therefore validates a benchmark-construction mechanism,
+not a general contamination detector.
+
+### Design implication
+
+Hewn Bench should maintain an explicit structure equivalent to:
+
+```text
+BenchmarkCase
+├── agent_visible
+│   ├── task
+│   ├── repository/context
+│   └── allowed tool interface
+└── evaluator_only
+    ├── task oracle
+    ├── regression oracle
+    ├── structural oracle
+    ├── expected-change metadata
+    └── scoring metadata
+```
+
+Only `agent_visible` information should participate in agent-input
+construction.
+
+`evaluator_only` information should become available only to post-run
+evaluation and diagnostics.
+
+The type boundary alone should not be described as a security boundary.
+Production benchmark construction should also validate the assembled
+payload before execution.
+
+### Conclusion
+
+011E supports explicit separation of agent-visible and evaluator-only
+benchmark information.
+
+It also shows why contamination checks need provenance and semantics
+around fields rather than raw string overlap alone. A repository path
+may legitimately appear in both repository evidence and evaluator
+metadata without the evaluator-specific meaning being disclosed.
+
+The primary 011E artifact is:
+
+`results/011e-benchmark-integrity-run001.json`
