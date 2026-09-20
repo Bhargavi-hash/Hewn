@@ -868,3 +868,155 @@ substantial prompt reuse.
 
 Otherwise, establish a stronger cache-isolation procedure before
 continuing with performance experiments.
+
+### 012C results
+
+Six runs were collected: three with prompt caching explicitly enabled
+and three with prompt caching explicitly disabled.
+
+All requests used the same model, prompt, thread count, configured
+context, temperature, and completion limit.
+
+### Observed measurements
+
+```text
+condition   run   prompt   cached   evaluated   prompt_ms   prompt_tok/s
+cache-on      1       47       46           1      83.595         11.962
+cache-on      2       47       46           1      86.065         11.619
+cache-on      3       47       46           1      75.004         13.333
+
+cache-off     1       47        0          47     953.092         49.313
+cache-off     2       47        0          47     918.768         51.155
+cache-off     3       47        0          47    1298.063         36.208
+```
+
+Generation measurements were:
+
+```text
+condition   run   completion   generation_ms   generation_tok/s   wall_s
+cache-on      1           17        1311.248             12.202    1.403
+cache-on      2           17        1348.154             11.868    1.446
+cache-on      3           17        1204.202             13.287    1.293
+
+cache-off     1           17        1559.884             10.257    2.524
+cache-off     2           17        1352.035             11.834    2.282
+cache-off     3           17        1258.163             12.717    2.568
+```
+
+### Prompt reuse
+
+With prompt caching enabled, every observed request reported:
+
+```text
+prompt_tokens = 47
+cached_prompt_tokens = 46
+prompt_evaluated_tokens = 1
+```
+
+With prompt caching disabled, every observed request reported:
+
+```text
+prompt_tokens = 47
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = 47
+```
+
+Therefore, in this three-run diagnostic, `--no-cache-prompt`
+successfully prevented the substantial repeated-prompt reuse observed
+with prompt caching enabled.
+
+### Throughput interpretation
+
+Prompt throughput cannot be interpreted independently from the number
+of evaluated tokens.
+
+For the cache-enabled runs, llama.cpp calculated prompt throughput from
+only one evaluated prompt token.
+
+Those values therefore do not represent full-prompt prefill throughput
+and should not be directly compared with the cache-disabled 47-token
+prefill measurements as equivalent workloads.
+
+### Timing observation
+
+Prompt caching substantially reduced observed prompt-processing time in
+these repeated requests because almost the entire prompt was reused.
+
+The experiment does not estimate the general latency benefit of prompt
+caching.
+
+Generation throughput also varied across repetitions even though the
+generated token count remained 17.
+
+Therefore later timing experiments should use repeated observations
+rather than treating a single timing measurement as representative.
+
+### Decision
+
+The frozen decision rule is satisfied.
+
+Across all three cache-disabled repetitions:
+
+```text
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = prompt_tokens = 47
+```
+
+Subsequent controlled Module 12 inference-performance experiments will
+therefore run llama.cpp with:
+
+```text
+--no-cache-prompt
+```
+
+unless prompt caching itself is the experimental variable.
+
+This is a benchmark-control decision.
+
+It is not a production recommendation for Hewn.
+
+### What 012C establishes
+
+For this llama.cpp build, model, and three-run diagnostic:
+
+1. repeated requests with prompt caching enabled can reuse nearly the
+   entire prompt;
+2. prompt reuse materially changes the amount of prompt evaluation
+   performed;
+3. prompt throughput must be interpreted relative to evaluated prompt
+   tokens;
+4. `--no-cache-prompt` prevented substantial prompt reuse in all three
+   observed cache-disabled runs;
+5. disabling prompt caching provides a suitable control protocol for
+   subsequent request-level inference comparisons.
+
+### What 012C does not establish
+
+012C does not establish:
+
+- the general production benefit of prompt caching;
+- cache behavior under multiple concurrent slots;
+- cache behavior for partially shared prompts;
+- cache behavior across arbitrary llama.cpp versions;
+- cold model-loading performance;
+- operating-system page-cache behavior;
+- whether prompt caching should be disabled in normal Hewn operation.
+
+### Benchmark protocol update
+
+For subsequent controlled inference experiments:
+
+```text
+prompt caching = disabled
+```
+
+Every run must still record:
+
+```text
+prompt_tokens
+cached_prompt_tokens
+prompt_evaluated_tokens
+```
+
+A run showing unexpected prompt reuse should remain visible and should
+not silently enter an uncached-performance aggregate.

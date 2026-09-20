@@ -1,0 +1,73 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 4096,
+    "max_tokens": 64,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 17,
+    "finish_reason": "stop",
+    "generated_tokens": 17,
+    "generation_seconds": 1.258163,
+    "generation_tokens_per_second": 12.716953208765478,
+    "prompt_evaluated_tokens": 47,
+    "prompt_seconds": 1.2980630000000002,
+    "prompt_tokens": 47,
+    "prompt_tokens_per_second": 36.20779576954277,
+    "total_tokens": 64,
+    "wall_time_seconds": 2.567825937992893
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4C/8T, approximately 7.6 GiB RAM, CPU inference",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "10991",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```python\ndef add(a, b):\n    return a + b\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789943860,
+    "id": "chatcmpl-aN119z7VemYBgDvgSKFyhdClus2MQnnK",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1258.163,
+      "predicted_n": 17,
+      "predicted_per_second": 12.716953208765478,
+      "predicted_per_token_ms": 78.6351875,
+      "prompt_ms": 1298.063,
+      "prompt_n": 47,
+      "prompt_per_second": 36.20779576954277,
+      "prompt_per_token_ms": 27.61836170212766
+    },
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 47,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 64
+    }
+  }
+}
