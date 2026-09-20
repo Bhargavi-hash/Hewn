@@ -715,3 +715,327 @@ not be changed in response to observed evaluator output.
 If the evaluator itself contains a defect, preserve the affected run,
 document the defect, correct only the evaluator implementation, and
 execute a new run.
+
+## 011D — Efficiency accounting
+
+### Research question
+
+Can Hewn Bench account for the additional computational and interaction
+cost of an agent strategy without allowing lower cost to compensate for
+incorrect behavior or higher cost to masquerade as greater capability?
+
+### Motivation
+
+Earlier Hewn experiments introduced mechanisms that can increase agent
+cost:
+
+- additional retrieved context;
+- additional model calls;
+- planning calls;
+- reviewer calls;
+- tool calls;
+- execution and verification;
+- repair iterations.
+
+Some mechanisms improved intermediate metrics without improving
+behavioral success.
+
+A benchmark therefore needs to measure both correctness and cost while
+keeping them conceptually separate.
+
+011D validates the accounting model before Hewn Bench uses it on larger
+agent comparisons.
+
+### Principle
+
+Correctness is evaluated first.
+
+Efficiency describes the cost of obtaining that outcome.
+
+Efficiency must not convert an incorrect solution into a successful one.
+
+The benchmark therefore does not define a weighted score such as:
+
+```text
+success - latency_penalty - token_penalty
+```
+
+and does not allow cheap failure to outrank correct behavior merely
+because it consumed fewer resources.
+
+### Experimental method
+
+011D is a deterministic evaluator experiment.
+
+No language model is invoked.
+
+Four synthetic run records represent different combinations of
+behavioral outcome and resource usage.
+
+The experiment validates aggregation and classification only. It does
+not estimate the real cost of any model or agent architecture.
+
+### Frozen resource fields
+
+Each run records:
+
+- model calls;
+- tool calls;
+- execution calls;
+- context characters;
+- wall time in seconds.
+
+Token counts are intentionally excluded from this experiment because
+the current Hewn model interface does not expose a uniform measured
+token-usage field.
+
+A later benchmark may add measured prompt and completion tokens when
+the model backend exposes them reliably.
+
+No character-to-token conversion is used as a substitute for measured
+token usage.
+
+### Frozen conditions
+
+#### A — correct, lower cost
+
+```text
+behavioral_success = true
+model_calls = 2
+tool_calls = 2
+execution_calls = 1
+context_chars = 1000
+wall_time_seconds = 4.0
+```
+
+#### B — correct, higher cost
+
+```text
+behavioral_success = true
+model_calls = 5
+tool_calls = 6
+execution_calls = 3
+context_chars = 3000
+wall_time_seconds = 12.0
+```
+
+#### C — incorrect, lower cost
+
+```text
+behavioral_success = false
+model_calls = 1
+tool_calls = 0
+execution_calls = 0
+context_chars = 500
+wall_time_seconds = 2.0
+```
+
+#### D — incorrect, higher cost
+
+```text
+behavioral_success = false
+model_calls = 4
+tool_calls = 5
+execution_calls = 2
+context_chars = 2500
+wall_time_seconds = 10.0
+```
+
+### Outcome classes
+
+Each run is first classified only by behavioral correctness:
+
+```text
+successful
+unsuccessful
+```
+
+Resource measurements do not participate in this classification.
+
+Expected:
+
+| Condition | Behavioral class |
+|---|---|
+| A | successful |
+| B | successful |
+| C | unsuccessful |
+| D | unsuccessful |
+
+### Efficiency comparison rule
+
+Efficiency comparisons are valid only within an explicitly selected
+outcome class or when correctness is reported alongside the cost.
+
+For the successful class:
+
+- A uses fewer model calls than B;
+- A uses fewer tool calls than B;
+- A uses fewer execution calls than B;
+- A uses fewer context characters than B;
+- A has lower wall time than B.
+
+Therefore A is lower-cost than B on every frozen resource dimension.
+
+For the unsuccessful class:
+
+- C is lower-cost than D on every frozen resource dimension.
+
+This does not make C a better coding solution than A or B.
+
+### Dominance relation
+
+For two runs with the same behavioral classification, run X
+resource-dominates run Y if X uses no more of every measured resource
+and strictly less of at least one measured resource.
+
+Measured dimensions are:
+
+```text
+model_calls
+tool_calls
+execution_calls
+context_chars
+wall_time_seconds
+```
+
+Under the frozen records:
+
+```text
+A resource-dominates B
+C resource-dominates D
+```
+
+No cross-correctness dominance claim is made.
+
+In particular:
+
+```text
+C does not dominate A
+```
+
+even though C is cheaper, because C is behaviorally unsuccessful and A
+is successful.
+
+### Aggregate accounting
+
+The evaluator records totals and arithmetic means for each resource
+dimension across all four synthetic runs.
+
+Frozen expected totals:
+
+```text
+model_calls = 12
+tool_calls = 13
+execution_calls = 6
+context_chars = 7000
+wall_time_seconds = 28.0
+```
+
+Frozen expected means:
+
+```text
+model_calls = 3.0
+tool_calls = 3.25
+execution_calls = 1.5
+context_chars = 1750.0
+wall_time_seconds = 7.0
+```
+
+The evaluator also reports resource aggregates separately for
+successful and unsuccessful runs.
+
+Successful totals:
+
+```text
+model_calls = 7
+tool_calls = 8
+execution_calls = 4
+context_chars = 4000
+wall_time_seconds = 16.0
+```
+
+Unsuccessful totals:
+
+```text
+model_calls = 5
+tool_calls = 5
+execution_calls = 2
+context_chars = 3000
+wall_time_seconds = 12.0
+```
+
+### Expected measurements
+
+The evaluator must establish:
+
+```text
+behavioral classifications matched: 4/4
+successful runs: 2/4
+A dominates B within successful class: true
+C dominates D within unsuccessful class: true
+C dominates A across correctness classes: not evaluated
+aggregate accounting matched: true
+```
+
+### Success criterion
+
+011D succeeds as an evaluation-methodology experiment if:
+
+1. all four behavioral classifications match the frozen expectations;
+2. resource accounting matches the frozen totals and means;
+3. A is identified as resource-dominating B;
+4. C is identified as resource-dominating D;
+5. the evaluator refuses to apply the resource-dominance relation
+   across different behavioral classes;
+6. no combined quality/cost score is produced.
+
+### Interpretation constraints
+
+011D validates an accounting and comparison rule over synthetic records.
+
+It does not show that any Hewn strategy is actually faster or cheaper.
+
+The selected resource dimensions are not exhaustive.
+
+Wall time is hardware- and environment-dependent in real experiments.
+
+Context characters measure supplied context size, not tokenizer-level
+prompt cost.
+
+Model-call counts do not imply equal inference cost across different
+models.
+
+Tool-call counts do not imply equal cost across different tools.
+
+Execution-call counts do not imply equal runtime across different
+commands.
+
+Accordingly, Hewn Bench should retain raw resource dimensions rather
+than hiding them behind one universal efficiency score.
+
+### Design implication
+
+Hewn Bench should treat evaluation as two related questions:
+
+```text
+1. Did the agent solve the task without detected regression?
+2. What resources did it consume to obtain that outcome?
+```
+
+The first is a correctness question.
+
+The second is an efficiency question.
+
+Efficiency should help compare strategies with equivalent observed
+correctness, but it must not redefine correctness.
+
+### Frozen implementation rule
+
+After this design is committed, the four synthetic records, measured
+resource dimensions, expected aggregates, behavioral classifications,
+and dominance definition must not be changed in response to evaluator
+output.
+
+If an evaluator implementation defect is discovered, preserve the
+affected run, document the defect, correct only the evaluator, and
+execute a new run.
