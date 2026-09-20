@@ -1289,3 +1289,232 @@ cached_prompt_tokens = 0
 prompt_evaluated_tokens = 321
 prompt_seconds = 5.718660
 prompt_tokens_per_second = 56.132031
+
+
+### 012D results
+
+Twenty measurements were collected:
+
+```text
+4 thread conditions × 5 repetitions
+```
+
+All twenty runs satisfied the uncached-workload requirement:
+
+```text
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = prompt_tokens = 321
+```
+
+All runs also generated exactly:
+
+```text
+128 tokens
+```
+
+and terminated because the configured generation limit was reached:
+
+```text
+finish_reason = length
+```
+
+Therefore the observed prompt and generation workloads were consistent
+across thread conditions.
+
+### Aggregate results
+
+```text
+threads   prompt tok/s min/med/max      generation tok/s min/med/max    wall s min/med/max
+
+1         18.92 / 20.29 / 21.56         7.66 /  8.25 /  8.33          30.29 / 31.07 / 32.96
+2         24.87 / 30.38 / 38.98         9.20 /  9.79 / 12.18          20.51 / 22.69 / 26.72
+4         39.55 / 43.24 / 57.11        12.16 / 13.95 / 14.34          15.97 / 16.30 / 17.24
+8         37.22 / 42.31 / 45.31         9.99 / 11.02 / 13.39          17.11 / 18.93 / 21.35
+```
+
+The median is the primary descriptive timing statistic for this
+five-repetition experiment.
+
+### Prefill scaling
+
+Median prompt-processing throughput was:
+
+```text
+1 thread: 20.29 tok/s
+2 threads: 30.38 tok/s
+4 threads: 43.24 tok/s
+8 threads: 42.31 tok/s
+```
+
+Relative to the one-thread median, the four-thread condition provided
+approximately:
+
+```text
+43.24 / 20.29 = 2.13x
+```
+
+the observed prompt throughput.
+
+Increasing from four to eight threads did not improve median prompt
+throughput in this workload:
+
+```text
+4 threads: 43.24 tok/s
+8 threads: 42.31 tok/s
+```
+
+The difference is small relative to the observed run-to-run variation,
+so this experiment supports describing prefill as approximately flat
+between the four- and eight-thread medians rather than establishing a
+general regression.
+
+### Decode scaling
+
+Median generation throughput was:
+
+```text
+1 thread:  8.25 tok/s
+2 threads: 9.79 tok/s
+4 threads: 13.95 tok/s
+8 threads: 11.02 tok/s
+```
+
+The four-thread condition had the highest median generation throughput.
+
+Relative to the one-thread median:
+
+```text
+13.95 / 8.25 = 1.69x
+```
+
+the generation throughput was observed at four threads.
+
+Unlike prefill, the eight-thread median was materially below the
+four-thread median in this experiment:
+
+```text
+4 threads: 13.95 tok/s
+8 threads: 11.02 tok/s
+```
+
+This five-repetition experiment does not establish the mechanism for
+that difference.
+
+### End-to-end wall time
+
+Median wall time was:
+
+```text
+1 thread: 31.07 s
+2 threads: 22.69 s
+4 threads: 16.30 s
+8 threads: 18.93 s
+```
+
+The four-thread condition had the lowest median wall time.
+
+Relative to one thread, median wall time decreased by approximately:
+
+```text
+(31.07 - 16.30) / 31.07 = 47.5%
+```
+
+Increasing from four to eight threads increased median wall time in this
+workload:
+
+```text
+16.30 s -> 18.93 s
+```
+
+### Variability
+
+Timing variation remained visible within individual conditions.
+
+For example, four-thread prompt throughput ranged from:
+
+```text
+39.55 to 57.11 tok/s
+```
+
+and two-thread prompt throughput ranged from:
+
+```text
+24.87 to 38.98 tok/s
+```
+
+Therefore a single timing observation would not have been sufficient to
+characterize these conditions reliably.
+
+Later Module 12 performance experiments should retain repeated
+measurements and individual run records.
+
+### Prefill versus decode
+
+The experiment supports treating prompt processing and autoregressive
+generation as separate inference workloads.
+
+From one to four threads, median throughput changed by different
+amounts:
+
+```text
+prefill:  20.29 -> 43.24 tok/s
+decode:    8.25 -> 13.95 tok/s
+```
+
+The eight-thread condition also affected them differently:
+
+```text
+prefill:  43.24 -> 42.31 tok/s
+decode:   13.95 -> 11.02 tok/s
+```
+
+A single generic "tokens per second" value would therefore hide
+meaningful inference behavior.
+
+### Decision
+
+Use:
+
+```text
+threads = 4
+```
+
+as the baseline for subsequent Module 12 experiments on this machine.
+
+This choice is supported by this workload because the four-thread
+condition produced:
+
+- the highest median prompt throughput;
+- the highest median generation throughput;
+- the lowest median wall time.
+
+This is a benchmark baseline for the current hardware and workload, not
+a universal llama.cpp recommendation.
+
+### What 012D establishes
+
+For this hardware, llama.cpp build, model, quantization, workload, and
+five repetitions per condition:
+
+1. CPU thread count materially affected inference performance;
+2. prompt processing and autoregressive generation exhibited different
+   scaling behavior;
+3. four threads produced the strongest median operating point among
+   the tested conditions;
+4. eight logical threads did not improve on the four-thread median
+   operating point;
+5. repeated measurements were necessary because timing variation was
+   visible within conditions.
+
+### Benchmark protocol update
+
+Subsequent Module 12 controlled inference experiments will use:
+
+```text
+threads = 4
+prompt caching = disabled
+configured context = 4096 unless context is the experimental variable
+```
+
+Every experiment will continue to preserve prefill and generation
+measurements separately.
