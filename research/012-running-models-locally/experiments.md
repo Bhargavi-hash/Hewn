@@ -1518,3 +1518,261 @@ configured context = 4096 unless context is the experimental variable
 
 Every experiment will continue to preserve prefill and generation
 measurements separately.
+
+## 012E — Context capacity versus consumed context
+
+### Research question
+
+How do configured context capacity and actually consumed prompt context
+affect memory use and inference performance independently?
+
+### Motivation
+
+"Context length" can refer to two different quantities:
+
+1. the maximum context capacity configured in the inference runtime;
+2. the number of prompt tokens actually consumed by a request.
+
+Those quantities must not be conflated.
+
+A local coding agent may configure enough capacity for large repository
+contexts without consuming that capacity on every request.
+
+### Measurement-source inspection
+
+The current llama.cpp metrics endpoint exposes inference-level counters
+including:
+
+```text
+prompt_tokens_total
+prompt_tokens_cached_total
+prompt_seconds_total
+tokens_predicted_total
+tokens_predicted_seconds_total
+n_decode_total
+n_tokens_max
+prompt_tokens_seconds
+predicted_tokens_seconds
+```
+
+No process-memory measurement was observed in the inspected metrics
+output.
+
+Linux `/proc/<pid>/status` exposes process-level fields including:
+
+```text
+VmPeak
+VmSize
+VmHWM
+VmRSS
+RssAnon
+RssFile
+VmData
+VmSwap
+```
+
+At the inspected 4096-context baseline before experimental requests:
+
+```text
+VmPeak  = 2339568 kB
+VmSize  = 2274032 kB
+VmHWM   = 1887080 kB
+VmRSS   = 1887080 kB
+RssAnon =  783284 kB
+RssFile = 1103796 kB
+VmData  = 1028232 kB
+VmSwap  =       0 kB
+```
+
+These values describe the process observed in that server session and
+are not yet a context-scaling result.
+
+### Memory semantics
+
+`VmRSS` is the process's resident memory at observation time.
+
+`VmHWM` is the maximum resident set size observed by Linux since that
+process started.
+
+Therefore `VmHWM` is not treated as an independent per-request peak
+when multiple requests execute inside the same server process.
+
+For configuration-level memory comparisons, each configured-context
+condition should start a fresh llama.cpp process.
+
+### Frozen baseline
+
+Unless explicitly varied:
+
+```text
+model = Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M
+threads = 4
+prompt caching = disabled
+temperature = 0
+runtime commit = 930e2fa5995789efbf249a8bf61325bb626e417b
+runtime build = 10991
+```
+
+### 012E-1 — Configured context capacity
+
+#### Question
+
+What changes when maximum context capacity increases while actual
+request context remains fixed?
+
+#### Variable
+
+Configured context:
+
+```text
+1024
+2048
+4096
+8192
+```
+
+A condition that cannot be started reliably because of available memory
+remains a result rather than being silently removed.
+
+#### Fixed workload
+
+Use the frozen 012D prompt:
+
+```text
+321 prompt tokens
+```
+
+with:
+
+```text
+max_tokens = 128
+```
+
+This workload fits within every tested configured context.
+
+#### Process isolation
+
+Each context-capacity condition must use a freshly started llama.cpp
+process.
+
+For every condition record process memory:
+
+1. after model/server initialization and before the measured request;
+2. after the measured request.
+
+Record at least:
+
+```text
+VmRSS
+VmHWM
+VmSize
+VmSwap
+```
+
+The inference run additionally records the normal 012B measurements.
+
+#### Primary comparison
+
+Compare configured capacity against:
+
+```text
+baseline VmRSS
+post-request VmRSS
+post-request VmHWM
+prompt throughput
+generation throughput
+wall time
+```
+
+The experiment must not interpret configured capacity as consumed
+context.
+
+### 012E-2 — Consumed prompt context
+
+#### Question
+
+What changes when actual prompt context grows while configured capacity
+remains fixed?
+
+#### Configured context
+
+Use one fixed capacity large enough for all frozen prompt workloads.
+
+The exact value will be selected before 012E-2 runs after observing
+which workloads fit safely on the machine.
+
+#### Prompt workloads
+
+Construct deterministic frozen prompt workloads at multiple actual
+token counts.
+
+The llama.cpp-reported token count is authoritative.
+
+Target scales:
+
+```text
+approximately 256
+approximately 512
+approximately 1024
+approximately 2048
+```
+
+Exact powers of two are not required.
+
+#### Measurements
+
+For every workload record:
+
+```text
+prompt_tokens
+prompt_evaluated_tokens
+prompt_seconds
+prompt_tokens_per_second
+
+generation_tokens
+generation_seconds
+generation_tokens_per_second
+
+wall_time_seconds
+
+VmRSS
+VmHWM
+VmSwap
+```
+
+#### Interpretation
+
+012E-2 measures the cost of actually supplying more context.
+
+012E-1 measures the cost of making more context capacity available.
+
+Results from those two experiments must remain separate.
+
+### Repetition policy
+
+Timing measurements require repeated observations.
+
+Memory measurements based on process high-water marks require explicit
+process-lifetime interpretation.
+
+No per-request memory peak is inferred from a process-level `VmHWM`
+shared across unrelated requests.
+
+### Non-goals
+
+012E does not establish:
+
+- context quality for coding tasks;
+- optimal repository-context selection;
+- model-size scaling;
+- quantization effects;
+- GPU context behavior;
+- production concurrency behavior.
+
+### Design principle
+
+Configured context is capacity.
+
+Consumed context is work.
+
+Measure them separately.
