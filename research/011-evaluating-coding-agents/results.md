@@ -152,3 +152,115 @@ The primary 011B artifact is:
 `results/011b-repeated-stability-run002.json`
 
 `run001` remains preserved as provenance for the evaluator correction.
+
+## 011C — Regression-aware scoring
+
+### Question
+
+Can task-local verification incorrectly classify a patch as successful
+when the requested behavior passes but existing behavior outside the
+requested change regresses?
+
+### Method
+
+011C used four deterministic evaluator-authored candidate
+implementations. No language model was involved.
+
+Two scoring rules were compared:
+
+```text
+task_only_success = task_passes
+```
+
+and:
+
+```text
+behavioral_success = task_passes AND regression_passes
+```
+
+The task oracle checked the requested `normalize_name` behavior.
+
+A separate evaluator-only regression oracle checked the existing
+`stable_identifier` behavior.
+
+### Results
+
+| Condition | Task passes | Regression passes | Task-only success | Behavioral success |
+|---|---:|---:|---:|---:|
+| A — no-op | false | true | false | false |
+| B — task correct, regression introduced | true | false | true | false |
+| C — task wrong, regression preserved | false | true | false | false |
+| D — task correct, regression preserved | true | true | true | true |
+
+The observed matrix matched the frozen expected matrix:
+
+```text
+expected matrix matched: 4/4
+task-only successes: 2/4
+behavioral successes: 1/4
+task-only false successes: 1
+```
+
+### False-success case
+
+Condition B satisfied every requested-behavior assertion:
+
+```text
+normalize_name(" Alice ") == "alice"
+normalize_name(" BOB ") == "bob"
+normalize_name("   ") is None
+```
+
+Task-only scoring therefore classified the condition as successful.
+
+However, the candidate also changed the existing behavior of
+`stable_identifier`, causing the regression oracle to fail.
+
+Regression-aware behavioral scoring therefore rejected the candidate.
+
+This is the false-success case the frozen experiment was designed to
+detect.
+
+### Interpretation
+
+011C demonstrates that task-local correctness and regression
+correctness are distinct evaluation properties.
+
+In this deliberately constructed diagnostic, a task-only evaluator
+accepted one candidate that violated existing behavior. Requiring both
+the task oracle and the regression oracle removed that false success
+while preserving the fully correct condition D as successful.
+
+This does not estimate the frequency with which coding agents introduce
+regressions. The experiment intentionally contains one regression case
+in four conditions.
+
+It also does not show that a passing regression suite proves absence of
+all regressions. The evaluator checks only the frozen behaviors included
+in its regression oracle.
+
+The result instead validates a benchmark-design requirement:
+
+> Passing the requested task oracle is necessary but not sufficient for
+> behavioral success when preservation requirements exist.
+
+### Conclusion
+
+For Hewn Bench, primary behavioral success should require both:
+
+1. requested behavior passes;
+2. required regression checks pass.
+
+Task correctness and regression correctness should also remain available
+as separate diagnostic fields so that a benchmark can distinguish:
+
+- failure to implement the requested behavior;
+- successful implementation with a regression;
+- successful implementation without detected regression.
+
+No weighted score is needed for this classification. Passing one
+correctness dimension must not compensate for failing the other.
+
+The primary 011C artifact is:
+
+`results/011c-regression-aware-scoring-run001.json`
