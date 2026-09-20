@@ -15,6 +15,8 @@ from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionRequirement
 from hewn.context.builder import ContextBuilder
 from hewn.llama_cpp import LlamaCppModel
+from hewn.model_protocol import ModelProtocolError
+from hewn.models import Message, ModelResponse
 from hewn.repository.index import RepositoryIndex
 from hewn.retrieval.semantic_index import SemanticIndex
 from hewn.retrieval.sentence_transformer import (
@@ -22,7 +24,12 @@ from hewn.retrieval.sentence_transformer import (
 )
 from hewn.retrieval.symbol_documents import build_symbol_documents
 from hewn.session import HewnSession
-from hewn.tools import ToolCall, ToolExecutor, ToolResult
+from hewn.tools import (
+    ToolCall,
+    ToolDefinition,
+    ToolExecutor,
+    ToolResult,
+)
 from hewn.workspace import Workspace
 
 MODULE_ROOT = Path(__file__).resolve().parent
@@ -60,6 +67,9 @@ class TaskResult:
     task_id: str
     request: str
     agent_text: str
+    protocol_valid: bool
+    protocol_error: str | None
+    raw_protocol_response: str | None
     model_calls: int
     tool_calls: int
     successful_tool_calls: int
@@ -74,7 +84,6 @@ class TaskResult:
     behavior_passed: bool
     behavior_detail: str
 
-
 @dataclass(frozen=True)
 class PairResult:
     pair_id: str
@@ -86,6 +95,32 @@ class PairResult:
     rediscovered_reusable_files: tuple[str, ...]
     task_2_reusable_overlap_ratio: float
     repeated_discovery_operations: int
+
+@dataclass
+class RecordingModel:
+    delegate: LlamaCppModel
+    model_calls: int = 0
+    protocol_failures: int = 0
+    last_protocol_error: str | None = None
+    last_raw_response: str | None = None
+
+    def respond(
+        self,
+        messages: list[Message],
+        tools: list[ToolDefinition],
+    ) -> ModelResponse:
+        self.model_calls += 1
+
+        try:
+            return self.delegate.respond(
+                messages=messages,
+                tools=tools,
+            )
+        except ModelProtocolError as exc:
+            self.protocol_failures += 1
+            self.last_protocol_error = str(exc)
+            self.last_raw_response = exc.raw_response
+            raise
 
 
 class RecordingToolExecutor(ToolExecutor):
@@ -388,7 +423,11 @@ def build_session(
     root: Path,
     embedding_model: SentenceTransformerEmbeddingModel,
     model: LlamaCppModel,
-) -> tuple[HewnSession, RecordingToolExecutor]:
+) -> tuple[
+    HewnSession,
+    RecordingToolExecutor,
+    RecordingModel,
+]:
     repository_index = RepositoryIndex.build(root)
 
     documents = build_symbol_documents(
@@ -421,8 +460,12 @@ def build_session(
         workspace_root=root,
     )
 
+    recording_model = RecordingModel(
+        delegate=model,
+    )
+
     agent = Agent(
-        model=model,
+        model=recording_model,
         registry=registry,
         executor=executor,
     )
@@ -440,7 +483,7 @@ def build_session(
         context_builder=context_builder,
     )
 
-    return session, executor
+    return session, executor, recording_model
 
 
 def context_paths(
@@ -471,10 +514,12 @@ def execute_task(
     embedding_model: SentenceTransformerEmbeddingModel,
     model: LlamaCppModel,
 ) -> TaskResult:
-    session, executor = build_session(
-        root=root,
-        embedding_model=embedding_model,
-        model=model,
+    session, executor, recording_model = (
+        build_session(
+            root=root,
+            embedding_model=embedding_model,
+            model=model,
+        )
     )
 
     initial_context_paths = context_paths(
@@ -484,12 +529,45 @@ def execute_task(
 
     before = snapshot_files(root)
 
-    result = session.run(
-        task["request"],
-        completion_requirement=(
-            CompletionRequirement.NONE
-        ),
-    )
+    agent_text = ""
+    protocol_valid = True
+    protocol_error: str | None = None
+    raw_protocol_response: str | None = None
+
+    returned_model_calls = 0
+    returned_tool_calls = 0
+    returned_successful_tool_calls = 0
+    returned_failed_tool_calls = 0
+
+    try:
+        result = session.run(
+            task["request"],
+            completion_requirement=(
+                CompletionRequirement.NONE
+            ),
+        )
+
+        agent_text = result.text
+
+        returned_model_calls = (
+            result.metrics.model_calls
+        )
+        returned_tool_calls = (
+            result.metrics.tool_calls
+        )
+        returned_successful_tool_calls = (
+            result.metrics.successful_tool_calls
+        )
+        returned_failed_tool_calls = (
+            result.metrics.failed_tool_calls
+        )
+
+    except ModelProtocolError as exc:
+        protocol_valid = False
+        protocol_error = str(exc)
+        raw_protocol_response = (
+            exc.raw_response
+        )
 
     after = snapshot_files(root)
 
@@ -536,18 +614,47 @@ def execute_task(
         )
     )
 
+    if protocol_valid:
+        model_calls = returned_model_calls
+        tool_calls = returned_tool_calls
+        successful_tool_calls = (
+            returned_successful_tool_calls
+        )
+        failed_tool_calls = (
+            returned_failed_tool_calls
+        )
+    else:
+        # AgentMetrics is local to Agent.run() and is lost when
+        # ModelProtocolError escapes model.respond(). The evaluator
+        # therefore uses its recording wrappers for partial-run
+        # accounting.
+        model_calls = recording_model.model_calls
+        tool_calls = len(executor.calls)
+        successful_tool_calls = sum(
+            1
+            for call in executor.calls
+            if call.ok
+        )
+        failed_tool_calls = (
+            tool_calls
+            - successful_tool_calls
+        )
+
     return TaskResult(
         task_id=task["id"],
         request=task["request"],
-        agent_text=result.text,
-        model_calls=result.metrics.model_calls,
-        tool_calls=result.metrics.tool_calls,
+        agent_text=agent_text,
+        protocol_valid=protocol_valid,
+        protocol_error=protocol_error,
+        raw_protocol_response=(
+            raw_protocol_response
+        ),
+        model_calls=model_calls,
+        tool_calls=tool_calls,
         successful_tool_calls=(
-            result.metrics.successful_tool_calls
+            successful_tool_calls
         ),
-        failed_tool_calls=(
-            result.metrics.failed_tool_calls
-        ),
+        failed_tool_calls=failed_tool_calls,
         context_paths=initial_context_paths,
         active_evidence_paths=active_paths,
         all_evidence_paths=all_paths,
@@ -558,7 +665,6 @@ def execute_task(
         behavior_passed=verification.passed,
         behavior_detail=verification.detail,
     )
-
 
 def repeated_discovery_operation_count(
     task_1: TaskResult,
@@ -742,6 +848,7 @@ def print_summary(
     print("\n===== 010A SUMMARY =====")
 
     total_behavior = 0
+    total_protocol_valid = 0
     total_tasks = 0
     total_rediscovered = 0
     total_t2_reusable = 0
@@ -762,6 +869,7 @@ def print_summary(
             print(
                 f"{task.task_id}: "
                 f"behavior={task.behavior_passed} "
+                f"protocol={task.protocol_valid} "
                 f"model_calls={task.model_calls} "
                 f"tool_calls={task.tool_calls} "
                 f"context={list(task.context_paths)} "
@@ -777,6 +885,10 @@ def print_summary(
         )
 
         total_rediscovered += rediscovered_count
+
+        total_protocol_valid += int(
+            task.protocol_valid
+        )
         total_t2_reusable += t2_count
         repeated_operations += (
             pair.repeated_discovery_operations
@@ -802,6 +914,10 @@ def print_summary(
     )
 
     print("\n===== AGGREGATE =====")
+    print(
+        f"protocol-valid tasks: "
+        f"{total_protocol_valid}/{total_tasks}"
+    )
     print(
         f"behavioral success: "
         f"{total_behavior}/{total_tasks}"
