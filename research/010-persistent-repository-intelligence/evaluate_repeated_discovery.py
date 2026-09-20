@@ -16,11 +16,11 @@ from hewn.completion import CompletionRequirement
 from hewn.context.builder import ContextBuilder
 from hewn.llama_cpp import LlamaCppModel
 from hewn.repository.index import RepositoryIndex
-from hewn.retrieval.documents import build_repository_documents
 from hewn.retrieval.semantic_index import SemanticIndex
 from hewn.retrieval.sentence_transformer import (
     SentenceTransformerEmbeddingModel,
 )
+from hewn.retrieval.symbol_documents import build_symbol_documents
 from hewn.session import HewnSession
 from hewn.tools import ToolCall, ToolExecutor, ToolResult
 from hewn.workspace import Workspace
@@ -144,7 +144,6 @@ def normalize_repository_path(
 
     return relative.as_posix()
 
-
 def infer_evidence_paths(
     *,
     call: ToolCall,
@@ -158,12 +157,14 @@ def infer_evidence_paths(
 
     if call.name == "read_file":
         raw = call.arguments.get("path")
+
         if isinstance(raw, str):
             resolved = workspace_root / raw
             normalized = normalize_repository_path(
                 resolved,
                 workspace_root,
             )
+
             if normalized is not None:
                 paths.add(normalized)
 
@@ -173,7 +174,11 @@ def infer_evidence_paths(
         if result.output is None:
             return paths
 
-        requested = call.arguments.get("path", ".")
+        requested = call.arguments.get(
+            "path",
+            ".",
+        )
+
         if not isinstance(requested, str):
             requested = "."
 
@@ -185,11 +190,15 @@ def infer_evidence_paths(
             if line.startswith("... "):
                 continue
 
-            match_path = line.split(":", 1)[0]
-            if not match_path:
+            match_path, separator, _ = (
+                line.partition(":")
+            )
+
+            if not separator or not match_path:
                 continue
 
             candidate = search_root / match_path
+
             normalized = normalize_repository_path(
                 candidate,
                 workspace_root,
@@ -212,17 +221,26 @@ def infer_evidence_paths(
     return paths
 
 
-def snapshot_files(root: Path) -> dict[str, bytes]:
+def snapshot_files(
+    root: Path,
+) -> dict[str, bytes]:
     snapshot: dict[str, bytes] = {}
 
     for path in sorted(root.rglob("*")):
         if not path.is_file():
             continue
 
-        relative = path.relative_to(root).as_posix()
+        relative = (
+            path.relative_to(root).as_posix()
+        )
 
         if (
-            relative.startswith(".pytest_cache/", "__pycache__/")
+            relative.startswith(
+                (
+                    ".pytest_cache/",
+                    "__pycache__/",
+                )
+            )
             or "/__pycache__/" in relative
             or relative.endswith(".pyc")
         ):
@@ -231,7 +249,6 @@ def snapshot_files(root: Path) -> dict[str, bytes]:
         snapshot[relative] = path.read_bytes()
 
     return snapshot
-
 
 def changed_files(
     before: dict[str, bytes],
@@ -374,7 +391,7 @@ def build_session(
 ) -> tuple[HewnSession, RecordingToolExecutor]:
     repository_index = RepositoryIndex.build(root)
 
-    documents = build_repository_documents(
+    documents = build_symbol_documents(
         repository_index
     )
 
@@ -661,12 +678,18 @@ def evaluate_pair(
 
 
 def load_manifest() -> dict[str, Any]:
-    return json.loads(
+    payload: Any = json.loads(
         MANIFEST_PATH.read_text(
             encoding="utf-8"
         )
     )
 
+    if not isinstance(payload, dict):
+        raise TypeError(
+            "010A manifest root must be an object"
+        )
+
+    return payload
 
 def validate_manifest(
     manifest: dict[str, Any],
