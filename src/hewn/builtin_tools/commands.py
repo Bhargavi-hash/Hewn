@@ -1,9 +1,14 @@
 from __future__ import annotations
 
-import subprocess
 import sys
 from typing import Any
 
+from hewn.execution import (
+    DirectExecutionBackend,
+    ExecutionError,
+    ExecutionTimeoutError,
+    ProcessExecutionBackend,
+)
 from hewn.tools import ToolDefinition, ToolError, ToolResult
 from hewn.workspace import Workspace
 
@@ -17,11 +22,13 @@ CHECK_COMMANDS = {
     "types": ["mypy", "src", "tests"],
 }
 
+
 def make_run_check_tool(
     workspace: Workspace,
     *,
     timeout_seconds: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
     output_limit: int = DEFAULT_COMMAND_OUTPUT_LIMIT,
+    execution_backend: ProcessExecutionBackend | None = None,
 ) -> ToolDefinition:
     if timeout_seconds <= 0:
         raise ValueError(
@@ -33,6 +40,8 @@ def make_run_check_tool(
             "output_limit must be at least 1"
         )
 
+    backend = execution_backend or DirectExecutionBackend()
+
     def run_check_handler(
         arguments: dict[str, Any],
     ) -> ToolResult:
@@ -40,22 +49,17 @@ def make_run_check_tool(
         command = CHECK_COMMANDS[check]
 
         try:
-            completed = subprocess.run(
+            completed = backend.run(
                 command,
-                cwd=workspace.root,
-                capture_output=True,
-                text=True,
-                timeout=timeout_seconds,
-                check=False,
+                workspace=workspace,
+                timeout_seconds=timeout_seconds,
             )
-        except FileNotFoundError as exc:
-            raise ToolError(
-                f"Required executable not found: {command[0]}"
-            ) from exc
-        except subprocess.TimeoutExpired as exc:
+        except ExecutionTimeoutError as exc:
             raise ToolError(
                 f"Check timed out after {timeout_seconds:g} seconds"
             ) from exc
+        except ExecutionError as exc:
+            raise ToolError(str(exc)) from exc
 
         output = _combine_output(
             completed.stdout,
@@ -72,7 +76,7 @@ def make_run_check_tool(
                 ok=False,
                 output=output,
                 error=(
-                    f"Check failed with exit code "
+                    "Check failed with exit code "
                     f"{completed.returncode}"
                 ),
             )
