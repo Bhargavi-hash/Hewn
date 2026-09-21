@@ -293,3 +293,31 @@ terminal condition after the additional action opportunity.
 
 This interpretation preserves the production `Agent.run()` control loop and
 changes only the information supplied at the targeted observable boundary.
+
+### Bounded-intervention semantics
+
+The phrase "allow one additional model action" refers to the scope of the
+mutation-specific intervention, not to the total remaining lifetime of the
+agent run.
+
+The treatment behaves as follows:
+
+1. Before any `replace_text` attempt, the first model-generated final response
+   is rejected with the frozen mutation-specific feedback.
+2. The next model response is the single additional action opportunity created
+   by the intervention.
+3. If that response is a `replace_text` attempt, whether successful or failed,
+   the mutation-specific gate is satisfied and normal
+   `CompletionRequirement.VERIFIED` behavior resumes.
+4. If that response is another final response, the mutation-specific
+   intervention is exhausted. Subsequent completion handling reverts to the
+   ordinary VERIFIED completion policy and existing agent stagnation behavior.
+5. The intervention does not alter `MAX_TURNS`, `max_stagnant_turns`, tool
+   availability, verification semantics, or any other control-loop budget.
+
+Therefore "bounded" means that mutation-specific feedback is injected at most
+once per run. It does not mean that the experimental policy introduces a new
+terminal condition after the additional action opportunity.
+
+This interpretation preserves the production `Agent.run()` control loop and
+changes only the information supplied at the targeted observable boundary.
