@@ -205,3 +205,63 @@ The intervention must remain bounded.
 When completion is mechanically impossible because a required repository
 mutation has not occurred, Hewn should treat that as agent state rather than
 model judgment.
+
+## 013B-1 design clarification after implementation inspection
+
+Inspection of the production agent loop revealed that the historical Module 11
+baseline already rejected premature finalization under
+`CompletionRequirement.VERIFIED`.
+
+A final response with verification state `UNKNOWN` was rejected with feedback
+that successful verification had not yet been observed. Repeated rejected
+finalizations could then terminate through stagnation.
+
+Therefore 013B-1 is not a comparison between:
+
+```text
+completion allowed
+vs
+completion rejected
+```
+
+The historical baseline already implemented completion rejection.
+
+The controlled comparison is instead:
+
+```text
+generic verification-state rejection
+vs
+boundary-specific mutation-state rejection
+```
+
+For frozen mutation tasks, the intervention communicates that no repository
+edit has yet been attempted before communicating the ordinary verification
+requirement.
+
+The intervention still does not reveal:
+
+- which file should change;
+- which symbol should change;
+- what replacement should be made;
+- expected patch contents;
+- evaluator-only information.
+
+### Revised hypothesis
+
+Boundary-specific deterministic feedback may improve action selection relative
+to generic completion rejection when the observable blocking state is known
+mechanically.
+
+If the model begins attempting edits but behavioral success remains zero, the
+intervention has moved the observable failure boundary without solving the
+downstream implementation problem.
+
+### Implementation constraint
+
+013B-1 must preserve the production `Agent.run()` control loop.
+
+The experiment must not perform hidden model calls or implement a parallel
+research-only agent loop.
+
+The intervention should be represented as a completion policy used by the
+existing agent control loop.
