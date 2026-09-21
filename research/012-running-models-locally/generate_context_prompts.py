@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 OUTPUT_DIR = Path(
     "research/012-running-models-locally/prompts/012e-consumed-context"
 )

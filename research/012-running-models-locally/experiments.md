@@ -1951,3 +1951,96 @@ Configured context is capacity.
 Consumed context is work.
 
 012E-1 shows that unused capacity can still have a memory cost.
+
+### 012E-2 — Consumed context scaling
+
+Question:
+
+> How does actually consumed prompt context affect memory use and
+> inference performance when configured context capacity is held fixed?
+
+#### Configuration
+
+Held fixed:
+
+- model: Qwen2.5-Coder-1.5B-Instruct Q4_K_M
+- llama.cpp commit: `930e2fa5995789efbf249a8bf61325bb626e417b`
+- configured context: 8192 tokens
+- threads: 4
+- parallel slots: 1
+- prompt cache: disabled
+- temperature: 0
+- maximum generation: 128 tokens
+- hardware: Intel Core i5-10210U, 4 physical / 8 logical CPUs,
+  ~7.6 GiB RAM, no NVIDIA GPU
+
+Varied consumed prompt context:
+
+- 256
+- 512
+- 1024
+- 2048
+- 4096 tokens
+
+Five repetitions were measured for each condition. Each prompt-size
+condition used a fresh llama-server process. All 25 persisted runs
+passed token-accounting validation.
+
+#### Results
+
+| Prompt tokens | Median prefill s | Median prefill tok/s | Median decode tok/s | Median wall s | Observed RSS delta MiB |
+|---:|---:|---:|---:|---:|---:|
+| 256 | 5.83 | 43.94 | 14.01 | 15.03 | 34.2 |
+| 512 | 11.99 | 42.69 | 13.46 | 21.41 | 69.8 |
+| 1024 | 25.28 | 40.51 | 12.17 | 35.52 | 70.3 |
+| 2048 | 52.63 | 38.91 | 11.23 | 61.30 | 71.2 |
+| 4096 | 117.39 | 34.89 | 8.14 | 129.09 | 74.0 |
+
+The 256-, 512-, and 1024-token conditions generated 128 tokens.
+The 2048- and 4096-token conditions stopped naturally after 96 tokens.
+Therefore wall time is reported as an observed end-to-end quantity but
+is not treated as a constant-output-work comparison.
+
+#### Observations
+
+Increasing consumed prompt context substantially increased prompt
+processing time while configured context capacity remained fixed.
+
+From 256 to 4096 consumed prompt tokens:
+
+- prompt length increased 16x;
+- median prefill time increased from 5.83 s to 117.39 s;
+- median prefill throughput decreased from 43.94 to 34.89 tok/s;
+- median decode throughput decreased from 14.01 to 8.14 tok/s.
+
+The experiment therefore does not support treating either prefill or
+decode throughput as constant with respect to consumed context on this
+configuration.
+
+Fresh-server idle RSS was approximately stable for the 512–4096
+conditions because configured capacity remained fixed. Observed
+process-lifetime HWM increased only modestly across those conditions.
+The 256-token condition had a smaller observed RSS delta. These
+measurements do not justify a general memory-per-consumed-token formula.
+
+#### Conclusion
+
+012E-1 and 012E-2 distinguish two different context costs.
+
+Configured context capacity primarily affected the process memory
+reserved or committed by the runtime even when consumed prompt length
+was fixed.
+
+Consumed context primarily affected inference work: longer prompts
+required substantially more prefill time, and both observed prefill
+and decode throughput declined as consumed context increased.
+
+For Hewn, context length should therefore be treated as a runtime
+resource rather than merely a model input limit. Supplying additional
+repository context has measurable latency cost even when that context
+fits comfortably inside the configured context window.
+
+Design principle:
+
+> Configured context is capacity. Consumed context is work.
+> Measure them separately.

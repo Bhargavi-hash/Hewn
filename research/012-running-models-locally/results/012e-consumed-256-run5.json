@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 8.930534,
+    "generation_tokens_per_second": 14.220874138097454,
+    "prompt_evaluated_tokens": 256,
+    "prompt_seconds": 5.85492,
+    "prompt_tokens": 256,
+    "prompt_tokens_per_second": 43.72391083054935,
+    "total_tokens": 384,
+    "wall_time_seconds": 14.80127478299255
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 932832,
+      "rss_file_kb": 1096940,
+      "vm_data_kb": 1141676,
+      "vm_hwm_kb": 2029772,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2029772,
+      "vm_size_kb": 2845200,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 932680,
+      "rss_file_kb": 1096940,
+      "vm_data_kb": 1141656,
+      "vm_hwm_kb": 2029620,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2029620,
+      "vm_size_kb": 2845200,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1039973
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the implementation of the `normalize_0001` function. The function is supposed to normalize the values by dividing each value by the maximum value in the list, but it is currently not doing this. The function is returning the original list without any modifications, which is incorrect.\n\nHere's the corrected version of the `normalize_0001` function:\n\n```python\ndef normalize_0001(values):\n    if not values:\n        return []\n    maximum = max(values)\n    return [value / maximum for value in values]\n```\n\nThis corrected version will",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789957281,
+    "id": "chatcmpl-ZBvOu2esRLP7rGHaVeEOINg6Fl7p4bpz",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 8930.534,
+      "predicted_n": 128,
+      "predicted_per_second": 14.220874138097454,
+      "predicted_per_token_ms": 70.3191653543307,
+      "prompt_ms": 5854.92,
+      "prompt_n": 256,
+      "prompt_per_second": 43.72391083054935,
+      "prompt_per_token_ms": 22.87078125
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 256,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 384
+    }
+  }
+}

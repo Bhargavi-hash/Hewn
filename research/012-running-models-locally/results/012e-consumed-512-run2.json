@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 9.889318999999999,
+    "generation_tokens_per_second": 12.842138068354354,
+    "prompt_evaluated_tokens": 512,
+    "prompt_seconds": 12.451848,
+    "prompt_tokens": 512,
+    "prompt_tokens_per_second": 41.11839463507746,
+    "total_tokens": 640,
+    "wall_time_seconds": 22.357859884999925
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 968804,
+      "rss_file_kb": 1103980,
+      "vm_data_kb": 1145052,
+      "vm_hwm_kb": 2072784,
+      "vm_peak_kb": 2848532,
+      "vm_rss_kb": 2072784,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 968600,
+      "rss_file_kb": 1103980,
+      "vm_data_kb": 1144980,
+      "vm_hwm_kb": 2072580,
+      "vm_peak_kb": 2848532,
+      "vm_rss_kb": 2072580,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1040957
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the implementation of the `normalize_0000` function across different files. Specifically, the function is defined in two different files (`module_0000.py` and `module_0001.py`), but the logic for finding the maximum value is different.\n\nIn `module_0000.py`, the maximum value is found using `max(values)`, which returns the largest value in the list. However, in `module_0001.py`, the maximum value is found using `max(values)`, which returns the largest value in",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789957329,
+    "id": "chatcmpl-VjTszQ1wTzpuy74qmRLREw1KzojVhrje",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 9889.319,
+      "predicted_n": 128,
+      "predicted_per_second": 12.842138068354354,
+      "predicted_per_token_ms": 77.86865354330708,
+      "prompt_ms": 12451.848,
+      "prompt_n": 512,
+      "prompt_per_second": 41.11839463507746,
+      "prompt_per_token_ms": 24.320015625
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 512,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 640
+    }
+  }
+}

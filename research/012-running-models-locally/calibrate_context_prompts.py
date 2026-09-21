@@ -4,9 +4,9 @@ import json
 import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
-
 
 BASE_URL = "http://127.0.0.1:8080"
 
@@ -111,7 +111,7 @@ def count_raw_tokens(text: str) -> int:
     tokens = response.get("tokens")
 
     if not isinstance(tokens, list):
-        raise RuntimeError(
+        raise TypeError(
             "llama.cpp /tokenize response did not contain "
             "a token list"
         )
@@ -143,7 +143,7 @@ def measure_chat_prompt_tokens(prompt: str) -> int:
         isinstance(prompt_tokens, bool)
         or not isinstance(prompt_tokens, int)
     ):
-        raise RuntimeError(
+        raise TypeError(
             "llama.cpp response did not contain integer "
             "'usage.prompt_tokens'"
         )
@@ -470,10 +470,7 @@ def main() -> None:
 
     prefix_checks: list[dict[str, Any]] = []
 
-    for smaller, larger in zip(
-        TARGETS,
-        TARGETS[1:],
-    ):
+    for smaller, larger in pairwise(TARGETS):
         is_prefix = prompts[larger].startswith(
             prompts[smaller]
         )
