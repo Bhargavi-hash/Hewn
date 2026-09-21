@@ -1776,3 +1776,178 @@ Configured context is capacity.
 Consumed context is work.
 
 Measure them separately.
+
+### 012E-1 results — Configured context capacity
+
+Twenty runs were collected across four configured context capacities:
+
+```text
+1024
+2048
+4096
+8192
+```
+
+Each condition used a fresh llama.cpp process.
+
+Process IDs were:
+
+```text
+1024 -> 983864
+2048 -> 987108
+4096 -> 989683
+8192 -> 991523
+```
+
+Each condition contained five repetitions using the same workload:
+
+```text
+prompt tokens = 321
+generated tokens = 128
+threads = 4
+prompt caching = disabled
+```
+
+All twenty runs satisfied:
+
+```text
+cached_prompt_tokens = 0
+prompt_evaluated_tokens = prompt_tokens
+```
+
+No tested condition used swap.
+
+#### Aggregate measurements
+
+```text
+context   idle RSS   final RSS/HWM   median prefill   median decode   median wall
+          MiB        MiB             tok/s            tok/s           seconds
+
+1024      1758.7     1801.4          41.93            13.15           17.21
+2048      1786.7     1829.4          45.89            14.31           16.12
+4096      1842.8     1886.7          44.04            13.62           16.65
+8192      1954.7     2000.4          42.17            13.91           17.75
+```
+
+#### Configured capacity and memory
+
+Idle resident memory increased as configured context capacity increased.
+
+From 1024 to 8192 configured tokens:
+
+```text
+idle RSS:
+1758.7 MiB -> 1954.7 MiB
+
+absolute increase:
+196.0 MiB
+
+relative increase:
+approximately 11.1%
+```
+
+Final resident memory similarly increased:
+
+```text
+1801.4 MiB -> 2000.4 MiB
+```
+
+The actual request remained fixed at 321 prompt tokens.
+
+Therefore the observed memory increase cannot be attributed to
+consuming additional prompt tokens in this experiment.
+
+Configured context capacity itself had a measurable process-memory cost.
+
+#### Configured capacity and inference performance
+
+Median prompt throughput was:
+
+```text
+1024: 41.93 tok/s
+2048: 45.89 tok/s
+4096: 44.04 tok/s
+8192: 42.17 tok/s
+```
+
+Median generation throughput was:
+
+```text
+1024: 13.15 tok/s
+2048: 14.31 tok/s
+4096: 13.62 tok/s
+8192: 13.91 tok/s
+```
+
+Median wall time was:
+
+```text
+1024: 17.21 s
+2048: 16.12 s
+4096: 16.65 s
+8192: 17.75 s
+```
+
+No monotonic relationship between configured context capacity and
+inference latency was observed.
+
+Although individual medians differ, this experiment does not establish
+that those differences were caused by configured context capacity.
+
+The clear monotonic effect observed here is process memory, not
+inference throughput.
+
+#### Request-associated resident memory
+
+For each condition, final RSS exceeded the pre-request idle RSS by
+approximately:
+
+```text
+1024: 42.7 MiB
+2048: 42.7 MiB
+4096: 43.9 MiB
+8192: 45.7 MiB
+```
+
+These values are observed process resident-memory changes, not estimates
+of intrinsic per-request memory requirements.
+
+#### Decision
+
+Configured context capacity and consumed context must remain separate
+experimental variables.
+
+For this hardware and configuration:
+
+- larger configured context capacity increased resident memory;
+- the fixed 321-token workload did not reveal a clear monotonic
+  throughput or wall-time penalty from configured capacity;
+- no tested capacity caused swap use;
+- 8192 tokens remained operational on this machine with this model.
+
+012E-2 will therefore hold configured context capacity fixed at:
+
+```text
+8192
+```
+
+while varying actual consumed prompt context.
+
+This isolates consumed-context scaling from configured-capacity scaling.
+
+#### Scoped conclusion
+
+For this llama.cpp build, Qwen2.5-Coder-1.5B Q4_K_M, CPU, and fixed
+321-token workload, increasing configured context capacity from 1024 to
+8192 increased idle RSS by approximately 196 MiB.
+
+The experiment does not establish a general memory-per-context-token
+formula or a universal latency relationship.
+
+### Design observation
+
+Configured context is capacity.
+
+Consumed context is work.
+
+012E-1 shows that unused capacity can still have a memory cost.
