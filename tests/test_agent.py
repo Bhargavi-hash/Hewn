@@ -4,8 +4,14 @@ import pytest
 
 from hewn.agent import Agent, AgentLimitError
 from hewn.builtin_tools import make_builtin_tool_registry
+from hewn.completion import CompletionPolicy, CompletionRequirement
 from hewn.models import FinalResponse, Message, ModelResponse
-from hewn.tools import ToolCall, ToolDefinition, ToolExecutor
+from hewn.tools import (
+    ToolCall,
+    ToolDefinition,
+    ToolExecutor,
+    ToolResult,
+)
 from hewn.workspace import Workspace
 
 
@@ -386,3 +392,85 @@ def test_accepts_final_response_after_edit_and_successful_check(
 
     assert result.metrics.model_calls == 4
     assert result.metrics.tool_calls == 3
+
+class RecordingCompletionPolicy(CompletionPolicy):
+    def __init__(
+        self,
+        *,
+        requirement: CompletionRequirement,
+    ) -> None:
+        super().__init__(requirement=requirement)
+        self.attempts: list[tuple[str, bool]] = []
+
+    def record_tool_attempt(
+        self,
+        *,
+        call: ToolCall,
+        result: ToolResult,
+    ) -> None:
+        self.attempts.append(
+            (call.name, result.ok)
+        )
+
+
+def test_agent_injects_completion_policy_and_records_failed_tool_attempt(
+    tmp_path: Path,
+) -> None:
+    created: list[RecordingCompletionPolicy] = []
+
+    def make_policy(
+        requirement: CompletionRequirement,
+    ) -> CompletionPolicy:
+        policy = RecordingCompletionPolicy(
+            requirement=requirement,
+        )
+        created.append(policy)
+        return policy
+
+    model = ScriptedModel(
+        responses=[
+            ToolCall(
+                name="replace_text",
+                arguments={
+                    "path": "missing.py",
+                    "old": "a",
+                    "new": "b",
+                },
+            ),
+            FinalResponse("Done."),
+        ]
+    )
+
+    workspace = Workspace(tmp_path)
+    registry = make_builtin_tool_registry(workspace)
+
+    agent = Agent(
+        model=model,
+        registry=registry,
+        executor=ToolExecutor(registry),
+        completion_policy_factory=make_policy,
+    )
+
+    result = agent.run("Attempt an edit.")
+
+    assert result.text == "Done."
+    assert len(created) == 1
+    assert created[0].attempts == [
+        ("replace_text", False)
+    ]
+
+
+def test_default_completion_factory_preserves_existing_behavior(
+    tmp_path: Path,
+) -> None:
+    model = ScriptedModel(
+        responses=[
+            FinalResponse("Done."),
+        ]
+    )
+
+    agent = make_agent(tmp_path, model)
+
+    result = agent.run("Say done.")
+
+    assert result.text == "Done."
