@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 9.957844999999999,
+    "generation_tokens_per_second": 12.753763489992062,
+    "prompt_evaluated_tokens": 1024,
+    "prompt_seconds": 23.61703,
+    "prompt_tokens": 1024,
+    "prompt_tokens_per_second": 43.35854254324104,
+    "total_tokens": 1152,
+    "wall_time_seconds": 33.59271036501741
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 968996,
+      "rss_file_kb": 1104276,
+      "vm_data_kb": 1145236,
+      "vm_hwm_kb": 2073272,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2073272,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 968700,
+      "rss_file_kb": 1104276,
+      "vm_data_kb": 1145072,
+      "vm_hwm_kb": 2072976,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2072976,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1173685
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the function names and the way they handle the input values. Specifically, the function names `transform_0000` and `normalize_0000` are identical, but they perform different operations. The `transform_0000` function sums up values greater than or equal to 1, while the `normalize_0000` function normalizes the values by dividing each by the maximum value in the list. This inconsistency can lead to unexpected results if the input values are not correctly handled by the function.\n\nTo fix this issue, we should rename",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790010694,
+    "id": "chatcmpl-7VcfLosHmBzY9QtTeJFDSaDZgYTtGUG0",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 9957.845,
+      "predicted_n": 128,
+      "predicted_per_second": 12.753763489992062,
+      "predicted_per_token_ms": 78.40822834645668,
+      "prompt_ms": 23617.03,
+      "prompt_n": 1024,
+      "prompt_per_second": 43.35854254324104,
+      "prompt_per_token_ms": 23.063505859375
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 1024,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1152
+    }
+  }
+}

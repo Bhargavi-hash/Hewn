@@ -1,0 +1,112 @@
+{
+  "condition": {
+    "artifact_mib": 468.6356201171875,
+    "artifact_path": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-0.5B-Instruct-GGUF/snapshots/ebb2015119c907b064c512bf053e945850b5875f/qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+    "expected_bytes": 491400064,
+    "filename": "qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+    "label": "0.5B",
+    "parameter_scale": "0.5B",
+    "repository": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF",
+    "resolved_artifact_path": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-0.5B-Instruct-GGUF/blobs/1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
+    "sha256": "1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
+    "snapshot": "ebb2015119c907b064c512bf053e945850b5875f"
+  },
+  "configuration": {
+    "configured_context": 8192,
+    "fresh_server_process": true,
+    "max_tokens": 128,
+    "parallel": 1,
+    "prompt_cache_enabled": false,
+    "quantization": "Q4_K_M",
+    "target_prompt_tokens": 1024,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "experiment": "012G-1",
+  "independent_variable": "model_size",
+  "measurements": {
+    "after_request_memory": {
+      "rss_anon_kib": 224000,
+      "rss_file_kib": 490200,
+      "vm_data_kib": 392084,
+      "vm_hwm_kib": 714200,
+      "vm_peak_kib": 1546188,
+      "vm_rss_kib": 714200,
+      "vm_size_kib": 1482504,
+      "vm_swap_kib": 0
+    },
+    "before_measured_request_memory": {
+      "rss_anon_kib": 224000,
+      "rss_file_kib": 490180,
+      "vm_data_kib": 392084,
+      "vm_hwm_kib": 714180,
+      "vm_peak_kib": 1546188,
+      "vm_rss_kib": 714180,
+      "vm_size_kib": 1482504,
+      "vm_swap_kib": 0
+    },
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 4,
+    "content": "validate_relative_path",
+    "finish_reason": "stop",
+    "fresh_process_memory": {
+      "rss_anon_kib": 183816,
+      "rss_file_kib": 490092,
+      "vm_data_kib": 388168,
+      "vm_hwm_kib": 673908,
+      "vm_peak_kib": 1415116,
+      "vm_rss_kib": 673908,
+      "vm_size_kib": 1415116,
+      "vm_swap_kib": 0
+    },
+    "generation_seconds": 0.137837,
+    "generation_tokens_per_second": 21.764838178428146,
+    "prompt_seconds": 10.762129000000002,
+    "prompt_tokens": 1024,
+    "prompt_tokens_per_second": 95.14845993762015,
+    "wall_seconds": 10.92156107298797
+  },
+  "provenance": {
+    "hardware": "Intel Core i5-10210U; 4 physical cores / 8 logical CPUs; ~7.6 GiB RAM; no NVIDIA GPU; Linux x86_64",
+    "llama_cpp_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "llama_cpp_version": "0.4.1-dev (build 10991, commit 930e2fa59)",
+    "repetition": 1
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "validate_relative_path",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790020564,
+    "id": "chatcmpl-oUncr2elCfRsCcmEcqjMnzxeGGtTMh6B",
+    "model": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-0.5B-Instruct-GGUF/blobs/1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 137.837,
+      "predicted_n": 4,
+      "predicted_per_second": 21.764838178428146,
+      "predicted_per_token_ms": 45.94566666666666,
+      "prompt_ms": 10762.129,
+      "prompt_n": 1024,
+      "prompt_per_second": 95.14845993762015,
+      "prompt_per_token_ms": 10.5098916015625
+    },
+    "usage": {
+      "completion_tokens": 4,
+      "prompt_tokens": 1024,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1028
+    }
+  },
+  "server_log": "/home/bhargavi/Documents/Hewn/research/012-running-models-locally/results/012g1-server-logs/0_5b-run1-server.log"
+}

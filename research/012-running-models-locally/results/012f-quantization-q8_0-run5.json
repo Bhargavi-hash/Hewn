@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 109,
+    "finish_reason": "stop",
+    "generated_tokens": 109,
+    "generation_seconds": 12.839324000000001,
+    "generation_tokens_per_second": 8.411657810021774,
+    "prompt_evaluated_tokens": 1024,
+    "prompt_seconds": 31.441254,
+    "prompt_tokens": 1024,
+    "prompt_tokens_per_second": 32.56867553692356,
+    "total_tokens": 1133,
+    "wall_time_seconds": 44.2963401080051
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 358676,
+      "rss_file_kb": 1863176,
+      "vm_data_kb": 534384,
+      "vm_hwm_kb": 2221852,
+      "vm_peak_kb": 2996184,
+      "vm_rss_kb": 2221852,
+      "vm_size_kb": 2996184,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 358380,
+      "rss_file_kb": 1863176,
+      "vm_data_kb": 534220,
+      "vm_hwm_kb": 2221556,
+      "vm_peak_kb": 2996184,
+      "vm_rss_kb": 2221556,
+      "vm_size_kb": 2996184,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1180698
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q8_0",
+    "quantization": "Q8_0",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the naming convention for the `transform_0000` and `normalize_0000` functions. Both functions are named the same, but they perform different operations. The `transform_0000` function sums up values greater than or equal to 1, while the `normalize_0000` function normalizes the values by dividing each by the maximum value in the list. This inconsistency can lead to confusion and potential bugs in the code.",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790011642,
+    "id": "chatcmpl-cpk8IIOzOQ63VxMHOzGyxxLZUU3rThgj",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q8_0",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 12839.324,
+      "predicted_n": 109,
+      "predicted_per_second": 8.411657810021774,
+      "predicted_per_token_ms": 118.88262962962963,
+      "prompt_ms": 31441.254,
+      "prompt_n": 1024,
+      "prompt_per_second": 32.56867553692356,
+      "prompt_per_token_ms": 30.704349609375
+    },
+    "usage": {
+      "completion_tokens": 109,
+      "prompt_tokens": 1024,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1133
+    }
+  }
+}

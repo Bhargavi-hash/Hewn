@@ -2265,3 +2265,12 @@ Behavior must be measured directly.
 
 Model size buys capacity at a systems cost. Measure whether Hewn actually
 benefits from that capacity.
+
+#### 012G-1 observations
+
+On the fixed 1024-token Module 12 workload, Qwen2.5-Coder-0.5B-Instruct Q4_K_M required substantially fewer local resources than the 1.5B Q4_K_M model. Across five fresh-process repetitions, the 0.5B model had median prompt throughput of 95.15 tok/s versus 44.29 tok/s, median decode throughput of 25.96 tok/s versus 13.06 tok/s, and median fresh RSS of 658.14 MiB versus 1951.77 MiB. Median wall time was 10.92 s versus 24.90 s. These measurements establish a systems tradeoff only; they do not establish whether the smaller model preserves coding-relevant behavior.
+
+### 012G conlcusion
+On the available CPU-only hardware, the 0.5B Q4_K_M model was substantially cheaper to run than the 1.5B Q4_K_M model on the fixed 012G-1 workload. Across five fresh-process repetitions per model, median prompt throughput was 95.15 versus 44.29 tok/s, median decode throughput was 25.96 versus 13.06 tok/s, median wall time was 10.92 versus 24.90 seconds, and median fresh RSS was 658.14 versus 1951.77 MiB. These results establish a systems-cost difference only. Module 12 did not measure whether the 0.5B model preserves the coding-relevant behavioral capability of the 1.5B model.
+
+> A 3B condition was attempted but did not produce a validated observation on the target machine. It was therefore excluded from the model-size comparison rather than extrapolating performance from an incomplete run.
