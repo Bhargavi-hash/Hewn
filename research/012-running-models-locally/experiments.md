@@ -2044,3 +2044,224 @@ Design principle:
 
 > Configured context is capacity. Consumed context is work.
 > Measure them separately.
+
+### 012F-1 — Quantization systems tradeoffs
+
+#### Question
+
+> How does quantization affect artifact size, process memory, and
+> inference performance when model family, runtime, workload, and
+> hardware are held fixed?
+
+#### Configuration
+
+Held fixed:
+
+- model family: Qwen2.5-Coder-1.5B-Instruct;
+- llama.cpp commit:
+  `930e2fa5995789efbf249a8bf61325bb626e417b`;
+- configured context: 8192 tokens;
+- consumed prompt: 1024 tokens;
+- threads: 4;
+- parallel slots: 1;
+- prompt cache: disabled;
+- temperature: 0;
+- maximum generation: 128 tokens;
+- hardware: Intel Core i5-10210U, 4 physical cores / 8 logical CPUs,
+  approximately 7.6 GiB RAM, no NVIDIA GPU.
+
+Varied:
+
+- Q3_K_M;
+- Q4_K_M;
+- Q5_K_M;
+- Q6_K;
+- Q8_0.
+
+Five repetitions were measured per quantization. Each quantization
+condition started with a fresh llama-server process.
+
+All 25 persisted runs passed token-accounting validation and observed
+zero swap.
+
+#### Results
+
+| Quantization | Artifact MiB | Fresh-process pre-request RSS MiB | Median prefill tok/s | Median decode tok/s | Median wall s |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Q3_K_M | 881.6 | 1415.0 | 28.07 | 12.54 | 46.63 |
+| Q4_K_M | 1065.6 | 1955.3 | 43.54 | 12.58 | 33.59 |
+| Q5_K_M | 1225.9 | 1519.1 | 22.61 | 11.16 | 55.03 |
+| Q6_K | 1396.3 | 1689.4 | 28.78 | 10.67 | 45.53 |
+| Q8_0 | 1806.8 | 2099.9 | 33.25 | 8.41 | 44.12 |
+
+Artifact size increased monotonically across the selected
+quantizations, from 881.6 MiB for Q3_K_M to 1806.8 MiB for Q8_0.
+
+Observed inference performance did not follow the same monotonic
+ordering.
+
+For this workload, Q4_K_M had the highest median prefill throughput at
+43.54 tokens/s. Q3_K_M and Q4_K_M had similar median decode throughput
+at 12.54 and 12.58 tokens/s respectively. The higher-precision
+conditions measured lower median decode throughput, reaching
+8.41 tokens/s for Q8_0.
+
+These measurements establish the observed ordering on this fixed
+hardware and workload. They do not establish that quantization bit
+width alone caused the differences. Quantization format, llama.cpp
+kernel behavior, CPU characteristics, and workload can interact.
+
+Generation length also differed across conditions. Q3_K_M and Q4_K_M
+generated 128 tokens and terminated at the configured length limit,
+while Q5_K_M, Q6_K, and Q8_0 stopped naturally after approximately
+107--109 tokens. Wall-clock latency therefore must not be interpreted
+as a constant-output-length comparison.
+
+#### Memory interpretation
+
+The first pre-request memory observation from each fresh server process
+was:
+
+- Q3_K_M: 1415.0 MiB;
+- Q4_K_M: 1955.3 MiB;
+- Q5_K_M: 1519.1 MiB;
+- Q6_K: 1689.4 MiB;
+- Q8_0: 2099.9 MiB.
+
+Later repetitions within each condition had higher pre-request RSS
+because the same server process was reused after the first request.
+Those later values are not fresh-server idle measurements.
+
+Observed process memory did not increase monotonically with artifact
+size. In particular, Q4_K_M had higher observed fresh-process RSS than
+Q5_K_M and Q6_K despite having a smaller artifact.
+
+This experiment does not establish a general mapping from GGUF artifact
+size or quantization level to process memory.
+
+#### Conclusion
+
+Quantization is not a one-dimensional compression knob.
+
+In this experiment, artifact size, process memory, prefill throughput,
+decode throughput, output length, and wall-clock latency did not move
+together.
+
+Q4_K_M was the fastest measured condition for the fixed 1024-token
+workload, but 012F-1 measures systems behavior only. It does not show
+whether Q4_K_M, or any other quantization, preserves more coding
+capability.
+
+That requires a separate behavioral experiment.
+
+> Quantization changes representation. Measure its effects on memory,
+> speed, and behavior separately.
+
+## 012G — Model Size Scaling
+
+### Research question
+
+When inference runtime, hardware, quantization family, context configuration,
+and workload are held as constant as practical, how does increasing model
+size affect local inference feasibility, memory use, latency, and
+coding-relevant behavior?
+
+### Hypothesis
+
+Increasing parameter count will increase local resource requirements and
+inference cost, but the relationship between model size and coding behavior
+will not necessarily be proportional.
+
+A larger model may improve reasoning on tasks where the smaller model fails,
+while providing little or no benefit on tasks already solved by the smaller
+model.
+
+### Independent variable
+
+Model size within the Qwen2.5-Coder-Instruct family.
+
+Candidate sizes:
+
+- 0.5B
+- 1.5B
+- 3B
+- 7B
+
+The exact runnable set will be determined by artifact availability and
+whether each model can execute reliably on the fixed machine.
+
+An inability to run a model within available memory is itself an operational
+result and must not be silently excluded.
+
+### Controls
+
+Hold constant where available:
+
+- model family: Qwen2.5-Coder-Instruct
+- quantization: Q4_K_M
+- llama.cpp runtime and commit
+- hardware
+- CPU threads: 4
+- prompt cache: disabled
+- temperature: 0
+- parallel slots: 1
+- prompt workload
+- evaluator
+- task definitions
+
+Configured context may need to be reduced for larger models if the machine
+cannot support the common context capacity. Any such deviation must be
+recorded explicitly and prevents treating that condition as a perfectly
+controlled model-size comparison.
+
+### Measurements
+
+Systems:
+
+- artifact bytes
+- successful model load
+- configured context
+- pre-request process RSS
+- peak process memory
+- swap use
+- prompt tokens
+- completion tokens
+- prompt-processing seconds and tokens/s
+- generation seconds and tokens/s
+- wall time
+
+Behavior:
+
+- deterministic coding-reasoning task outcome
+- protocol validity
+- answer-level disagreements between model sizes
+
+### Experimental structure
+
+012G-1 measures systems behavior using one fixed inference workload.
+
+012G-2 measures coding-relevant behavior using a frozen deterministic task
+suite.
+
+Systems and behavioral conclusions remain separate.
+
+### Failure handling
+
+If a model cannot load, exceeds available memory, enters unacceptable swap
+pressure, or cannot complete the frozen workload reliably, record that
+condition as an operational result.
+
+Do not replace the failed model with a different quantization and continue
+calling the experiment a controlled model-size comparison.
+
+### Interpretation rule
+
+Do not infer coding capability from parameter count, artifact size,
+tokens per second, or memory consumption.
+
+Behavior must be measured directly.
+
+### Design principle
+
+Model size buys capacity at a systems cost. Measure whether Hewn actually
+benefits from that capacity.
