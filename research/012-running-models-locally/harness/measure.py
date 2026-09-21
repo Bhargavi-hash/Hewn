@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from .process_memory import ProcessMemory, read_process_memory
+
 JsonObject = dict[str, Any]
 
 
@@ -28,8 +30,16 @@ class InferenceConfiguration:
     base_url: str
     threads: int
     configured_context: int
+    prompt_cache_enabled: bool
     temperature: float
     max_tokens: int
+
+
+@dataclass(frozen=True)
+class MemoryMeasurements:
+    server_pid: int
+    before_request: ProcessMemory
+    after_request: ProcessMemory
 
 
 @dataclass(frozen=True)
@@ -70,6 +80,7 @@ class InferenceRun:
     configuration: InferenceConfiguration
     measurements: Measurements
     accounting: AccountingValidation
+    memory: MemoryMeasurements | None
     raw_response: JsonObject
 
 
@@ -142,6 +153,7 @@ def normalize_response(
 
     choices = response.get("choices")
     finish_reason: str | None = None
+
     if isinstance(choices, list) and choices:
         first_choice = choices[0]
         if isinstance(first_choice, dict):
@@ -155,9 +167,9 @@ def normalize_response(
         prompt_evaluated_tokens=prompt_evaluated_tokens,
         generated_tokens=generated_tokens,
         prompt_seconds=None if prompt_ms is None else prompt_ms / 1000.0,
-        generation_seconds=None
-        if generation_ms is None
-        else generation_ms / 1000.0,
+        generation_seconds=(
+            None if generation_ms is None else generation_ms / 1000.0
+        ),
         prompt_tokens_per_second=_optional_float(
             timings.get("prompt_per_second")
         ),
@@ -242,7 +254,14 @@ def measure(
     configuration: InferenceConfiguration,
     prompt: str,
     timeout_seconds: float = 120.0,
+    server_pid: int | None = None,
 ) -> InferenceRun:
+    memory_before = (
+        read_process_memory(server_pid)
+        if server_pid is not None
+        else None
+    )
+
     response, wall_time_seconds = request_completion(
         configuration=configuration,
         model_id=provenance.model_id,
@@ -250,16 +269,36 @@ def measure(
         timeout_seconds=timeout_seconds,
     )
 
+    memory_after = (
+        read_process_memory(server_pid)
+        if server_pid is not None
+        else None
+    )
+
     measurements, accounting = normalize_response(
         response=response,
         wall_time_seconds=wall_time_seconds,
     )
+
+    memory: MemoryMeasurements | None = None
+
+    if (
+        server_pid is not None
+        and memory_before is not None
+        and memory_after is not None
+    ):
+        memory = MemoryMeasurements(
+            server_pid=server_pid,
+            before_request=memory_before,
+            after_request=memory_after,
+        )
 
     return InferenceRun(
         provenance=provenance,
         configuration=configuration,
         measurements=measurements,
         accounting=accounting,
+        memory=memory,
         raw_response=response,
     )
 
@@ -286,6 +325,18 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--threads", type=int, required=True)
     parser.add_argument("--context", type=int, required=True)
+
+    parser.add_argument(
+        "--prompt-cache",
+        choices=("enabled", "disabled"),
+        required=True,
+        help=(
+            "Prompt-cache state of the llama.cpp server. "
+            "This records the experimental configuration; it does not "
+            "change the server setting."
+        ),
+    )
+
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=64)
 
@@ -296,6 +347,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model-id", required=True)
     parser.add_argument("--quantization", required=True)
     parser.add_argument("--hardware", required=True)
+
+    parser.add_argument(
+        "--server-pid",
+        type=int,
+        default=None,
+        help=(
+            "Explicit llama-server PID used for Linux process-memory "
+            "measurements."
+        ),
+    )
 
     parser.add_argument("--timeout", type=float, default=120.0)
 
@@ -319,6 +380,7 @@ def main() -> None:
         base_url=args.base_url,
         threads=args.threads,
         configured_context=args.context,
+        prompt_cache_enabled=args.prompt_cache == "enabled",
         temperature=args.temperature,
         max_tokens=args.max_tokens,
     )
@@ -328,6 +390,7 @@ def main() -> None:
         configuration=configuration,
         prompt=args.prompt,
         timeout_seconds=args.timeout,
+        server_pid=args.server_pid,
     )
 
     write_run(run, args.output)

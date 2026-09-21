@@ -4,7 +4,13 @@ from typing import Any
 
 import pytest
 
-from .measure import normalize_response
+from . import measure as measure_module
+from .measure import (
+    InferenceConfiguration,
+    Provenance,
+    normalize_response,
+)
+from .process_memory import ProcessMemory
 
 
 def _response() -> dict[str, Any]:
@@ -37,6 +43,48 @@ def _response() -> dict[str, Any]:
             "predicted_per_second": 13.315723289283257,
         },
     }
+
+
+def _provenance() -> Provenance:
+    return Provenance(
+        runtime="llama.cpp",
+        runtime_commit="test-commit",
+        runtime_version="test-version",
+        runtime_build="test-build",
+        model_id="test-model",
+        quantization="Q4_K_M",
+        hardware_description="test-hardware",
+    )
+
+
+def _configuration() -> InferenceConfiguration:
+    return InferenceConfiguration(
+        base_url="http://127.0.0.1:8080",
+        threads=4,
+        configured_context=4096,
+        prompt_cache_enabled=False,
+        temperature=0.0,
+        max_tokens=64,
+    )
+
+
+def _memory(
+    *,
+    vm_peak_kb: int,
+    vm_size_kb: int,
+    vm_hwm_kb: int,
+    vm_rss_kb: int,
+) -> ProcessMemory:
+    return ProcessMemory(
+        vm_peak_kb=vm_peak_kb,
+        vm_size_kb=vm_size_kb,
+        vm_hwm_kb=vm_hwm_kb,
+        vm_rss_kb=vm_rss_kb,
+        rss_anon_kb=900,
+        rss_file_kb=500,
+        vm_data_kb=800,
+        vm_swap_kb=0,
+    )
 
 
 def test_normalizes_observed_llama_cpp_response() -> None:
@@ -145,3 +193,116 @@ def test_protocol_booleans_are_not_accepted_as_numeric_measurements() -> None:
 
     assert measurements.prompt_tokens is None
     assert accounting.total_token_accounting is None
+
+
+def test_measure_records_explicit_process_memory(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    before = _memory(
+        vm_peak_kb=2000,
+        vm_size_kb=1800,
+        vm_hwm_kb=1500,
+        vm_rss_kb=1400,
+    )
+    after = _memory(
+        vm_peak_kb=2200,
+        vm_size_kb=1900,
+        vm_hwm_kb=1700,
+        vm_rss_kb=1500,
+    )
+
+    readings = iter((before, after))
+
+    def fake_read_process_memory(pid: int) -> ProcessMemory:
+        assert pid == 12345
+        return next(readings)
+
+    def fake_request_completion(
+        *,
+        configuration: InferenceConfiguration,
+        model_id: str,
+        prompt: str,
+        timeout_seconds: float,
+    ) -> tuple[dict[str, Any], float]:
+        assert configuration == _configuration()
+        assert configuration.prompt_cache_enabled is False
+        assert model_id == "test-model"
+        assert prompt == "test prompt"
+        assert timeout_seconds == pytest.approx(120.0)
+
+        return _response(), 2.1
+
+    monkeypatch.setattr(
+        measure_module,
+        "read_process_memory",
+        fake_read_process_memory,
+    )
+    monkeypatch.setattr(
+        measure_module,
+        "request_completion",
+        fake_request_completion,
+    )
+
+    run = measure_module.measure(
+        provenance=_provenance(),
+        configuration=_configuration(),
+        prompt="test prompt",
+        server_pid=12345,
+    )
+
+    assert run.memory is not None
+    assert run.memory.server_pid == 12345
+    assert run.memory.before_request == before
+    assert run.memory.after_request == after
+
+    assert run.configuration.prompt_cache_enabled is False
+
+    assert run.measurements.prompt_tokens == 47
+    assert run.measurements.generated_tokens == 17
+    assert run.measurements.wall_time_seconds == pytest.approx(2.1)
+
+    assert run.accounting.all_observed_valid is True
+
+
+def test_measure_without_server_pid_does_not_read_process_memory(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_if_memory_is_read(pid: int) -> ProcessMemory:
+        raise AssertionError(
+            f"read_process_memory unexpectedly called for PID {pid}"
+        )
+
+    def fake_request_completion(
+        *,
+        configuration: InferenceConfiguration,
+        model_id: str,
+        prompt: str,
+        timeout_seconds: float,
+    ) -> tuple[dict[str, Any], float]:
+        assert configuration == _configuration()
+        assert model_id == "test-model"
+        assert prompt == "test prompt"
+        assert timeout_seconds == pytest.approx(120.0)
+
+        return _response(), 2.1
+
+    monkeypatch.setattr(
+        measure_module,
+        "read_process_memory",
+        fail_if_memory_is_read,
+    )
+    monkeypatch.setattr(
+        measure_module,
+        "request_completion",
+        fake_request_completion,
+    )
+
+    run = measure_module.measure(
+        provenance=_provenance(),
+        configuration=_configuration(),
+        prompt="test prompt",
+    )
+
+    assert run.memory is None
+    assert run.configuration.prompt_cache_enabled is False
+    assert run.accounting.all_observed_valid is True
