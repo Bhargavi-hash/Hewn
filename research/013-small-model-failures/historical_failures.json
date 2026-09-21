@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "purpose": "Historical failure patterns used to ground the Module 13 taxonomy before new inference.",
+  "records": [
+    {
+      "id": "m05-evidence-insufficient",
+      "source_module": "005-context-engineering",
+      "failure_stage": "evidence_utilization_failure",
+      "observation": "Improved repository context increased evidence availability, but conceptual-task behavioral success remained absent.",
+      "localization": "Relevant evidence being available was insufficient for successful downstream behavior.",
+      "cause_established": false,
+      "competing_explanations": [
+        "evidence integration",
+        "semantic reasoning",
+        "instruction following",
+        "downstream action selection"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "m06-valid-edit-wrong-semantics",
+      "source_module": "006-code-editing",
+      "failure_stage": "semantic_reasoning_failure",
+      "observation": "Several proposed edits were mechanically applicable but behaviorally wrong or incomplete.",
+      "localization": "Mechanical applicability did not imply semantic correctness.",
+      "cause_established": false,
+      "competing_explanations": [
+        "incorrect semantic transformation",
+        "incomplete task understanding",
+        "incomplete propagation"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "m06-validation-repair",
+      "source_module": "006-code-editing",
+      "failure_stage": "repair_failure",
+      "observation": "Deterministic validation exposed invalid batches, but a single validation-feedback repair opportunity did not reliably recover them.",
+      "localization": "Failure detection succeeded while model repair remained unsuccessful.",
+      "cause_established": false,
+      "competing_explanations": [
+        "insufficient repair reasoning",
+        "insufficient retry budget",
+        "feedback representation"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "m08-plan-scope-vs-semantics",
+      "source_module": "008-planning-subagents",
+      "failure_stage": "semantic_reasoning_failure",
+      "observation": "Plan conditioning improved protocol validity, edit applicability, commit rate, and required-file coverage while behavioral success remained 1/8 in both direct and planned conditions.",
+      "localization": "Improved decomposition and scope discovery did not resolve semantic implementation failures.",
+      "cause_established": false,
+      "competing_explanations": [
+        "incorrect semantic operations",
+        "reference corruption",
+        "incomplete propagation",
+        "incorrect authorization logic"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "m08-reviewer-semantic-judgment",
+      "source_module": "008-planning-subagents",
+      "failure_stage": "verification_interpretation_failure",
+      "observation": "A patch-only model reviewer falsely accepted multiple behaviorally incorrect patches.",
+      "localization": "Independent model review was not a reliable substitute for deterministic execution evidence.",
+      "cause_established": false,
+      "competing_explanations": [
+        "insufficient semantic patch reasoning",
+        "missing runtime evidence"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "m08-execution-signal-redundancy",
+      "source_module": "008-planning-subagents",
+      "failure_stage": "protocol_failure",
+      "observation": "Detailed execution evidence added context and inference cost and produced one truncated protocol failure, while the simpler deterministic PASS/FAIL signal already encoded the required verdict.",
+      "localization": "Additional model inference did not add useful information over an existing deterministic signal.",
+      "cause_established": true,
+      "competing_explanations": [],
+      "confidence": "high"
+    },
+    {
+      "id": "m10-memory-does-not-fix-behavior",
+      "source_module": "010-persistent-repository-intelligence",
+      "failure_stage": "evidence_utilization_failure",
+      "observation": "Adding bounded structured repository memory improved protocol validity from 2/3 to 3/3 but behavioral success remained 0/3.",
+      "localization": "Additional repository evidence did not produce behavioral improvement in the tested task pairs.",
+      "cause_established": false,
+      "competing_explanations": [
+        "memory content not sufficient",
+        "evidence utilization",
+        "semantic reasoning",
+        "task difficulty"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "m11-finalize-instead-of-edit",
+      "source_module": "011-evaluating-coding-agents",
+      "failure_stage": "premature_completion",
+      "observation": "Across 15 repeated observations, behavioral success was 0/15 and the model finalized rather than using the available editing tools.",
+      "localization": "The immediate observable failure occurred at the model-to-agent action-selection and completion boundary before patch generation.",
+      "cause_established": false,
+      "competing_explanations": [
+        "tool-use instruction following",
+        "action selection",
+        "completion policy interaction"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
