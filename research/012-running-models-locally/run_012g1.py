@@ -222,6 +222,20 @@ def port_is_free() -> bool:
 
     return True
 
+def wait_for_port_free(timeout_seconds: float = 30.0) -> None:
+    deadline = time.monotonic() + timeout_seconds
+
+    while time.monotonic() < deadline:
+        if port_is_free():
+            return
+
+        time.sleep(0.25)
+
+    raise RuntimeError(
+        f"Port {PORT} did not become reusable within "
+        f"{timeout_seconds:.0f} seconds"
+    )
+
 
 def server_is_ready() -> bool:
     url = f"http://{HOST}:{PORT}/health"
@@ -636,10 +650,7 @@ def run_observation(
     artifact: Path,
     repetition: int,
 ) -> dict[str, Any]:
-    if not port_is_free():
-        raise RuntimeError(
-            f"Port {PORT} is already in use. Stop the existing server first."
-        )
+    wait_for_port_free()
 
     process, log_handle, log_path = start_server(
         condition,
@@ -762,6 +773,108 @@ def result_path(
 
     return RESULTS_DIR / f"012g1-{label}-run{repetition}.json"
 
+def load_existing_result(
+    condition: ModelCondition,
+    repetition: int,
+) -> dict[str, Any] | None:
+    path = result_path(condition, repetition)
+
+    if not path.exists():
+        return None
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+
+    if not isinstance(payload, dict):
+        raise TypeError(
+            f"Existing observation is not a JSON object: {path}"
+        )
+
+    result = cast(dict[str, Any], payload)
+
+    if result.get("experiment") != "012G-1":
+        raise RuntimeError(
+            f"Existing observation has wrong experiment: {path}"
+        )
+
+    condition_value = result.get("condition")
+    provenance_value = result.get("provenance")
+    configuration_value = result.get("configuration")
+    measurements_value = result.get("measurements")
+
+    if not isinstance(condition_value, dict):
+        raise TypeError(
+            f"Existing observation has invalid condition: {path}"
+        )
+
+    if not isinstance(provenance_value, dict):
+        raise TypeError(
+            f"Existing observation has invalid provenance: {path}"
+        )
+
+    if not isinstance(configuration_value, dict):
+        raise TypeError(
+            f"Existing observation has invalid configuration: {path}"
+        )
+
+    if not isinstance(measurements_value, dict):
+        raise TypeError(
+            f"Existing observation has invalid measurements: {path}"
+        )
+
+    expected_condition = {
+        "label": condition.label,
+        "parameter_scale": condition.parameter_scale,
+        "repository": condition.repository,
+        "snapshot": condition.snapshot,
+        "filename": condition.filename,
+        "sha256": condition.sha256,
+        "expected_bytes": condition.expected_bytes,
+    }
+
+    for key, expected in expected_condition.items():
+        if condition_value.get(key) != expected:
+            raise RuntimeError(
+                f"Existing observation condition mismatch for {key}: "
+                f"{path}"
+            )
+
+    if provenance_value.get("repetition") != repetition:
+        raise RuntimeError(
+            f"Existing observation repetition mismatch: {path}"
+        )
+
+    expected_configuration = {
+        "quantization": "Q4_K_M",
+        "threads": THREADS,
+        "configured_context": CONTEXT_SIZE,
+        "target_prompt_tokens": TARGET_PROMPT_TOKENS,
+        "prompt_cache_enabled": False,
+        "temperature": TEMPERATURE,
+        "max_tokens": MAX_TOKENS,
+        "parallel": PARALLEL,
+        "fresh_server_process": True,
+    }
+
+    for key, expected in expected_configuration.items():
+        if configuration_value.get(key) != expected:
+            raise RuntimeError(
+                f"Existing observation configuration mismatch for {key}: "
+                f"{path}"
+            )
+
+    if measurements_value.get("prompt_tokens") != TARGET_PROMPT_TOKENS:
+        raise RuntimeError(
+            f"Existing observation prompt-token mismatch: {path}"
+        )
+
+    cached = measurements_value.get("cached_prompt_tokens")
+
+    if cached is not None and cached != 0:
+        raise RuntimeError(
+            f"Existing observation contains cached prompt tokens: {path}"
+        )
+
+    return result
 
 def write_result(
     condition: ModelCondition,
@@ -941,6 +1054,17 @@ def main() -> None:
                 f"[{condition.label}] repetition "
                 f"{repetition}/{REPETITIONS}"
             )
+
+            existing = load_existing_result(
+                condition,
+                repetition,
+            )
+
+            if existing is not None:
+                path = result_path(condition, repetition)
+                completed.append(existing)
+                print(f"  validated existing observation: {path}")
+                continue
 
             result = run_observation(
                 condition,
