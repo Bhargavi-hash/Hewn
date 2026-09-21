@@ -1,0 +1,412 @@
+You are reviewing a synthetic Python repository.
+
+Read the repository excerpts below and identify potential correctness
+problems. Give a concise explanation of the most important issue.
+
+Repository excerpts:
+
+# file: synthetic/module_0000.py
+
+def transform_0000(values):
+    total = 0
+    for value in values:
+        if value >= 1:
+            total += value
+    return total
+
+
+def normalize_0000(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0001.py
+
+def transform_0001(values):
+    total = 0
+    for value in values:
+        if value >= 2:
+            total += value
+    return total
+
+
+def normalize_0001(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0002.py
+
+def transform_0002(values):
+    total = 0
+    for value in values:
+        if value >= 3:
+            total += value
+    return total
+
+
+def normalize_0002(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0003.py
+
+def transform_0003(values):
+    total = 0
+    for value in values:
+        if value >= 4:
+            total += value
+    return total
+
+
+def normalize_0003(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0004.py
+
+def transform_0004(values):
+    total = 0
+    for value in values:
+        if value >= 5:
+            total += value
+    return total
+
+
+def normalize_0004(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0005.py
+
+def transform_0005(values):
+    total = 0
+    for value in values:
+        if value >= 6:
+            total += value
+    return total
+
+
+def normalize_0005(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0006.py
+
+def transform_0006(values):
+    total = 0
+    for value in values:
+        if value >= 7:
+            total += value
+    return total
+
+
+def normalize_0006(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0007.py
+
+def transform_0007(values):
+    total = 0
+    for value in values:
+        if value >= 8:
+            total += value
+    return total
+
+
+def normalize_0007(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0008.py
+
+def transform_0008(values):
+    total = 0
+    for value in values:
+        if value >= 9:
+            total += value
+    return total
+
+
+def normalize_0008(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0009.py
+
+def transform_0009(values):
+    total = 0
+    for value in values:
+        if value >= 10:
+            total += value
+    return total
+
+
+def normalize_0009(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0010.py
+
+def transform_0010(values):
+    total = 0
+    for value in values:
+        if value >= 11:
+            total += value
+    return total
+
+
+def normalize_0010(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0011.py
+
+def transform_0011(values):
+    total = 0
+    for value in values:
+        if value >= 12:
+            total += value
+    return total
+
+
+def normalize_0011(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0012.py
+
+def transform_0012(values):
+    total = 0
+    for value in values:
+        if value >= 13:
+            total += value
+    return total
+
+
+def normalize_0012(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0013.py
+
+def transform_0013(values):
+    total = 0
+    for value in values:
+        if value >= 14:
+            total += value
+    return total
+
+
+def normalize_0013(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0014.py
+
+def transform_0014(values):
+    total = 0
+    for value in values:
+        if value >= 15:
+            total += value
+    return total
+
+
+def normalize_0014(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0015.py
+
+def transform_0015(values):
+    total = 0
+    for value in values:
+        if value >= 16:
+            total += value
+    return total
+
+
+def normalize_0015(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0016.py
+
+def transform_0016(values):
+    total = 0
+    for value in values:
+        if value >= 17:
+            total += value
+    return total
+
+
+def normalize_0016(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0017.py
+
+def transform_0017(values):
+    total = 0
+    for value in values:
+        if value >= 1:
+            total += value
+    return total
+
+
+def normalize_0017(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0018.py
+
+def transform_0018(values):
+    total = 0
+    for value in values:
+        if value >= 2:
+            total += value
+    return total
+
+
+def normalize_0018(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0019.py
+
+def transform_0019(values):
+    total = 0
+    for value in values:
+        if value >= 3:
+            total += value
+    return total
+
+
+def normalize_0019(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0020.py
+
+def transform_0020(values):
+    total = 0
+    for value in values:
+        if value >= 4:
+            total += value
+    return total
+
+
+def normalize_0020(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0021.py
+
+def transform_0021(values):
+    total = 0
+    for value in values:
+        if value >= 5:
+            total += value
+    return total
+
+
+def normalize_0021(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0022.py
+
+def transform_0022(values):
+    total = 0
+    for value in values:
+        if value >= 6:
+            total += value
+    return total
+
+
+def normalize_0022(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0023.py
+
+def transform_0023(values):
+    total = 0
+    for value in values:
+        if value >= 7:
+            total += value
+    return total
+
+
+def normalize_0023(values):
+    if not values:
+        return []
+    maximum =
