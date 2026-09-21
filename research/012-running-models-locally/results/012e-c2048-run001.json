@@ -1,0 +1,96 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 2048,
+    "max_tokens": 128,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 10.452029,
+    "generation_tokens_per_second": 12.150750825509572,
+    "prompt_evaluated_tokens": 321,
+    "prompt_seconds": 6.146282,
+    "prompt_tokens": 321,
+    "prompt_tokens_per_second": 52.22669574874696,
+    "total_tokens": 449,
+    "wall_time_seconds": 16.608747382008005
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 768572,
+      "rss_file_kb": 1103896,
+      "vm_data_kb": 972296,
+      "vm_hwm_kb": 1872468,
+      "vm_peak_kb": 2345704,
+      "vm_rss_kb": 1872468,
+      "vm_size_kb": 2283448,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 725900,
+      "rss_file_kb": 1103712,
+      "vm_data_kb": 968700,
+      "vm_hwm_kb": 1829612,
+      "vm_peak_kb": 2149096,
+      "vm_rss_kb": 1829612,
+      "vm_size_kb": 2149096,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 987108
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4C/8T, approximately 7.6 GiB RAM, CPU inference",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "10991",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The algorithm for selecting ready tasks involves the following steps:\n\n1. **Filter Tasks**: First, filter out tasks that do not have all their dependencies completed. This is done by checking the status of each dependency in the task's dependencies list.\n\n2. **Sort Tasks**: Next, sort the remaining tasks based on their priority and creation timestamp. Tasks with higher priority should be selected first, and tasks with equal priority should be ordered by creation timestamp from oldest to newest.\n\n3. **Select Tasks**: Finally, select the first `limit` tasks from the sorted list.\n\nHere is the Python implementation of the `select_ready_tasks` function:\n\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789948052,
+    "id": "chatcmpl-gqHNN3oiSCCebpoOtIQWNgIKDwSq0cjO",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 10452.029,
+      "predicted_n": 128,
+      "predicted_per_second": 12.150750825509572,
+      "predicted_per_token_ms": 82.2994409448819,
+      "prompt_ms": 6146.282,
+      "prompt_n": 321,
+      "prompt_per_second": 52.22669574874696,
+      "prompt_per_token_ms": 19.147295950155765
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 321,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 449
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "experiment": "012F-2",
+  "version": "1",
+  "response_protocol": {
+    "instruction": "Return exactly one JSON object with one field named answer. The value must be one of A, B, C, or D. Example: {\"answer\":\"B\"}. Do not include markdown or explanation."
+  },
+  "tasks": [
+    {
+      "task_id": "qbehavior-001",
+      "category": "bug_localization",
+      "prompt": "A Python function should return the product of two numbers:\n\n```python\ndef multiply(a: int, b: int) -> int:\n    result = a + b\n    return result\n```\n\nWhich change fixes the bug while changing the least code?\n\nA. Change `a + b` to `a * b`.\nB. Change `return result` to `return a + b`.\nC. Initialize `result = 0`.\nD. Change both parameters to floats.",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "A"
+      }
+    },
+    {
+      "task_id": "qbehavior-002",
+      "category": "code_behavior",
+      "prompt": "Consider:\n\n```python\ndef clamp_retry(value: int) -> int:\n    if value < 2:\n        return 2\n    if value > 5:\n        return 5\n    return value\n```\n\nWhat does `clamp_retry(7)` return?\n\nA. 2\nB. 5\nC. 7\nD. It raises an exception.",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    },
+    {
+      "task_id": "qbehavior-003",
+      "category": "api_contract",
+      "prompt": "A function has this contract: `display_name(profile)` must return `profile[\"nickname\"]` when a nickname exists and is not empty. Otherwise it must return `profile[\"name\"]`.\n\nWhich implementation satisfies the contract?\n\nA. `return profile[\"nickname\"]`\nB. `return profile.get(\"nickname\") or profile[\"name\"]`\nC. `return profile.get(\"name\") or profile[\"nickname\"]`\nD. `return profile.get(\"nickname\")`",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    },
+    {
+      "task_id": "qbehavior-004",
+      "category": "edge_case",
+      "prompt": "The function below should return the average of a list of numbers, but an empty list should return `None`:\n\n```python\ndef average(values: list[float]) -> float | None:\n    return sum(values) / len(values)\n```\n\nWhich input exposes the missing required behavior?\n\nA. `[1.0]`\nB. `[1.0, 3.0]`\nC. `[]`\nD. `[-1.0, 1.0]`",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "C"
+      }
+    },
+    {
+      "task_id": "qbehavior-005",
+      "category": "test_selection",
+      "prompt": "Repository structure:\n\n```text\nsrc/\n  pricing.py\n  profile.py\n  retry.py\ntests/\n  test_pricing.py\n  test_profile.py\n  test_retry.py\n```\n\nOnly `src/retry.py` was changed. There is no evidence of cross-module dependencies. Which is the narrowest directly relevant test file to run first?\n\nA. `tests/test_pricing.py`\nB. `tests/test_profile.py`\nC. `tests/test_retry.py`\nD. All tests are equally direct.",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "C"
+      }
+    },
+    {
+      "task_id": "qbehavior-006",
+      "category": "dependency_reasoning",
+      "prompt": "Repository code:\n\n```python\n# settings.py\nREQUEST_TIMEOUT = 30\n\n# client.py\nfrom settings import REQUEST_TIMEOUT\n\ndef timeout() -> int:\n    return REQUEST_TIMEOUT\n\n# api.py\nfrom client import timeout\n```\n\nIf `REQUEST_TIMEOUT` is renamed to `HTTP_TIMEOUT` in `settings.py`, which additional file must be updated to avoid an import failure?\n\nA. Only `api.py`\nB. Only `client.py`\nC. Both `client.py` and `api.py`\nD. Neither file",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    },
+    {
+      "task_id": "qbehavior-007",
+      "category": "patch_reasoning",
+      "prompt": "The required behavior is: authenticated owners and authenticated administrators may delete; unauthenticated users may never delete.\n\nCurrent code:\n\n```python\ndef can_delete(authenticated: bool, owner: bool, admin: bool) -> bool:\n    return authenticated and owner\n```\n\nWhich replacement implements the requirement?\n\nA. `return authenticated and owner or admin`\nB. `return authenticated and (owner or admin)`\nC. `return authenticated or owner or admin`\nD. `return owner and admin`",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    },
+    {
+      "task_id": "qbehavior-008",
+      "category": "diagnostic_interpretation",
+      "prompt": "A test fails with:\n\n```text\nE   NameError: name 'TIMEOUT' is not defined\n```\n\nThe source contains:\n\n```python\nREQUEST_TIMEOUT = 30\n\ndef request_timeout() -> int:\n    return TIMEOUT\n```\n\nWhich change most directly fixes the reported failure while preserving the existing constant value?\n\nA. Rename `REQUEST_TIMEOUT` to `TIMEOUT`.\nB. Change `return TIMEOUT` to `return REQUEST_TIMEOUT`.\nC. Change `30` to `0`.\nD. Catch `NameError` and return `30`.",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    },
+    {
+      "task_id": "qbehavior-009",
+      "category": "repository_structure",
+      "prompt": "Repository map:\n\n```text\nsrc/hewn/\n  completion.py       CompletionPolicy\n  llama_cpp.py        LlamaCppModel\n  telemetry.py        AgentMetrics\n  tools.py            ToolExecutor\n  workspace.py        Workspace\n```\n\nYou need to inspect the implementation responsible for converting a requested tool action into actual tool execution. Which file is the strongest first location?\n\nA. `src/hewn/completion.py`\nB. `src/hewn/llama_cpp.py`\nC. `src/hewn/tools.py`\nD. `src/hewn/telemetry.py`",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "C"
+      }
+    },
+    {
+      "task_id": "qbehavior-010",
+      "category": "action_selection",
+      "prompt": "Available actions:\n\nA. `read_file(path)` reads a known file.\nB. `find_symbol(name)` locates the definition of a named symbol.\nC. `replace_text(path, old, new)` edits an exact known string.\nD. `run_tests(path)` executes tests.\n\nThe task is: `Find where CompletionPolicy is defined.` You do not yet know its file path. Which action is the most direct first action?\n\nA. `read_file`\nB. `find_symbol`\nC. `replace_text`\nD. `run_tests`",
+      "oracle": {
+        "type": "exact_choice",
+        "answer": "B"
+      }
+    }
+  ]
+}

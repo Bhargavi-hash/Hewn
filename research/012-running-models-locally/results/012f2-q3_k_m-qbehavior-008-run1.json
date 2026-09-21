@@ -1,0 +1,76 @@
+{
+  "experiment": "012F-2",
+  "task": {
+    "task_id": "qbehavior-008",
+    "category": "diagnostic_interpretation"
+  },
+  "provenance": {
+    "runtime": "llama.cpp",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q3_K_M",
+    "quantization": "Q3_K_M",
+    "artifact_bytes": 924456000,
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "repetition": 1
+  },
+  "configuration": {
+    "threads": 4,
+    "configured_context": 8192,
+    "parallel_slots": 1,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "max_tokens": 128
+  },
+  "server_pid": 1235237,
+  "measurements": {
+    "content": "```json\n{\"answer\":\"B\"}\n```",
+    "finish_reason": "stop",
+    "prompt_tokens": 189,
+    "completion_tokens": 10,
+    "total_tokens": 199,
+    "cached_prompt_tokens": 0,
+    "prompt_seconds": 6.408823999999999,
+    "generation_seconds": 0.587047,
+    "prompt_tokens_per_second": 29.490589849245353,
+    "generation_tokens_per_second": 15.33097009268423,
+    "wall_time_seconds": 7.015369671978988
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\"answer\":\"B\"}\n```"
+        }
+      }
+    ],
+    "created": 1790017701,
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q3_K_M",
+    "system_fingerprint": "b10991-930e2fa59",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 10,
+      "prompt_tokens": 189,
+      "total_tokens": 199,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "id": "chatcmpl-OL875YpUKDWV9hbmFGHXJ9TTZi5SFGF4",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 189,
+      "prompt_ms": 6408.824,
+      "prompt_per_token_ms": 33.90912169312169,
+      "prompt_per_second": 29.490589849245353,
+      "predicted_n": 10,
+      "predicted_ms": 587.047,
+      "predicted_per_token_ms": 65.22744444444444,
+      "predicted_per_second": 15.33097009268423
+    }
+  }
+}

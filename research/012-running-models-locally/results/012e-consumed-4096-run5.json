@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 96,
+    "finish_reason": "stop",
+    "generated_tokens": 96,
+    "generation_seconds": 10.697569,
+    "generation_tokens_per_second": 8.880522294364262,
+    "prompt_evaluated_tokens": 4096,
+    "prompt_seconds": 114.089898,
+    "prompt_tokens": 4096,
+    "prompt_tokens_per_second": 35.9015133837704,
+    "total_tokens": 4192,
+    "wall_time_seconds": 124.82011171100021
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 973652,
+      "rss_file_kb": 1103920,
+      "vm_data_kb": 1148472,
+      "vm_hwm_kb": 2077572,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2077572,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 972804,
+      "rss_file_kb": 1103920,
+      "vm_data_kb": 1147756,
+      "vm_hwm_kb": 2076724,
+      "vm_peak_kb": 2908900,
+      "vm_rss_kb": 2076724,
+      "vm_size_kb": 2848532,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1056634
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the naming convention of the `transform_0000` and `normalize_0000` functions. The `transform_0000` function is named correctly, but the `normalize_0000` function is named incorrectly. The `normalize_0000` function should be named `normalize_0000` to match the naming convention of the other functions.",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789959809,
+    "id": "chatcmpl-qZUAJ2LWyLNQUXwU0SWa1aa5Q7Ebwrpv",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 10697.569,
+      "predicted_n": 96,
+      "predicted_per_second": 8.880522294364262,
+      "predicted_per_token_ms": 112.6059894736842,
+      "prompt_ms": 114089.898,
+      "prompt_n": 4096,
+      "prompt_per_second": 35.9015133837704,
+      "prompt_per_token_ms": 27.85397900390625
+    },
+    "usage": {
+      "completion_tokens": 96,
+      "prompt_tokens": 4096,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 4192
+    }
+  }
+}

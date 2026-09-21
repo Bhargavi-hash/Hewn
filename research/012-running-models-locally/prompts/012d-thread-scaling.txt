@@ -1,0 +1,11 @@
+You are reviewing a Python repository that implements a small task scheduler.
+
+The scheduler stores tasks in a dictionary keyed by task identifier. Each task has a status, a priority, a creation timestamp, and a list of dependency identifiers. Valid statuses are pending, running, completed, and failed. A task may run only when every dependency exists and has completed successfully.
+
+The repository currently contains functions for adding tasks, retrieving tasks, marking tasks as completed, and listing pending tasks. The listing function currently returns pending tasks in dictionary insertion order. The requested change is to make task selection deterministic and priority-aware.
+
+Design a Python function named select_ready_tasks that accepts the task dictionary and an integer limit. It should return at most limit task identifiers. Only pending tasks whose dependencies all exist and are completed may be returned. Higher integer priority values should be selected first. Tasks with equal priority should be ordered by creation timestamp from oldest to newest. If priority and creation timestamp are both equal, use the task identifier as the final deterministic tie breaker.
+
+The function must not mutate the task dictionary or any task object. A limit of zero should return an empty list. A negative limit should raise ValueError. Missing dependencies make a task not ready. Dependencies that are pending, running, or failed also make a task not ready.
+
+Explain the algorithm briefly, discuss its time complexity, and provide the Python implementation. Include at least three concise examples covering dependency filtering, priority ordering, and deterministic tie breaking.

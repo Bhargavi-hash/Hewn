@@ -1,0 +1,73 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 4096,
+    "max_tokens": 128,
+    "temperature": 0.0,
+    "threads": 2
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 12.103620000000001,
+    "generation_tokens_per_second": 10.492728621685082,
+    "prompt_evaluated_tokens": 321,
+    "prompt_seconds": 10.566849,
+    "prompt_tokens": 321,
+    "prompt_tokens_per_second": 30.378024707270825,
+    "total_tokens": 449,
+    "wall_time_seconds": 22.68677651899634
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4C/8T, approximately 7.6 GiB RAM, CPU inference",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "quantization": "Q4_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "10991",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The algorithm for selecting ready tasks involves the following steps:\n\n1. **Filtering Tasks**: First, filter out tasks that do not have all their dependencies completed. This is done by checking the status of each dependency in the task's dependencies list.\n\n2. **Sorting Tasks**: Next, sort the remaining tasks based on their priority and creation timestamp. Tasks with higher priority should be selected first. If priority is equal, tasks should be ordered by creation timestamp from oldest to newest. If priority and creation timestamp are both equal, use the task identifier as the final deterministic tie breaker.\n\n3. **Limiting Results**: Finally, limit the number of",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789944991,
+    "id": "chatcmpl-CWJp4ixXdXGdyZycxQ9tkwNUGWB9rqoQ",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 12103.62,
+      "predicted_n": 128,
+      "predicted_per_second": 10.492728621685082,
+      "predicted_per_token_ms": 95.30409448818898,
+      "prompt_ms": 10566.849,
+      "prompt_n": 321,
+      "prompt_per_second": 30.378024707270825,
+      "prompt_per_token_ms": 32.918532710280374
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 321,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 449
+    }
+  }
+}

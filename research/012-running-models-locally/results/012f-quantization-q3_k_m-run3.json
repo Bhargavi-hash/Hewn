@@ -1,0 +1,97 @@
+{
+  "accounting": {
+    "generation_token_accounting": true,
+    "prompt_cache_accounting": true,
+    "total_token_accounting": true
+  },
+  "configuration": {
+    "base_url": "http://127.0.0.1:8080",
+    "configured_context": 8192,
+    "max_tokens": 128,
+    "prompt_cache_enabled": false,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "measurements": {
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "generated_tokens": 128,
+    "generation_seconds": 10.271968000000001,
+    "generation_tokens_per_second": 12.36374568145072,
+    "prompt_evaluated_tokens": 1024,
+    "prompt_seconds": 36.393891,
+    "prompt_tokens": 1024,
+    "prompt_tokens_per_second": 28.13659028654012,
+    "total_tokens": 1152,
+    "wall_time_seconds": 46.68404813899542
+  },
+  "memory": {
+    "after_request": {
+      "rss_anon_kb": 604484,
+      "rss_file_kb": 915880,
+      "vm_data_kb": 780592,
+      "vm_hwm_kb": 1520364,
+      "vm_peak_kb": 2355752,
+      "vm_rss_kb": 1520364,
+      "vm_size_kb": 2295368,
+      "vm_swap_kb": 0
+    },
+    "before_request": {
+      "rss_anon_kb": 604184,
+      "rss_file_kb": 915880,
+      "vm_data_kb": 780424,
+      "vm_hwm_kb": 1520064,
+      "vm_peak_kb": 2355752,
+      "vm_rss_kb": 1520064,
+      "vm_size_kb": 2295368,
+      "vm_swap_kb": 0
+    },
+    "server_pid": 1171492
+  },
+  "provenance": {
+    "hardware_description": "Intel Core i5-10210U, 4 physical cores / 8 logical CPUs, ~7.6 GiB RAM, no NVIDIA GPU",
+    "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q3_K_M",
+    "quantization": "Q3_K_M",
+    "runtime": "llama.cpp",
+    "runtime_build": "build 10991, commit 930e2fa59",
+    "runtime_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "runtime_version": "0.4.1-dev"
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "The most important issue in this repository is the inconsistency in the function names and the way they handle the input values. The function names are all the same (`transform_0000`, `transform_0001`, ..., `transform_0011`), but they handle the input values differently. The `transform_0000` function only sums up values that are greater than or equal to 1, while the other functions sum up values that are greater than or equal to 2, 3, 4, 5, 6, 7, 8, 9, and ",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790010504,
+    "id": "chatcmpl-aevOhdmeh7JlVsKhkdDEw5Vd9HKaND7h",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q3_K_M",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 10271.968,
+      "predicted_n": 128,
+      "predicted_per_second": 12.36374568145072,
+      "predicted_per_token_ms": 80.8816377952756,
+      "prompt_ms": 36393.891,
+      "prompt_n": 1024,
+      "prompt_per_second": 28.13659028654012,
+      "prompt_per_token_ms": 35.5409091796875
+    },
+    "usage": {
+      "completion_tokens": 128,
+      "prompt_tokens": 1024,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1152
+    }
+  }
+}

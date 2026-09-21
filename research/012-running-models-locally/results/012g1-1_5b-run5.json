@@ -1,0 +1,112 @@
+{
+  "condition": {
+    "artifact_mib": 1065.5601196289062,
+    "artifact_path": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct-GGUF/snapshots/f86cb2c1fa58255f8052cc32aeede1b7482d4361/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "expected_bytes": 1117320768,
+    "filename": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "label": "1.5B",
+    "parameter_scale": "1.5B",
+    "repository": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "resolved_artifact_path": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct-GGUF/blobs/cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "snapshot": "f86cb2c1fa58255f8052cc32aeede1b7482d4361"
+  },
+  "configuration": {
+    "configured_context": 8192,
+    "fresh_server_process": true,
+    "max_tokens": 128,
+    "parallel": 1,
+    "prompt_cache_enabled": false,
+    "quantization": "Q4_K_M",
+    "target_prompt_tokens": 1024,
+    "temperature": 0.0,
+    "threads": 4
+  },
+  "experiment": "012G-1",
+  "independent_variable": "model_size",
+  "measurements": {
+    "after_request_memory": {
+      "rss_anon_kib": 970284,
+      "rss_file_kib": 1101712,
+      "vm_data_kib": 1145956,
+      "vm_hwm_kib": 2071996,
+      "vm_peak_kib": 2847596,
+      "vm_rss_kib": 2071996,
+      "vm_size_kib": 2847596,
+      "vm_swap_kib": 0
+    },
+    "before_measured_request_memory": {
+      "rss_anon_kib": 970284,
+      "rss_file_kib": 1101712,
+      "vm_data_kib": 1145956,
+      "vm_hwm_kib": 2071996,
+      "vm_peak_kib": 2847596,
+      "vm_rss_kib": 2071996,
+      "vm_size_kib": 2847596,
+      "vm_swap_kib": 0
+    },
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 24,
+    "content": "The function responsible for validating a repository-relative path is `validate_relative_path` in the `workspace.py` file.",
+    "finish_reason": "stop",
+    "fresh_process_memory": {
+      "rss_anon_kib": 897096,
+      "rss_file_kib": 1101524,
+      "vm_data_kib": 1138440,
+      "vm_hwm_kib": 1998620,
+      "vm_peak_kib": 2711368,
+      "vm_rss_kib": 1998620,
+      "vm_size_kib": 2645832,
+      "vm_swap_kib": 0
+    },
+    "generation_seconds": 1.990509,
+    "generation_tokens_per_second": 11.554833462194845,
+    "prompt_seconds": 24.695083,
+    "prompt_tokens": 1024,
+    "prompt_tokens_per_second": 41.46574441559885,
+    "wall_seconds": 26.70879986300133
+  },
+  "provenance": {
+    "hardware": "Intel Core i5-10210U; 4 physical cores / 8 logical CPUs; ~7.6 GiB RAM; no NVIDIA GPU; Linux x86_64",
+    "llama_cpp_commit": "930e2fa5995789efbf249a8bf61325bb626e417b",
+    "llama_cpp_version": "0.4.1-dev (build 10991, commit 930e2fa59)",
+    "repetition": 5
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "The function responsible for validating a repository-relative path is `validate_relative_path` in the `workspace.py` file.",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790023663,
+    "id": "chatcmpl-DVl7hQwdIpmfKY9NjN5TVQTrxBptWOuN",
+    "model": "/home/bhargavi/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct-GGUF/blobs/cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "object": "chat.completion",
+    "system_fingerprint": "b10991-930e2fa59",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1990.509,
+      "predicted_n": 24,
+      "predicted_per_second": 11.554833462194845,
+      "predicted_per_token_ms": 86.54386956521739,
+      "prompt_ms": 24695.083,
+      "prompt_n": 1024,
+      "prompt_per_second": 41.46574441559885,
+      "prompt_per_token_ms": 24.1162919921875
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1024,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1048
+    }
+  },
+  "server_log": "/home/bhargavi/Documents/Hewn/research/012-running-models-locally/results/012g1-server-logs/1_5b-run5-server.log"
+}

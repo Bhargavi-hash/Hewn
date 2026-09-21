@@ -1,0 +1,98 @@
+You are reviewing a synthetic Python repository.
+
+Read the repository excerpts below and identify potential correctness
+problems. Give a concise explanation of the most important issue.
+
+Repository excerpts:
+
+# file: synthetic/module_0000.py
+
+def transform_0000(values):
+    total = 0
+    for value in values:
+        if value >= 1:
+            total += value
+    return total
+
+
+def normalize_0000(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0001.py
+
+def transform_0001(values):
+    total = 0
+    for value in values:
+        if value >= 2:
+            total += value
+    return total
+
+
+def normalize_0001(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0002.py
+
+def transform_0002(values):
+    total = 0
+    for value in values:
+        if value >= 3:
+            total += value
+    return total
+
+
+def normalize_0002(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0003.py
+
+def transform_0003(values):
+    total = 0
+    for value in values:
+        if value >= 4:
+            total += value
+    return total
+
+
+def normalize_0003(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0004.py
+
+def transform_0004(values):
+    total = 0
+    for value in values:
+        if value >= 5:
+            total += value
+    return total
+
+
+def normalize_0004(values):
+    if not values:
+        return []
+    maximum = max(values)
+    return [value / maximum for value in values]
+
+
+# file: synthetic/module_0005.py
+
+def transform_0005(values):
+    total = 0
+    for value in values:
+        if

@@ -1,0 +1,85 @@
+{
+  "calibration_method": "raw tokenization followed by authoritative chat-completion verification",
+  "configured_context": 8192,
+  "experiment": "012E-2",
+  "initial_chat_template_overhead_tokens": 29,
+  "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M",
+  "parallel_slots": 1,
+  "prefix_checks": [
+    {
+      "is_prefix": true,
+      "larger_target": 512,
+      "smaller_target": 256
+    },
+    {
+      "is_prefix": true,
+      "larger_target": 1024,
+      "smaller_target": 512
+    },
+    {
+      "is_prefix": true,
+      "larger_target": 2048,
+      "smaller_target": 1024
+    },
+    {
+      "is_prefix": true,
+      "larger_target": 4096,
+      "smaller_target": 2048
+    }
+  ],
+  "prompt_cache_enabled": false,
+  "purpose": "consumed context scaling",
+  "source_corpus": "research/012-running-models-locally/prompts/012e-consumed-context/corpus.txt",
+  "targets": [
+    {
+      "absolute_error": 0,
+      "actual_prompt_tokens": 256,
+      "character_count": 911,
+      "chat_template_overhead_tokens": 29,
+      "filename": "prompt-256.txt",
+      "raw_content_tokens": 227,
+      "target_tokens": 256
+    },
+    {
+      "absolute_error": 0,
+      "actual_prompt_tokens": 512,
+      "character_count": 1880,
+      "chat_template_overhead_tokens": 29,
+      "filename": "prompt-512.txt",
+      "raw_content_tokens": 483,
+      "target_tokens": 512
+    },
+    {
+      "absolute_error": 0,
+      "actual_prompt_tokens": 1024,
+      "character_count": 3799,
+      "chat_template_overhead_tokens": 29,
+      "filename": "prompt-1024.txt",
+      "raw_content_tokens": 995,
+      "target_tokens": 1024
+    },
+    {
+      "absolute_error": 0,
+      "actual_prompt_tokens": 2048,
+      "character_count": 7641,
+      "chat_template_overhead_tokens": 29,
+      "filename": "prompt-2048.txt",
+      "raw_content_tokens": 2019,
+      "target_tokens": 2048
+    },
+    {
+      "absolute_error": 0,
+      "actual_prompt_tokens": 4096,
+      "character_count": 15288,
+      "chat_template_overhead_tokens": 29,
+      "filename": "prompt-4096.txt",
+      "raw_content_tokens": 4067,
+      "target_tokens": 4096
+    }
+  ],
+  "temperature": 0.0,
+  "threads": 4,
+  "tokenizer_endpoint": "http://127.0.0.1:8080/tokenize",
+  "verification_endpoint": "http://127.0.0.1:8080/v1/chat/completions",
+  "verification_max_tokens": 1
+}
