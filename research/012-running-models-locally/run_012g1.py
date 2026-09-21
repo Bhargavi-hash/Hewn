@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import socket
 import statistics
 import subprocess
 import time
@@ -213,28 +212,6 @@ def read_process_memory(pid: int) -> ProcessMemory:
     )
 
 
-def port_is_free() -> bool:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        try:
-            sock.bind((HOST, PORT))
-        except OSError:
-            return False
-
-    return True
-
-def wait_for_port_free(timeout_seconds: float = 30.0) -> None:
-    deadline = time.monotonic() + timeout_seconds
-
-    while time.monotonic() < deadline:
-        if port_is_free():
-            return
-
-        time.sleep(0.25)
-
-    raise RuntimeError(
-        f"Port {PORT} did not become reusable within "
-        f"{timeout_seconds:.0f} seconds"
-    )
 
 
 def server_is_ready() -> bool:
@@ -650,7 +627,6 @@ def run_observation(
     artifact: Path,
     repetition: int,
 ) -> dict[str, Any]:
-    wait_for_port_free()
 
     process, log_handle, log_path = start_server(
         condition,
