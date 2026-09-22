@@ -1,6 +1,11 @@
 import pytest
 
-from hewn.completion import CompletionPolicy, CompletionRequirement, VerificationState
+from hewn.completion import (
+    CompletionPolicy,
+    CompletionRequirement,
+    VerificationState,
+)
+from hewn.tools import ToolCall, ToolResult
 
 
 def test_unknown_allows_completion() -> None:
@@ -108,3 +113,27 @@ def test_none_requirement_allows_unknown() -> None:
     )
 
     assert policy.can_finish()
+
+def test_default_policy_ignores_tool_attempts() -> None:
+    policy = CompletionPolicy(
+        requirement=CompletionRequirement.VERIFIED,
+    )
+
+    policy.record_tool_attempt(
+        call=ToolCall(
+            name="replace_text",
+            arguments={
+                "path": "example.py",
+                "old": "a",
+                "new": "b",
+            },
+        ),
+        result=ToolResult(
+            ok=False,
+            error="replacement failed",
+        ),
+    )
+
+    assert policy.verification_state is VerificationState.UNKNOWN
+    assert not policy.can_finish()
+    assert "requires verification" in policy.rejection_reason()

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from time import perf_counter
 
@@ -16,6 +17,34 @@ from hewn.tools import (
     ToolRegistry,
 )
 
+CompletionRejectionFormatter = Callable[
+    [FinalResponse, str],
+    list[Message],
+]
+
+CompletionPolicyFactory = Callable[
+    [CompletionRequirement],
+    CompletionPolicy,
+]
+
+def _default_completion_rejection_formatter(
+    response: FinalResponse,
+    reason: str,
+) -> list[Message]:
+    del response
+
+    return [
+        Message(
+            role="tool",
+            content=reason,
+        )
+    ]
+
+def _default_completion_policy_factory(
+    requirement: CompletionRequirement,
+) -> CompletionPolicy:
+    return CompletionPolicy(requirement=requirement)
+
 
 def _format_tool_observation(
     *,
@@ -29,9 +58,7 @@ def _format_tool_observation(
     parts = []
 
     if error:
-        parts.append(
-            f"Error: {error}"
-        )
+        parts.append(f"Error: {error}")
 
     if output:
         parts.append(output)
@@ -44,15 +71,10 @@ def _build_initial_user_message(
     user_request: str,
     context: ContextBundle | None,
 ) -> str:
-    if (
-        context is None
-        or context.evidence_count == 0
-    ):
+    if context is None or context.evidence_count == 0:
         return user_request
 
-    formatted_context = (
-        context.format_for_model()
-    )
+    formatted_context = context.format_for_model()
 
     return (
         f"{user_request}\n\n"
@@ -98,6 +120,12 @@ class Agent:
     executor: ToolExecutor
     max_turns: int = 20
     max_stagnant_turns: int = 3
+    completion_policy_factory: CompletionPolicyFactory = (
+        _default_completion_policy_factory
+    )
+    completion_rejection_formatter: CompletionRejectionFormatter = (
+        _default_completion_rejection_formatter
+    )
 
     def run(
         self,
@@ -110,17 +138,15 @@ class Agent:
     ) -> AgentRunResult:
         started_at = perf_counter()
 
-        completion_policy = CompletionPolicy(
-            requirement=completion_requirement,
+        completion_policy = self.completion_policy_factory(
+            completion_requirement
         )
 
         consecutive_stagnant_turns = 0
 
-        initial_user_message = (
-            _build_initial_user_message(
-                user_request=user_request,
-                context=context,
-            )
+        initial_user_message = _build_initial_user_message(
+            user_request=user_request,
+            context=context,
         )
 
         messages = [
@@ -148,14 +174,9 @@ class Agent:
                 )
             )
 
-            if isinstance(
-                response,
-                FinalResponse,
-            ):
+            if isinstance(response, FinalResponse):
                 if not completion_policy.can_finish():
-                    reason = (
-                        completion_policy.rejection_reason()
-                    )
+                    reason = completion_policy.rejection_reason()
 
                     metrics.events.append(
                         AgentEvent(
@@ -164,10 +185,10 @@ class Agent:
                         )
                     )
 
-                    messages.append(
-                        Message(
-                            role="tool",
-                            content=reason,
+                    messages.extend(
+                        self.completion_rejection_formatter(
+                            response,
+                            reason,
                         )
                     )
 
@@ -188,8 +209,7 @@ class Agent:
                         )
 
                         metrics.wall_time_seconds = (
-                            perf_counter()
-                            - started_at
+                            perf_counter() - started_at
                         )
 
                         raise AgentStagnationError(
@@ -204,8 +224,7 @@ class Agent:
                     continue
 
                 metrics.wall_time_seconds = (
-                    perf_counter()
-                    - started_at
+                    perf_counter() - started_at
                 )
 
                 return AgentRunResult(
@@ -213,14 +232,14 @@ class Agent:
                     metrics=metrics,
                 )
 
-            if isinstance(
-                response,
-                ToolCall,
-            ):
+            if isinstance(response, ToolCall):
                 metrics.tool_calls += 1
 
-                result = self.executor.execute(
-                    response
+                result = self.executor.execute(response)
+
+                completion_policy.record_tool_attempt(
+                    call=response,
+                    result=result,
                 )
 
                 consecutive_stagnant_turns = 0
@@ -236,12 +255,10 @@ class Agent:
                 ):
                     completion_policy.record_repository_change()
 
-                observation = (
-                    _format_tool_observation(
-                        ok=result.ok,
-                        output=result.output,
-                        error=result.error,
-                    )
+                observation = _format_tool_observation(
+                    ok=result.ok,
+                    output=result.output,
+                    error=result.error,
                 )
 
                 metrics.events.append(
@@ -281,8 +298,7 @@ class Agent:
             )
 
         metrics.wall_time_seconds = (
-            perf_counter()
-            - started_at
+            perf_counter() - started_at
         )
 
         raise AgentLimitError(

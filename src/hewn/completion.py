@@ -3,12 +3,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum, auto
 
+from hewn.tools import ToolCall, ToolResult
+
 
 class VerificationState(Enum):
     UNKNOWN = auto()
     FAILED = auto()
     STALE = auto()
     PASSED = auto()
+
 
 class CompletionRequirement(Enum):
     NONE = auto()
@@ -29,6 +32,20 @@ class CompletionPolicy:
 
     def record_repository_change(self) -> None:
         self.verification_state = VerificationState.STALE
+
+    def record_tool_attempt(
+        self,
+        *,
+        call: ToolCall,
+        result: ToolResult,
+    ) -> None:
+        """Observe an attempted tool action.
+
+        The default completion policy does not use tool-attempt history.
+        Specialized policies may override this hook without requiring the
+        agent loop to understand task-specific completion semantics.
+        """
+        del call, result
 
     def can_finish(self) -> bool:
         if self.requirement is CompletionRequirement.VERIFIED:
