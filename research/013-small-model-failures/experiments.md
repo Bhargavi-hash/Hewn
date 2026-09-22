@@ -902,3 +902,52 @@ repair system.
 > Deterministic mechanisms should establish whether an action is grounded and
 > effective. The model should remain responsible for deciding what semantic
 > change to make.
+
+### 013C conclusion
+
+013C tested whether one bounded deterministic grounding observation could
+convert the mechanically ineffective edit attempts exposed by 013B-2 into
+effective repository mutations. The treatment was triggered only after the
+model had independently selected `replace_text` following the frozen
+mutation-specific completion intervention.
+
+The grounding intervention was eligible and delivered in all 10 candidate
+runs. Five `stability-002` runs received the frozen missing-target feedback
+after proposing replacements whose `old` text was absent from the selected
+file. Five `stability-003` runs received the frozen no-op feedback after
+proposing exact-match replacements that the tool accepted but that left the
+selected file unchanged.
+
+No candidate run attempted a second valid edit after grounding, no candidate
+run produced an effective repository mutation, and behavioral success remained
+0/10. The negative-control `stability-001` runs received neither intervention
+and produced no tool calls or repository changes.
+
+The post-grounding outputs expose different downstream failures. In all five
+`stability-002` runs, the model emitted a non-JSON textual `replace_text` call
+using the same kind of placeholder replacement after being told that its
+target was absent and that it should re-read the current source. This provides
+no observable evidence that the model acquired additional repository evidence
+before retrying and terminates at the protocol boundary. In all five
+`stability-003` runs, the model first returned another `FinalResponse("None")`;
+after ordinary completion rejection, it emitted a non-JSON textual
+`run_check` action and terminated at the protocol boundary.
+
+The tested grounding intervention therefore did not move the eligible runs to
+effective repository mutation or behavioral correctness. It did expose that
+mechanically correct feedback about why an edit was ineffective is not, by
+itself, sufficient for this model to reliably execute a valid recovery
+sequence through Hewn's existing tool protocol.
+
+This result does not establish that deterministic grounding is generally
+ineffective. The intervention identified the mechanical failure but did not
+supply an exact current source span, automatically perform retrieval, generate
+replacement text, or repair malformed tool serialization. It therefore does
+not test stronger forms of deterministic grounding or establish an intrinsic
+model-capability boundary.
+
+Across 013B and 013C, the observable failure boundary moved from premature
+completion/action selection to edit construction and grounding, and then to
+recovery/action serialization. The experiments support treating these as
+distinct agent boundaries rather than collapsing them into a single
+"small-model reasoning" failure.
