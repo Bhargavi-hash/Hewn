@@ -275,3 +275,38 @@ Do not use "small model failure" as a causal explanation.
 
 The next experiment should test whether targeted system interventions can move
 specific observed failures from behavioral failure to behavioral success.
+---
+
+# Post-experiment taxonomy note
+
+The taxonomy above was frozen before the 013B and 013C intervention
+experiments. The categories are intentionally preserved rather than rewritten
+after observing those results.
+
+The intervention experiments reinforced the need to classify failures at the
+earliest observable boundary while preserving downstream observations.
+
+In particular:
+
+- 013B-1 exposed premature-completion and action-selection behavior.
+- 013B-2 moved the observable boundary to edit construction and grounding.
+- 013C exposed subsequent recovery and protocol-serialization failures after
+  the mechanical edit failure had been explicitly identified.
+
+These observations do not require a new failure category.
+
+They demonstrate that one run can encounter multiple boundaries sequentially
+and that an intervention can remove or move an earlier boundary without
+producing behavioral success.
+
+For future Hewn evaluation, failure records should therefore distinguish:
+
+1. the earliest observed blocking boundary;
+2. downstream failures exposed after an intervention;
+3. whether the intervention changed observable behavior;
+4. whether it produced an effective repository mutation; and
+5. whether the final requested behavior became correct.
+
+`unresolved_capability_boundary` remains reserved for cases where relevant
+agent-side scaffolding has been controlled or provided and the remaining
+failure cannot be assigned more specifically from observable evidence.
