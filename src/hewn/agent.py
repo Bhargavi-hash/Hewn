@@ -17,11 +17,28 @@ from hewn.tools import (
     ToolRegistry,
 )
 
+CompletionRejectionFormatter = Callable[
+    [FinalResponse, str],
+    list[Message],
+]
+
 CompletionPolicyFactory = Callable[
     [CompletionRequirement],
     CompletionPolicy,
 ]
 
+def _default_completion_rejection_formatter(
+    response: FinalResponse,
+    reason: str,
+) -> list[Message]:
+    del response
+
+    return [
+        Message(
+            role="tool",
+            content=reason,
+        )
+    ]
 
 def _default_completion_policy_factory(
     requirement: CompletionRequirement,
@@ -106,6 +123,9 @@ class Agent:
     completion_policy_factory: CompletionPolicyFactory = (
         _default_completion_policy_factory
     )
+    completion_rejection_formatter: CompletionRejectionFormatter = (
+        _default_completion_rejection_formatter
+    )
 
     def run(
         self,
@@ -165,10 +185,10 @@ class Agent:
                         )
                     )
 
-                    messages.append(
-                        Message(
-                            role="tool",
-                            content=reason,
+                    messages.extend(
+                        self.completion_rejection_formatter(
+                            response,
+                            reason,
                         )
                     )
 

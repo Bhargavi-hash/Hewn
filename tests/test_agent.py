@@ -1,8 +1,13 @@
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
 
-from hewn.agent import Agent, AgentLimitError
+from hewn.agent import (
+    Agent,
+    AgentLimitError,
+    AgentStagnationError,
+)
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionPolicy, CompletionRequirement
 from hewn.models import FinalResponse, Message, ModelResponse
@@ -15,11 +20,33 @@ from hewn.tools import (
 from hewn.workspace import Workspace
 
 
+@dataclass
+class RecordingCompletionRejectionFormatter:
+    calls: list[tuple[FinalResponse, str]] = field(
+        default_factory=list
+    )
+
+    def __call__(
+        self,
+        response: FinalResponse,
+        reason: str,
+    ) -> list[Message]:
+        self.calls.append((response, reason))
+
+        return [
+            Message(
+                role="user",
+                content=f"Controller feedback: {reason}",
+            )
+        ]
+
+
 class ScriptedModel:
     def __init__(
         self,
         responses: list[ModelResponse],
     ) -> None:
+        self.received_messages: list[list[Message]] = []
         self._responses = iter(responses)
         self.calls: list[list[Message]] = []
 
@@ -28,6 +55,7 @@ class ScriptedModel:
         messages: list[Message],
         tools: list[ToolDefinition],
     ) -> ModelResponse:
+        self.received_messages.append(list(messages))
         self.calls.append(list(messages))
         return next(self._responses)
 
@@ -474,3 +502,96 @@ def test_default_completion_factory_preserves_existing_behavior(
     result = agent.run("Say done.")
 
     assert result.text == "Done."
+
+def test_default_completion_rejection_formatter_preserves_existing_behavior(
+    tmp_path: Path,
+) -> None:
+    model = ScriptedModel(
+        responses=[
+            FinalResponse(text="premature completion"),
+            FinalResponse(text="still premature"),
+            FinalResponse(text="still premature"),
+        ]
+    )
+
+    registry = make_builtin_tool_registry(
+        Workspace(tmp_path)
+    )
+    executor = ToolExecutor(registry)
+
+    agent = Agent(
+        model=model,
+        registry=registry,
+        executor=executor,
+    )
+
+    with pytest.raises(AgentStagnationError):
+        agent.run(
+            "Change the repository.",
+            completion_requirement=CompletionRequirement.VERIFIED,
+        )
+
+    assert len(model.received_messages) >= 2
+
+    second_messages = model.received_messages[1]
+
+    assert second_messages[0] == Message(
+        role="user",
+        content="Change the repository.",
+    )
+
+    assert second_messages[-1].role == "tool"
+    assert "verification" in second_messages[-1].content.lower()
+
+    assert all(
+        message.content != "premature completion"
+        for message in second_messages
+    )
+
+
+def test_completion_rejection_formatter_is_injectable(
+    tmp_path: Path,
+) -> None:
+    formatter = RecordingCompletionRejectionFormatter()
+
+    model = ScriptedModel(
+        responses=[
+            FinalResponse(text="premature completion"),
+            FinalResponse(text="still premature"),
+            FinalResponse(text="still premature"),
+        ]
+    )
+
+    registry = make_builtin_tool_registry(
+        Workspace(tmp_path)
+    )
+    executor = ToolExecutor(registry)
+
+    agent = Agent(
+        model=model,
+        registry=registry,
+        executor=executor,
+        completion_rejection_formatter=formatter,
+    )
+
+    with pytest.raises(AgentStagnationError):
+        agent.run(
+            "Change the repository.",
+            completion_requirement=CompletionRequirement.VERIFIED,
+        )
+
+    assert formatter.calls
+
+    rejected_response, reason = formatter.calls[0]
+
+    assert rejected_response == FinalResponse(
+        text="premature completion"
+    )
+    assert "verification" in reason.lower()
+
+    second_messages = model.received_messages[1]
+
+    assert second_messages[-1] == Message(
+        role="user",
+        content=f"Controller feedback: {reason}",
+    )
