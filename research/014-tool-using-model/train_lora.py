@@ -48,6 +48,30 @@ def main():
         fp16=torch.cuda.is_available(),
         dataloader_num_workers=0,
     )
-    model.save_pretrained(a.out); tok.save_pretrained(a.out)
-    (a.out/"training_result.json").write_text(json.dumps({"base_model":a.model,"rows":len(rows),"epochs":a.epochs,"loss":result.training_loss},indent=2)+"\n")
-if __name__=="__main__": main()
+
+    trainer = Trainer(
+        model=model,
+        args=ta,
+        train_dataset=ds,
+    )
+    result = trainer.train()
+
+    model.save_pretrained(a.out)
+    tok.save_pretrained(a.out)
+
+    (a.out / "training_result.json").write_text(
+        json.dumps(
+            {
+                "base_model": a.model,
+                "rows": len(rows),
+                "epochs": a.epochs,
+                "loss": result.training_loss,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+
+
+if __name__ == "__main__":
+    main()
