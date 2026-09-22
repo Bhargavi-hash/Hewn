@@ -1,0 +1,846 @@
+{
+  "note": "Post-hoc Module 16 diagnostic over frozen M15 outputs. The normalizer rules were motivated by observed M15 failure shapes, so this replay is not independent evidence of generalization and does not alter M15 metrics.",
+  "protocol_finding": {
+    "m14_m15_tool_type": "tool",
+    "production_hewn_tool_type": "tool_call",
+    "aligned": false
+  },
+  "rows": 32,
+  "strict_tool_calls": 0,
+  "normalizable_outputs": 16,
+  "normalizable_correct_actions": 16,
+  "normalizable_rate": 0.5,
+  "normalizable_correct_rate": 0.5,
+  "rules": {
+    "action_file_to_read_file": 8,
+    "tool_args_to_read_file": 8
+  },
+  "families": {
+    "failed_verification": {
+      "rows": 8,
+      "strict_tool_calls": 0,
+      "normalizable_outputs": 8,
+      "normalizable_correct_actions": 8
+    },
+    "missing_target": {
+      "rows": 8,
+      "strict_tool_calls": 0,
+      "normalizable_outputs": 8,
+      "normalizable_correct_actions": 8
+    },
+    "noop_edit": {
+      "rows": 8,
+      "strict_tool_calls": 0,
+      "normalizable_outputs": 0,
+      "normalizable_correct_actions": 0
+    },
+    "unverified_mutation": {
+      "rows": 8,
+      "strict_tool_calls": 0,
+      "normalizable_outputs": 0,
+      "normalizable_correct_actions": 0
+    }
+  },
+  "records": [
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_0.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_0.py\",\"output\":\"src/heldout_recovery_0.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_0.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_0.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_0.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_1.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_1.py\",\"output\":\"src/heldout_recovery_1.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_1.py\",\"output\":\"No verification has run afterward.\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_1.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_1.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_2.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_2.py\",\"output\":\"src/heldout_recovery_2.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_2.py\",\"output\":\"No verification has run afterward.\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_2.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_2.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_3.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_3.py\",\"output\":\"src/heldout_recovery_3.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_3.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_3.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_3.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_4.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\": \"replace_text\", \"action\": \"on\", \"source\": \"src/heldout_recovery_4.py\", \"bytes_changed\": 0}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_4.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_4.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_4.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_5.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_5.py\",\"output\":\"src/heldout_recovery_5.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_5.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_5.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_5.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_6.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\": \"replace_text\", \"action\": \"on\", \"source\": \"src/heldout_recovery_6.py\", \"bytes_changed\": 0}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_6.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_6.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_6.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "missing_target",
+      "raw": "{\"action\":\"read_file\",\"file\":\"src/heldout_recovery_7.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "action_file_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "normalized_action_correct": true
+    },
+    {
+      "family": "noop_edit",
+      "raw": "{\"tool\": \"replace_text\", \"action\": \"on\", \"source\": \"src/heldout_recovery_7.py\", \"bytes_changed\": 0}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "unverified_mutation",
+      "raw": "{\"tool\":\"read_file\",\"input\":\"src/heldout_recovery_7.py\"}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "run_check",
+        "arguments": {
+          "check": "tests"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": null,
+      "normalized_action": null,
+      "normalized_action_correct": false
+    },
+    {
+      "family": "failed_verification",
+      "raw": "{\"tool\": \"read_file\", \"args\": [\"src/heldout_recovery_7.py\"]}",
+      "frozen_training_target": {
+        "type": "tool",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "production_equivalent_target": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "strict_production_tool_call": null,
+      "normalization_rule": "tool_args_to_read_file",
+      "normalized_action": {
+        "type": "tool_call",
+        "name": "read_file",
+        "arguments": {
+          "path": "src/heldout_recovery_7.py"
+        }
+      },
+      "normalized_action_correct": true
+    }
+  ]
+}

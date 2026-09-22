@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from hewn.action_normalizer import normalize_model_response
 from hewn.models import FinalResponse, ModelResponse
 from hewn.tools import ToolCall
 
@@ -17,6 +18,25 @@ class ModelProtocolError(ValueError):
         super().__init__(message)
         self.raw_response = raw_response
 
+def parse_or_normalize_model_response(
+    text: str,
+) -> ModelResponse:
+    """
+    Parse the canonical Hewn protocol first.
+
+    If strict parsing fails, attempt only allowlisted deterministic
+    normalization. The canonical parser itself remains strict.
+    """
+
+    try:
+        return parse_model_response(text)
+    except ModelProtocolError:
+        normalized = normalize_model_response(text)
+
+        if normalized.response is not None:
+            return normalized.response
+
+        raise
 
 def parse_model_response(text: str) -> ModelResponse:
     try:

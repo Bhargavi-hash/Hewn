@@ -6,7 +6,7 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from hewn.model_protocol import parse_model_response
+from hewn.model_protocol import parse_or_normalize_model_response
 from hewn.models import Message, ModelError, ModelResponse
 from hewn.tools import ToolDefinition
 
@@ -56,7 +56,7 @@ class LlamaCppModel:
 
         generated_text = self._extract_content(body)
 
-        return parse_model_response(generated_text)
+        return parse_or_normalize_model_response(generated_text)
 
     def _build_messages(
         self,
