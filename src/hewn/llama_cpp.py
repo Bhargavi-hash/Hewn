@@ -25,6 +25,7 @@ class LlamaCppModel:
     temperature: float = 0.0
     max_tokens: int = 256
     timeout_seconds: float = 120.0
+    health_timeout_seconds: float = 2.0
     additional_system_instruction: str | None = None
 
     _diagnostics: list[ModelDiagnostic] = field(
@@ -76,6 +77,28 @@ class LlamaCppModel:
         generated_text = self._extract_content(body)
 
         return self._parse_generated_text(generated_text)
+
+    def check_available(self) -> None:
+        request = Request(
+            f"{self.base_url}/health",
+            method="GET",
+        )
+    
+        try:
+            with urlopen(
+                request,
+                timeout=self.health_timeout_seconds,
+            ):
+                return
+        except HTTPError as exc:
+            raise ModelError(
+                f"llama.cpp health check returned HTTP {exc.code}"
+            ) from exc
+        except URLError as exc:
+            raise ModelError(
+                f"Could not reach llama.cpp: {exc.reason}"
+            ) from exc
+
 
     def _parse_generated_text(
         self,
