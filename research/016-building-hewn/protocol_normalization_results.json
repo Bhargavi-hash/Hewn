@@ -1,0 +1,173 @@
+{
+  "note": "Fresh Module 16 deterministic protocol-boundary validation fixture, frozen before model evaluation.",
+  "rows": 18,
+  "correct": 18,
+  "accuracy": 1.0,
+  "expected_counts": {
+    "canonical": 4,
+    "normalized": 2,
+    "rejected": 12
+  },
+  "actual_counts": {
+    "canonical": 4,
+    "normalized": 2,
+    "rejected": 12
+  },
+  "category_counts": {
+    "ambiguous": 2,
+    "canonical": 4,
+    "incomplete": 1,
+    "invalid": 4,
+    "protocol_drift": 1,
+    "safe_alias": 2,
+    "unsafe_alias": 2,
+    "unsupported_alias": 2
+  },
+  "failures": [],
+  "records": [
+    {
+      "id": "canonical_read",
+      "category": "canonical",
+      "expected": "canonical",
+      "actual": "canonical",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "canonical_search",
+      "category": "canonical",
+      "expected": "canonical",
+      "actual": "canonical",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "canonical_check",
+      "category": "canonical",
+      "expected": "canonical",
+      "actual": "canonical",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "canonical_final",
+      "category": "canonical",
+      "expected": "canonical",
+      "actual": "canonical",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "alias_action_file",
+      "category": "safe_alias",
+      "expected": "normalized",
+      "actual": "normalized",
+      "normalization_rule": "action_file_to_read_file",
+      "correct": true
+    },
+    {
+      "id": "alias_tool_args",
+      "category": "safe_alias",
+      "expected": "normalized",
+      "actual": "normalized",
+      "normalization_rule": "tool_args_to_read_file",
+      "correct": true
+    },
+    {
+      "id": "reject_action_search",
+      "category": "unsupported_alias",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_action_check",
+      "category": "unsupported_alias",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_action_replace",
+      "category": "unsafe_alias",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_tool_replace_args",
+      "category": "unsafe_alias",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_read_missing_file",
+      "category": "incomplete",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_read_extra_field",
+      "category": "ambiguous",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_tool_multiple_args",
+      "category": "ambiguous",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_nonstring_file",
+      "category": "invalid",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_nonstring_arg",
+      "category": "invalid",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_old_training_protocol",
+      "category": "protocol_drift",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_markdown",
+      "category": "invalid",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    },
+    {
+      "id": "reject_prose",
+      "category": "invalid",
+      "expected": "rejected",
+      "actual": "rejected",
+      "normalization_rule": null,
+      "correct": true
+    }
+  ]
+}
