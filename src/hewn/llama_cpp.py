@@ -1,13 +1,21 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from hewn.model_protocol import parse_or_normalize_model_response
-from hewn.models import Message, ModelError, ModelResponse
+from hewn.model_protocol import (
+    ParseSource,
+    parse_model_response_with_provenance,
+)
+from hewn.models import (
+    Message,
+    ModelDiagnostic,
+    ModelError,
+    ModelResponse,
+)
 from hewn.tools import ToolDefinition
 
 
@@ -17,8 +25,19 @@ class LlamaCppModel:
     temperature: float = 0.0
     max_tokens: int = 256
     timeout_seconds: float = 120.0
-
     additional_system_instruction: str | None = None
+
+    _diagnostics: list[ModelDiagnostic] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+        compare=False,
+    )
+
+    def drain_diagnostics(self) -> list[ModelDiagnostic]:
+        diagnostics = list(self._diagnostics)
+        self._diagnostics.clear()
+        return diagnostics
 
     def respond(
         self,
@@ -56,7 +75,37 @@ class LlamaCppModel:
 
         generated_text = self._extract_content(body)
 
-        return parse_or_normalize_model_response(generated_text)
+        return self._parse_generated_text(generated_text)
+
+    def _parse_generated_text(
+        self,
+        generated_text: str,
+    ) -> ModelResponse:
+        parsed = parse_model_response_with_provenance(
+            generated_text
+        )
+
+        if parsed.source is ParseSource.CANONICAL:
+            detail = "canonical"
+        else:
+            if parsed.normalization_rule is None:
+                raise RuntimeError(
+                    "Normalized response is missing provenance"
+                )
+
+            detail = (
+                "normalized:"
+                f"{parsed.normalization_rule}"
+            )
+
+        self._diagnostics.append(
+            ModelDiagnostic(
+                kind="model_protocol",
+                detail=detail,
+            )
+        )
+
+        return parsed.response
 
     def _build_messages(
         self,
@@ -83,39 +132,39 @@ class LlamaCppModel:
         return provider_messages
 
     def _build_system_prompt(
-            self,
-            tools: list[ToolDefinition],
-        ) -> str:
-            tool_descriptions = "\n".join(
-                (
-                    f"- {tool.name}: {tool.description}\n"
-                    f"  arguments schema: "
-                    f"{json.dumps(tool.input_schema, sort_keys=True)}"
-                )
-                for tool in tools
+        self,
+        tools: list[ToolDefinition],
+    ) -> str:
+        tool_descriptions = "\n".join(
+            (
+                f"- {tool.name}: {tool.description}\n"
+                f"  arguments schema: "
+                f"{json.dumps(tool.input_schema, sort_keys=True)}"
+            )
+            for tool in tools
+        )
+
+        system_prompt = (
+            "You are the decision model inside Hewn, a coding agent.\n"
+            "Choose exactly one next action.\n\n"
+            "To use a tool, respond with exactly this JSON shape:\n"
+            '{"type":"tool_call","name":"TOOL_NAME",'
+            '"arguments":{...}}\n\n'
+            "To finish, respond with exactly this JSON shape:\n"
+            '{"type":"final","text":"ANSWER"}\n\n'
+            "Return exactly one JSON object and no Markdown fences, "
+            "explanation, or additional text.\n\n"
+            "Available tools:\n"
+            f"{tool_descriptions}"
+        )
+
+        if self.additional_system_instruction is not None:
+            system_prompt += (
+                "\n\n"
+                + self.additional_system_instruction
             )
 
-            system_prompt = (
-                "You are the decision model inside Hewn, a coding agent.\n"
-                "Choose exactly one next action.\n\n"
-                "To use a tool, respond with exactly this JSON shape:\n"
-                '{"type":"tool_call","name":"TOOL_NAME",'
-                '"arguments":{...}}\n\n'
-                "To finish, respond with exactly this JSON shape:\n"
-                '{"type":"final","text":"ANSWER"}\n\n'
-                "Return exactly one JSON object and no Markdown fences, "
-                "explanation, or additional text.\n\n"
-                "Available tools:\n"
-                f"{tool_descriptions}"
-            )
-
-            if self.additional_system_instruction is not None:
-                system_prompt += (
-                    "\n\n"
-                    + self.additional_system_instruction
-                )
-        
-            return system_prompt
+        return system_prompt
 
     def _extract_content(self, body: str) -> str:
         try:

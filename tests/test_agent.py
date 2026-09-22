@@ -10,7 +10,13 @@ from hewn.agent import (
 )
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionPolicy, CompletionRequirement
-from hewn.models import FinalResponse, Message, ModelResponse
+from hewn.models import (
+    FinalResponse,
+    Message,
+    ModelDiagnostic,
+    ModelResponse,
+)
+from hewn.telemetry import AgentEvent
 from hewn.tools import (
     ToolCall,
     ToolDefinition,
@@ -59,6 +65,19 @@ class ScriptedModel:
         self.calls.append(list(messages))
         return next(self._responses)
 
+class DiagnosticScriptedModel(ScriptedModel):
+    def __init__(
+        self,
+        responses: list[ModelResponse],
+        diagnostics: list[ModelDiagnostic],
+    ) -> None:
+        super().__init__(responses)
+        self._diagnostics = diagnostics
+
+    def drain_diagnostics(self) -> list[ModelDiagnostic]:
+        diagnostics = list(self._diagnostics)
+        self._diagnostics.clear()
+        return diagnostics
 
 def make_agent(
     tmp_path: Path,
@@ -75,6 +94,38 @@ def make_agent(
         executor=ToolExecutor(registry),
         max_turns=max_turns,
     )
+
+def test_agent_records_model_diagnostics(
+    tmp_path: Path,
+) -> None:
+    model = DiagnosticScriptedModel(
+        responses=[
+            FinalResponse("Done."),
+        ],
+        diagnostics=[
+            ModelDiagnostic(
+                kind="model_protocol",
+                detail=(
+                    "normalized:"
+                    "action_file_to_read_file"
+                ),
+            ),
+        ],
+    )
+
+    agent = make_agent(tmp_path, model)
+
+    result = agent.run("Finish.")
+
+    assert result.metrics.events[0] == AgentEvent(
+        kind="model_protocol",
+        detail=(
+            "normalized:"
+            "action_file_to_read_file"
+        ),
+    )
+
+    assert result.metrics.events[1].kind == "model_response"
 
 def test_agent_returns_immediate_final_response(
     tmp_path: Path,

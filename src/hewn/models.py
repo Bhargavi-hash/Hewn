@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from hewn.tools import ToolCall, ToolDefinition
 
@@ -27,6 +27,17 @@ class Model(Protocol):
         messages: list[Message],
         tools: list[ToolDefinition],
     ) -> ModelResponse:
+        ...
+
+@dataclass(frozen=True)
+class ModelDiagnostic:
+    kind: str
+    detail: str
+
+@runtime_checkable
+class DiagnosticModel(Protocol):
+    def drain_diagnostics(self) -> list[ModelDiagnostic]:
+        """Return pending diagnostics and clear them."""
         ...
 
 @dataclass

@@ -96,3 +96,4 @@ def test_system_prompt_omits_extra_separator_by_default() -> None:
         default_model._build_system_prompt([])
         == explicit_empty_model._build_system_prompt([])
     )
+

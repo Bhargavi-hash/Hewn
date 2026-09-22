@@ -9,7 +9,12 @@ from hewn.completion import (
     CompletionRequirement,
 )
 from hewn.context.models import ContextBundle
-from hewn.models import FinalResponse, Message, Model
+from hewn.models import (
+    DiagnosticModel,
+    FinalResponse,
+    Message,
+    Model,
+)
 from hewn.telemetry import AgentEvent, AgentMetrics
 from hewn.tools import (
     ToolCall,
@@ -166,6 +171,15 @@ class Agent:
                 messages=messages,
                 tools=tools,
             )
+
+            if isinstance(self.model, DiagnosticModel):
+                for diagnostic in self.model.drain_diagnostics():
+                    metrics.events.append(
+                        AgentEvent(
+                            kind=diagnostic.kind,
+                            detail=diagnostic.detail,
+                        )
+                    )
 
             metrics.events.append(
                 AgentEvent(
