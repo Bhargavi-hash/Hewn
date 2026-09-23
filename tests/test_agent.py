@@ -172,7 +172,25 @@ def test_agent_executes_tool_and_returns_observation_to_model(
     assert len(model.calls) == 2
 
     second_call_messages = model.calls[1]
-
+    assistant_messages = [
+        message
+        for message in second_call_messages
+        if message.role == "assistant"
+    ]
+    
+    assert assistant_messages == [
+        Message(
+            role="assistant",
+            content=(
+                '{"arguments":{"query":"ImportantThing"},'
+                '"name":"search_text","type":"tool_call"}'
+            ),
+        )
+    ]
+    
+    assert not assistant_messages[0].content.startswith(
+        "Tool call:"
+    )
     assert any(
         message.role == "tool"
         and "example.py" in message.content

@@ -9,6 +9,7 @@ from hewn.completion import (
     CompletionRequirement,
 )
 from hewn.context.models import ContextBundle
+from hewn.model_protocol import serialize_model_response
 from hewn.models import (
     DiagnosticModel,
     FinalResponse,
@@ -310,10 +311,7 @@ class Agent:
                 messages.append(
                     Message(
                         role="assistant",
-                        content=(
-                            f"Tool call: {response.name} "
-                            f"{response.arguments}"
-                        ),
+                        content=serialize_model_response(response),
                     )
                 )
 
