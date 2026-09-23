@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
@@ -16,14 +17,14 @@ from hewn.retrieval.semantic import EmbeddingModel
 from hewn.retrieval.semantic_index import SemanticIndex
 from hewn.retrieval.symbol_documents import build_symbol_documents
 from hewn.session import HewnSession
-from hewn.tools import ToolExecutor
+from hewn.tools import ToolDefinition, ToolExecutor
 from hewn.workspace import Workspace
 
 
 class FakeEmbeddingModel(EmbeddingModel):
     def encode(
         self,
-        texts: list[str],
+        texts: Sequence[str],
     ) -> np.ndarray:
         return np.ones(
             (len(texts), 4),
@@ -37,9 +38,8 @@ class RecordingFinalModel:
 
     def respond(
         self,
-        *,
         messages: list[Message],
-        tools: object,
+        tools: list[ToolDefinition],
     ) -> FinalResponse:
         del tools
         self.messages = list(messages)
