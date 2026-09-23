@@ -27,6 +27,7 @@ from hewn.completion import CompletionRequirement
 from hewn.context.builder import ContextBuilder
 from hewn.execution import BubblewrapExecutionBackend
 from hewn.llama_cpp import LlamaCppModel
+from hewn.model_protocol import ModelProtocolError
 from hewn.repository.index import RepositoryIndex
 from hewn.retrieval.semantic_index import SemanticIndex
 
@@ -109,6 +110,10 @@ class TaskResult:
     canonical_model_responses: int
     normalized_model_responses: int
     normalization_rules: Mapping[str, int]
+
+    model_attempts: int
+    protocol_rejections: int
+    rejected_generation: str | None
 
     behavioral_oracle: OracleResult
     regression_oracle: OracleResult
@@ -511,6 +516,9 @@ def run_one(
         final_text: str | None = None
 
         metrics = AgentMetrics()
+        model_attempts = 0
+        protocol_rejections = 0
+        rejected_generation: str | None = None
         treatment = (
             "repository_map_bootstrap"
             if bootstrap_repository_map
@@ -554,6 +562,18 @@ def run_one(
             final_text = result.text
             metrics = result.metrics
             terminal_status = "completed"
+        except ModelProtocolError as exc:
+            terminal_status = "protocol_error"
+            terminal_error = (
+                f"{type(exc).__name__}: {exc}"
+            )
+            protocol_rejections = 1
+            rejected_generation = exc.raw_response
+
+            # The protocol error occurs after one model request
+            # has returned text but before Agent can return its
+            # in-progress metrics.
+            model_attempts = 1
 
         except AgentLimitError as exc:
             metrics = exc.metrics
@@ -570,6 +590,8 @@ def run_one(
             terminal_error = (
                 f"{type(exc).__name__}: {exc}"
             )
+        if model_attempts == 0:
+            model_attempts = metrics.model_calls
 
         agent_wall_time = (
             perf_counter() - started
@@ -630,6 +652,9 @@ def run_one(
             terminal_error=terminal_error,
             final_text=final_text,
             task_passes=behavioral.passed,
+            model_attempts=model_attempts,
+            protocol_rejections=protocol_rejections,
+            rejected_generation=rejected_generation,
             regression_passes=regression.passed,
             behavioral_success=(
                 behavioral_success
@@ -741,6 +766,19 @@ def print_task_result(
         f"regression={result.regression_passes} "
         f"terminal={result.terminal_status}"
     )
+
+    print(
+        "  model_attempts="
+        f"{result.model_attempts} "
+        "protocol_rejections="
+        f"{result.protocol_rejections}"
+    )
+
+    if result.rejected_generation is not None:
+        print(
+            "  rejected_generation="
+            f"{result.rejected_generation!r}"
+        )
 
     print(
         "  changed="
