@@ -5,6 +5,7 @@ description = "A local-first coding agent designed to make small models perform 
 requires-python = ">=3.12"
 dependencies = [
     "jsonschema>=4.23,<5",
+    "sentence-transformers>=6.0.1",
 ]
 
 [dependency-groups]
