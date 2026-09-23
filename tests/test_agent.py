@@ -8,13 +8,21 @@ from hewn.agent import (
     AgentLimitError,
     AgentStagnationError,
 )
+from hewn.authority import AuthorityGrant, AuthorityPolicy
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionPolicy, CompletionRequirement
-from hewn.models import FinalResponse, Message, ModelResponse
+from hewn.models import (
+    FinalResponse,
+    Message,
+    ModelDiagnostic,
+    ModelResponse,
+)
+from hewn.telemetry import AgentEvent
 from hewn.tools import (
     ToolCall,
     ToolDefinition,
     ToolExecutor,
+    ToolRegistry,
     ToolResult,
 )
 from hewn.workspace import Workspace
@@ -59,6 +67,19 @@ class ScriptedModel:
         self.calls.append(list(messages))
         return next(self._responses)
 
+class DiagnosticScriptedModel(ScriptedModel):
+    def __init__(
+        self,
+        responses: list[ModelResponse],
+        diagnostics: list[ModelDiagnostic],
+    ) -> None:
+        super().__init__(responses)
+        self._diagnostics = diagnostics
+
+    def drain_diagnostics(self) -> list[ModelDiagnostic]:
+        diagnostics = list(self._diagnostics)
+        self._diagnostics.clear()
+        return diagnostics
 
 def make_agent(
     tmp_path: Path,
@@ -75,6 +96,38 @@ def make_agent(
         executor=ToolExecutor(registry),
         max_turns=max_turns,
     )
+
+def test_agent_records_model_diagnostics(
+    tmp_path: Path,
+) -> None:
+    model = DiagnosticScriptedModel(
+        responses=[
+            FinalResponse("Done."),
+        ],
+        diagnostics=[
+            ModelDiagnostic(
+                kind="model_protocol",
+                detail=(
+                    "normalized:"
+                    "action_file_to_read_file"
+                ),
+            ),
+        ],
+    )
+
+    agent = make_agent(tmp_path, model)
+
+    result = agent.run("Finish.")
+
+    assert result.metrics.events[0] == AgentEvent(
+        kind="model_protocol",
+        detail=(
+            "normalized:"
+            "action_file_to_read_file"
+        ),
+    )
+
+    assert result.metrics.events[1].kind == "model_response"
 
 def test_agent_returns_immediate_final_response(
     tmp_path: Path,
@@ -119,7 +172,25 @@ def test_agent_executes_tool_and_returns_observation_to_model(
     assert len(model.calls) == 2
 
     second_call_messages = model.calls[1]
-
+    assistant_messages = [
+        message
+        for message in second_call_messages
+        if message.role == "assistant"
+    ]
+    
+    assert assistant_messages == [
+        Message(
+            role="assistant",
+            content=(
+                '{"arguments":{"query":"ImportantThing"},'
+                '"name":"search_text","type":"tool_call"}'
+            ),
+        )
+    ]
+    
+    assert not assistant_messages[0].content.startswith(
+        "Tool call:"
+    )
     assert any(
         message.role == "tool"
         and "example.py" in message.content
@@ -594,4 +665,68 @@ def test_completion_rejection_formatter_is_injectable(
     assert second_messages[-1] == Message(
         role="user",
         content=f"Controller feedback: {reason}",
+    )
+
+def test_run_messages_matches_run_for_same_initial_message() -> None:
+    registry = ToolRegistry()
+
+    executor = ToolExecutor(
+        registry,
+        authority_policy=AuthorityPolicy(
+            AuthorityGrant(
+                repository_read=True,
+                repository_write=True,
+                approved_checks=True,
+            )
+        ),
+    )
+
+    run_model = ScriptedModel(
+        responses=[
+            FinalResponse(text="Done."),
+        ]
+    )
+    messages_model = ScriptedModel(
+        responses=[
+            FinalResponse(text="Done."),
+        ]
+    )
+
+    run_agent = Agent(
+        model=run_model,
+        registry=registry,
+        executor=executor,
+    )
+    messages_agent = Agent(
+        model=messages_model,
+        registry=registry,
+        executor=executor,
+    )
+
+    run_result = run_agent.run("hello")
+
+    messages_result = messages_agent.run_messages(
+        [
+            Message(
+                role="user",
+                content="hello",
+            )
+        ]
+    )
+
+    assert run_result.text == messages_result.text
+    assert run_result.metrics.model_calls == (
+        messages_result.metrics.model_calls
+    )
+    assert run_result.metrics.tool_calls == (
+        messages_result.metrics.tool_calls
+    )
+    assert run_result.metrics.successful_tool_calls == (
+        messages_result.metrics.successful_tool_calls
+    )
+    assert run_result.metrics.failed_tool_calls == (
+        messages_result.metrics.failed_tool_calls
+    )
+    assert run_result.metrics.events == (
+        messages_result.metrics.events
     )

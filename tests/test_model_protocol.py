@@ -87,3 +87,94 @@ def test_structured_protocol_error_preserves_raw_response() -> None:
         parse_model_response(raw_response)
 
     assert exc_info.value.raw_response == raw_response
+
+def test_serialize_tool_call_uses_canonical_protocol() -> None:
+    from hewn.model_protocol import serialize_model_response
+
+    encoded = serialize_model_response(
+        ToolCall(
+            name="read_file",
+            arguments={"path": "README.md"},
+        )
+    )
+
+    assert encoded == (
+        '{"arguments":{"path":"README.md"},'
+        '"name":"read_file","type":"tool_call"}'
+    )
+
+    assert parse_model_response(encoded) == ToolCall(
+        name="read_file",
+        arguments={"path": "README.md"},
+    )
+
+
+def test_serialize_final_uses_canonical_protocol() -> None:
+    from hewn.model_protocol import serialize_model_response
+
+    encoded = serialize_model_response(
+        FinalResponse(text="Done.")
+    )
+
+    assert encoded == '{"text":"Done.","type":"final"}'
+    assert parse_model_response(encoded) == FinalResponse(
+        text="Done."
+    )
+
+
+def test_canonical_parse_records_canonical_provenance() -> None:
+    from hewn.model_protocol import (
+        ParseSource,
+        parse_model_response_with_provenance,
+    )
+
+    parsed = parse_model_response_with_provenance(
+        '{"type":"tool_call","name":"read_file",'
+        '"arguments":{"path":"README.md"}}'
+    )
+
+    assert parsed.response == ToolCall(
+        name="read_file",
+        arguments={"path": "README.md"},
+    )
+    assert parsed.source is ParseSource.CANONICAL
+    assert parsed.normalization_rule is None
+
+
+def test_normalized_parse_records_rule_provenance() -> None:
+    from hewn.model_protocol import (
+        ParseSource,
+        parse_model_response_with_provenance,
+    )
+
+    parsed = parse_model_response_with_provenance(
+        '{"action":"read_file","file":"README.md"}'
+    )
+
+    assert parsed.response == ToolCall(
+        name="read_file",
+        arguments={"path": "README.md"},
+    )
+    assert parsed.source is ParseSource.NORMALIZED
+    assert (
+        parsed.normalization_rule
+        == "action_file_to_read_file"
+    )
+
+
+def test_serializer_round_trip_preserves_tool_call() -> None:
+    from hewn.model_protocol import serialize_model_response
+
+    original = ToolCall(
+        name="replace_text",
+        arguments={
+            "path": "example.py",
+            "old": "x = 1",
+            "new": "x = 2",
+        },
+    )
+
+    encoded = serialize_model_response(original)
+    decoded = parse_model_response(encoded)
+
+    assert decoded == original

@@ -1,12 +1,55 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 from _pytest.capture import CaptureFixture
+from _pytest.monkeypatch import MonkeyPatch
 
 from hewn.cli import run_cli
-from hewn.models import EchoModel, FinalResponse, Message, ModelResponse
+from hewn.llama_cpp import LlamaCppModel
+from hewn.model_protocol import ModelProtocolError
+from hewn.models import (
+    EchoModel,
+    FinalResponse,
+    Message,
+    ModelError,
+    ModelResponse,
+)
+from hewn.retrieval.semantic import FloatArray
 from hewn.tools import ToolCall, ToolDefinition
 
+
+class InvalidProtocolModel:
+    def respond(
+        self,
+        messages: list[Message],
+        tools: list[ToolDefinition],
+    ) -> ModelResponse:
+        del messages, tools
+
+        raise ModelProtocolError(
+            "Model response is not valid JSON",
+            raw_response="not valid json",
+        )
+
+class FakeEmbeddingModel:
+    def encode(
+        self,
+        texts: Sequence[str],
+    ) -> FloatArray:
+        return np.ones(
+            (len(texts), 4),
+            dtype=np.float32,
+        )
+
+def make_test_repository(root: Path) -> None:
+    source = root / "sample.py"
+    source.write_text(
+        "def sample() -> str:\n"
+        '    return "sample"\n',
+        encoding="utf-8",
+    )
 
 class RepeatingToolModel:
     def respond(
@@ -46,6 +89,8 @@ def test_cli_runs_request(
     tmp_path: Path,
     capsys: CaptureFixture[str],
 ) -> None:
+    make_test_repository(tmp_path)
+
     exit_code = run_cli(
         [
             "hello Hewn",
@@ -53,6 +98,7 @@ def test_cli_runs_request(
             str(tmp_path),
         ],
         model=EchoModel(),
+        embedding_model=FakeEmbeddingModel(),
     )
 
     captured = capsys.readouterr()
@@ -66,6 +112,7 @@ def test_cli_reports_trace_when_agent_reaches_turn_limit(
     tmp_path: Path,
     capsys: CaptureFixture[str],
 ) -> None:
+    make_test_repository(tmp_path)
     exit_code = run_cli(
         [
             "Keep looking.",
@@ -74,6 +121,7 @@ def test_cli_reports_trace_when_agent_reaches_turn_limit(
             "--trace",
         ],
         model=RepeatingToolModel(),
+        embedding_model=FakeEmbeddingModel(),
     )
 
     captured = capsys.readouterr()
@@ -94,7 +142,7 @@ def test_cli_reports_trace_when_agent_stagnates(
         "    assert False\n",
         encoding="utf-8",
     )
-
+    make_test_repository(tmp_path)
     exit_code = run_cli(
         [
             "Fix the failing tests.",
@@ -103,6 +151,7 @@ def test_cli_reports_trace_when_agent_stagnates(
             "--trace",
         ],
         model=StagnatingModel(),
+        embedding_model=FakeEmbeddingModel(),
     )
 
     captured = capsys.readouterr()
@@ -118,3 +167,102 @@ def test_cli_reports_trace_when_agent_stagnates(
     assert "Trace:" in captured.out
     assert "completion_rejected" in captured.out
     assert "stagnation_detected" in captured.out
+
+def test_cli_verify_requires_successful_check(
+    tmp_path: Path,
+    capsys: CaptureFixture[str],
+) -> None:
+    make_test_repository(tmp_path)
+
+    exit_code = run_cli(
+        [
+            "hello Hewn",
+            "--workspace",
+            str(tmp_path),
+            "--verify",
+            "--trace",
+        ],
+        model=EchoModel(),
+        embedding_model=FakeEmbeddingModel(),
+    )
+
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "requires verification" in captured.out
+    assert "completion_rejected" in captured.out
+
+
+def test_cli_reports_model_protocol_error_without_traceback(
+    tmp_path: Path,
+    capsys: CaptureFixture[str],
+) -> None:
+    make_test_repository(tmp_path)
+
+    exit_code = run_cli(
+        [
+            "Fix the repository.",
+            "--workspace",
+            str(tmp_path),
+        ],
+        model=InvalidProtocolModel(),
+        embedding_model=FakeEmbeddingModel(),
+    )
+
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert (
+        "Model protocol error: "
+        "Model response is not valid JSON"
+        in captured.out
+    )
+    assert "Traceback" not in captured.out
+    assert "Traceback" not in captured.err
+
+def test_cli_preflights_llama_cpp_before_loading_embeddings(
+    tmp_path: Path,
+    capsys: CaptureFixture[str],
+    monkeypatch: MonkeyPatch,
+) -> None:
+    embedding_initialized = False
+
+    def unavailable(self: LlamaCppModel) -> None:
+        del self
+        raise ModelError(
+            "Could not reach llama.cpp: connection refused"
+        )
+
+    def fake_embedding_model(
+        model_name: str,
+    ) -> FakeEmbeddingModel:
+        nonlocal embedding_initialized
+        del model_name
+
+        embedding_initialized = True
+        return FakeEmbeddingModel()
+
+    monkeypatch.setattr(
+        LlamaCppModel,
+        "check_available",
+        unavailable,
+    )
+    monkeypatch.setattr(
+        "hewn.cli.SentenceTransformerEmbeddingModel",
+        fake_embedding_model,
+    )
+
+    exit_code = run_cli(
+        [
+            "Explain this repository.",
+            "--workspace",
+            str(tmp_path),
+        ],
+        model=LlamaCppModel(),
+    )
+
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "Could not reach llama.cpp" in captured.out
+    assert not embedding_initialized

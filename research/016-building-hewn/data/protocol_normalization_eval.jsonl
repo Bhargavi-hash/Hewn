@@ -1,0 +1,18 @@
+{"id":"canonical_read","category":"canonical","raw":"{\"type\":\"tool_call\",\"name\":\"read_file\",\"arguments\":{\"path\":\"src/new_alpha.py\"}}","expected":"canonical","expected_name":"read_file","expected_arguments":{"path":"src/new_alpha.py"}}
+{"id":"canonical_search","category":"canonical","raw":"{\"type\":\"tool_call\",\"name\":\"search_text\",\"arguments\":{\"query\":\"FreshSymbol\"}}","expected":"canonical","expected_name":"search_text","expected_arguments":{"query":"FreshSymbol"}}
+{"id":"canonical_check","category":"canonical","raw":"{\"type\":\"tool_call\",\"name\":\"run_check\",\"arguments\":{\"check\":\"tests\"}}","expected":"canonical","expected_name":"run_check","expected_arguments":{"check":"tests"}}
+{"id":"canonical_final","category":"canonical","raw":"{\"type\":\"final\",\"text\":\"Fresh task complete.\"}","expected":"canonical","expected_text":"Fresh task complete."}
+{"id":"alias_action_file","category":"safe_alias","raw":"{\"action\":\"read_file\",\"file\":\"src/new_beta.py\"}","expected":"normalized","expected_rule":"action_file_to_read_file","expected_name":"read_file","expected_arguments":{"path":"src/new_beta.py"}}
+{"id":"alias_tool_args","category":"safe_alias","raw":"{\"tool\":\"read_file\",\"args\":[\"src/new_gamma.py\"]}","expected":"normalized","expected_rule":"tool_args_to_read_file","expected_name":"read_file","expected_arguments":{"path":"src/new_gamma.py"}}
+{"id":"reject_action_search","category":"unsupported_alias","raw":"{\"action\":\"search_text\",\"query\":\"FreshSymbol\"}","expected":"rejected"}
+{"id":"reject_action_check","category":"unsupported_alias","raw":"{\"action\":\"run_check\",\"check\":\"tests\"}","expected":"rejected"}
+{"id":"reject_action_replace","category":"unsafe_alias","raw":"{\"action\":\"replace_text\",\"file\":\"src/new_alpha.py\",\"old\":\"a\",\"new\":\"b\"}","expected":"rejected"}
+{"id":"reject_tool_replace_args","category":"unsafe_alias","raw":"{\"tool\":\"replace_text\",\"args\":[\"src/new_alpha.py\",\"a\",\"b\"]}","expected":"rejected"}
+{"id":"reject_read_missing_file","category":"incomplete","raw":"{\"action\":\"read_file\"}","expected":"rejected"}
+{"id":"reject_read_extra_field","category":"ambiguous","raw":"{\"action\":\"read_file\",\"file\":\"src/new_beta.py\",\"line\":10}","expected":"rejected"}
+{"id":"reject_tool_multiple_args","category":"ambiguous","raw":"{\"tool\":\"read_file\",\"args\":[\"src/a.py\",\"src/b.py\"]}","expected":"rejected"}
+{"id":"reject_nonstring_file","category":"invalid","raw":"{\"action\":\"read_file\",\"file\":42}","expected":"rejected"}
+{"id":"reject_nonstring_arg","category":"invalid","raw":"{\"tool\":\"read_file\",\"args\":[42]}","expected":"rejected"}
+{"id":"reject_old_training_protocol","category":"protocol_drift","raw":"{\"type\":\"tool\",\"name\":\"read_file\",\"arguments\":{\"path\":\"src/new_delta.py\"}}","expected":"rejected"}
+{"id":"reject_markdown","category":"invalid","raw":"```json\n{\"type\":\"tool_call\",\"name\":\"read_file\",\"arguments\":{\"path\":\"src/new_alpha.py\"}}\n```","expected":"rejected"}
+{"id":"reject_prose","category":"invalid","raw":"I should inspect src/new_alpha.py first.","expected":"rejected"}

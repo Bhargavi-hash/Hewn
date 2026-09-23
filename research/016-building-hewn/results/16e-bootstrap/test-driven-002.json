@@ -1,0 +1,75 @@
+{
+  "benchmark": {
+    "frozen_commit": "851de9e",
+    "name": "hewn-module-16-end-to-end",
+    "version": "16C-frozen-1"
+  },
+  "results": [
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_original_order_is_preserved _______________________\n\n    def test_original_order_is_preserved() -> None:\n>       assert unique_tags([\"b\", \"a\", \"b\", \"c\", \"a\"]) == [\n            \"b\",\n            \"a\",\n            \"c\",\n        ]\nE       AssertionError: assert ['b', 'a', 'b', 'c', 'a'] == ['b', 'a', 'c']\nE         \nE         At index 2 diff: 'b' != 'c'\nE         Left contains 2 more items, first extra item: 'c'\nE         Use -v to get more diff\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_002/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_002/evaluator/test_task.py::test_original_order_is_preserved\n1 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 208,
+      "context_evidence_count": 2,
+      "controller_bootstrap_calls": 1,
+      "controller_bootstrap_chars": 169,
+      "controller_bootstrap_tool": "repository_map",
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/tags.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "test_driven_fix",
+      "final_text": null,
+      "fixture": "test_driven_002",
+      "model_attempts": 1,
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "protocol_rejections": 1,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_duplicate_tags_are_removed ________________________\n\n    def test_duplicate_tags_are_removed() -> None:\n>       assert unique_tags([\"python\", \"agent\", \"python\"]) == [\n            \"python\",\n            \"agent\",\n        ]\nE       AssertionError: assert ['python', 'agent', 'python'] == ['python', 'agent']\nE         \nE         Left contains one more item: 'python'\nE         Use -v to get more diff\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_duplicate_tags_are_removed - AssertionE...\n1 failed in 0.03s\n"
+      },
+      "regression_passes": false,
+      "rejected_generation": "Controller bootstrap tool call: repository_map {}",
+      "successful_tool_calls": 0,
+      "task_id": "test-driven-002",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "protocol_error",
+      "tool_calls": 0,
+      "treatment": "repository_map_bootstrap",
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 1.9200651770224795
+    }
+  ],
+  "run": {
+    "commit": "94964cf7e2f8209c76e118daf35e401a4f44f02a",
+    "completion_requirement": "VERIFIED",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "execution_backend": "bubblewrap",
+    "max_turns": 12,
+    "model_id": "Qwen2.5-Coder-0.5B-Instruct",
+    "temperature": 0.0
+  },
+  "summary": {
+    "behavioral_successes": 0,
+    "canonical_model_responses": 0,
+    "normalized_model_responses": 0,
+    "regression_passes": 0,
+    "runs": 1,
+    "runs_with_edits": 0,
+    "task_passes": 0
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "fixture_count": 12,
+  "fixtures": [
+    "localized_001",
+    "localized_002",
+    "localized_003",
+    "cross_file_001",
+    "cross_file_002",
+    "cross_file_003",
+    "test_driven_001",
+    "test_driven_002",
+    "test_driven_003",
+    "verification_001",
+    "verification_002",
+    "verification_003"
+  ],
+  "note": "Repository contains only agent-visible files. Evaluator tests are stored outside the repository. Reference contains the deterministic known-good patch and is evaluator-only."
+}

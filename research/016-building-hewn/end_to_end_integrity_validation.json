@@ -1,0 +1,103 @@
+{
+  "tasks": 12,
+  "valid": 12,
+  "all_valid": true,
+  "records": [
+    {
+      "task_id": "localized-001",
+      "hidden_marker_count": 2,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "localized-002",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "localized-003",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-001",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-002",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-003",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-001",
+      "hidden_marker_count": 2,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-002",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-003",
+      "hidden_marker_count": 2,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "verification-001",
+      "hidden_marker_count": 2,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "verification-002",
+      "hidden_marker_count": 1,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    },
+    {
+      "task_id": "verification-003",
+      "hidden_marker_count": 2,
+      "exposed_markers": [],
+      "evaluator_inside_repository": false,
+      "reference_inside_repository": false,
+      "correct": true
+    }
+  ]
+}

@@ -1,0 +1,855 @@
+{
+  "benchmark": {
+    "frozen_commit": "851de9e",
+    "name": "hewn-module-16-end-to-end",
+    "version": "16C-frozen-1"
+  },
+  "results": [
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_________________________ test_surrounding_punctuation _________________________\n\n    def test_surrounding_punctuation() -> None:\n>       assert make_slug(\"  Hello World!!  \") == \"hello-world\"\nE       AssertionError: assert '-hello-world-' == 'hello-world'\nE         \nE         - hello-world\nE         + -hello-world-\nE         ? +           +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py:5: AssertionError\n____________________________ test_only_punctuation _____________________________\n\n    def test_only_punctuation() -> None:\n>       assert make_slug(\"!!!\") == \"\"\nE       AssertionError: assert '-' == ''\nE         \nE         + -\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py::test_surrounding_punctuation\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py::test_only_punctuation\n2 failed in 0.10s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 187,
+      "context_evidence_count": 2,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text=\"make_slug('Hello World') == 'hello-world'\")",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/slug.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "localized_fix",
+      "final_text": null,
+      "fixture": "localized_001",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "localized-001",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 4.1880697989836335
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________________ test_below_range _______________________________\n\n    def test_below_range() -> None:\n>       assert clamp(-4, 0, 10) == 0\nE       assert 10 == 0\nE        +  where 10 = clamp(-4, 0, 10)\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_002/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_002/evaluator/test_task.py::test_below_range\n1 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 116,
+      "context_evidence_count": 1,
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/numbers.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "localized_fix",
+      "final_text": null,
+      "fixture": "localized_002",
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "localized-002",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "error",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 3.221073004999198
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________________________ test_surrounding_whitespace __________________________\n\n    def test_surrounding_whitespace() -> None:\n>       assert normalize_username(\"  Alice  \") == \"alice\"\nE       AssertionError: assert '  alice  ' == 'alice'\nE         \nE         - alice\nE         +   alice\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_003/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_003/evaluator/test_task.py::test_surrounding_whitespace\n1 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [
+        "tests/test_regression.py"
+      ],
+      "context_chars": 146,
+      "context_evidence_count": 2,
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/users.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "localized_fix",
+      "final_text": null,
+      "fixture": "localized_003",
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "localized-003",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "error",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [
+        "tests/test_regression.py"
+      ],
+      "wall_time_seconds": 4.612971142982133
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________ test_percentage_discount ___________________________\n\n    def test_percentage_discount() -> None:\n>       assert checkout_total(200.0, 25.0) == 150.0\nE       assert 175.0 == 150.0\nE        +  where 175.0 = checkout_total(200.0, 25.0)\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_001/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_001/evaluator/test_task.py::test_percentage_discount\n1 failed in 0.10s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 308,
+      "context_evidence_count": 3,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='To fix the issue with incorrect order totals when a percentage discount is applied, we need to ensure that the calculation is performed in the correct order. The `checkout_total` function should be called before the `apply_percentage_discount` function to avoid incorrect order.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/shop/discounts.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "cross_file_fix",
+      "final_text": null,
+      "fixture": "cross_file_001",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "cross-file-001",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 8.691123003984103
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________________________ test_display_name_is_used ___________________________\n\n    def test_display_name_is_used() -> None:\n        profile = Profile(\"acct-481\", \"Alice\")\n>       assert render_greeting(profile) == \"Hello, Alice!\"\nE       AssertionError: assert 'Hello, acct-481!' == 'Hello, Alice!'\nE         \nE         - Hello, Alice!\nE         + Hello, acct-481!\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_002/evaluator/test_task.py:7: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_002/evaluator/test_task.py::test_display_name_is_used\n1 failed in 0.09s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 280,
+      "context_evidence_count": 3,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='render_greeting')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/app/profile.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "cross_file_fix",
+      "final_text": null,
+      "fixture": "cross_file_002",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "cross-file-002",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 5.532352064008592
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_disabled_records_are_excluded ______________________\n\n    def test_disabled_records_are_excluded() -> None:\n        records = [\n            {\"id\": 1, \"enabled\": True},\n            {\"id\": 2, \"enabled\": False},\n            {\"id\": 3, \"enabled\": True},\n        ]\n>       assert active_count(records) == 2\nE       AssertionError: assert 3 == 2\nE        +  where 3 = active_count([{'id': 1, 'enabled': True}, {'id': 2, 'enabled': False}, {'id': 3, 'enabled': True}])\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_003/evaluator/test_task.py:10: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/cross_file_003/evaluator/test_task.py::test_disabled_records_are_excluded\n1 failed in 0.18s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 366,
+      "context_evidence_count": 3,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text=\"To correct the behavior without changing the reporting interface, we need to ensure that the `active_count` function correctly counts disabled records even when callers request active records only. This can be achieved by modifying the function to return the count of active records regardless of the caller's request.\")",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/reporting/records.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "cross_file_fix",
+      "final_text": null,
+      "fixture": "cross_file_003",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "cross-file-003",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 10.527925723989028
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_____________________ test_parent_with_trailing_separator ______________________\n\n    def test_parent_with_trailing_separator() -> None:\n>       assert join_path(\"/var/log/\", \"app.log\") == \"/var/log/app.log\"\nE       AssertionError: assert '/var/log//app.log' == '/var/log/app.log'\nE         \nE         - /var/log/app.log\nE         + /var/log//app.log\nE         ?          +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py:5: AssertionError\n______________________ test_child_with_leading_separator _______________________\n\n    def test_child_with_leading_separator() -> None:\n>       assert join_path(\"/var/log\", \"/app.log\") == \"/var/log/app.log\"\nE       AssertionError: assert '/var/log//app.log' == '/var/log/app.log'\nE         \nE         - /var/log/app.log\nE         + /var/log//app.log\nE         ?          +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py::test_parent_with_trailing_separator\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py::test_child_with_leading_separator\n2 failed in 0.12s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 195,
+      "context_evidence_count": 2,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='To fix the failure in the path formatting behavior, we need to ensure that the `join_path` function correctly handles the case where the separator is a duplicate. The current implementation does not handle this case.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/paths.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "test_driven_fix",
+      "final_text": null,
+      "fixture": "test_driven_001",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________ test_join_avoids_duplicate_separator _____________________\n\n    def test_join_avoids_duplicate_separator() -> None:\n>       assert join_path(\"/tmp/\", \"/report.txt\") == \"/tmp/report.txt\"\nE       AssertionError: assert '/tmp///report.txt' == '/tmp/report.txt'\nE         \nE         - /tmp/report.txt\nE         + /tmp///report.txt\nE         ?     ++\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_join_avoids_duplicate_separator - Asser...\n1 failed in 0.04s\n"
+      },
+      "regression_passes": false,
+      "successful_tool_calls": 0,
+      "task_id": "test-driven-001",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 8.47383178002201
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_original_order_is_preserved _______________________\n\n    def test_original_order_is_preserved() -> None:\n>       assert unique_tags([\"b\", \"a\", \"b\", \"c\", \"a\"]) == [\n            \"b\",\n            \"a\",\n            \"c\",\n        ]\nE       AssertionError: assert ['b', 'a', 'b', 'c', 'a'] == ['b', 'a', 'c']\nE         \nE         At index 2 diff: 'b' != 'c'\nE         Left contains 2 more items, first extra item: 'c'\nE         Use -v to get more diff\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_002/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_002/evaluator/test_task.py::test_original_order_is_preserved\n1 failed in 0.11s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 208,
+      "context_evidence_count": 2,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='To diagnose the failure and correct the implementation without weakening the test, we need to identify the exact cause of the duplicate tags being removed. The provided repository evidence does not contain any information about the cause of the failure. To proceed, we need to analyze the code and identify the line numbers and symbols that are causing the issue.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/tags.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "test_driven_fix",
+      "final_text": null,
+      "fixture": "test_driven_002",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_duplicate_tags_are_removed ________________________\n\n    def test_duplicate_tags_are_removed() -> None:\n>       assert unique_tags([\"python\", \"agent\", \"python\"]) == [\n            \"python\",\n            \"agent\",\n        ]\nE       AssertionError: assert ['python', 'agent', 'python'] == ['python', 'agent']\nE         \nE         Left contains one more item: 'python'\nE         Use -v to get more diff\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_duplicate_tags_are_removed - AssertionE...\n1 failed in 0.03s\n"
+      },
+      "regression_passes": false,
+      "successful_tool_calls": 0,
+      "task_id": "test-driven-002",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 8.410350185993593
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_empty_string _______________________________\n\n    def test_empty_string() -> None:\n>       assert format_title(\"\") == \"Hewn\"\nE       AssertionError: assert ' | Hewn' == 'Hewn'\nE         \nE         - Hewn\nE         +  | Hewn\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_003/evaluator/test_task.py:5: AssertionError\n__________________________ test_whitespace_only_title __________________________\n\n    def test_whitespace_only_title() -> None:\n>       assert format_title(\"\t  \") == \"Hewn\"\nE       AssertionError: assert ' | Hewn' == 'Hewn'\nE         \nE         - Hewn\nE         +  | Hewn\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_003/evaluator/test_task.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_003/evaluator/test_task.py::test_empty_string\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_003/evaluator/test_task.py::test_whitespace_only_title\n2 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 153,
+      "context_evidence_count": 2,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='To diagnose the behavior and fix the implementation, we need to understand where an unfamiliar behavior or concept may be implemented. The repository evidence provided does not contain any information about where an unfamiliar behavior or concept may be implemented. Therefore, we cannot determine the behavior and fix the implementation.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/titles.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "test_driven_fix",
+      "final_text": null,
+      "fixture": "test_driven_003",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________________ test_empty_title _______________________________\n\n    def test_empty_title() -> None:\n>       assert format_title(\"   \") == \"Hewn\"\nE       AssertionError: assert ' | Hewn' == 'Hewn'\nE         \nE         - Hewn\nE         +  | Hewn\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_empty_title - AssertionError: assert ' ...\n1 failed in 0.03s\n"
+      },
+      "regression_passes": false,
+      "successful_tool_calls": 0,
+      "task_id": "test-driven-003",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 8.388013026007684
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________________ test_false __________________________________\n\n    def test_false() -> None:\n>       assert parse_bool(\"false\") is False\nE       AssertionError: assert True is False\nE        +  where True = parse_bool('false')\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_001/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_001/evaluator/test_task.py::test_false\n1 failed, 1 passed in 0.07s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [
+        "tests/test_regression.py"
+      ],
+      "context_chars": 120,
+      "context_evidence_count": 2,
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/boolean.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "verification_required",
+      "final_text": null,
+      "fixture": "verification_001",
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________________________________ test_true ___________________________________\n\n    def test_true() -> None:\n>       assert parse_bool(\"true\") is False\nE       AssertionError: assert True is False\nE        +  where True = parse_bool('true')\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_true - AssertionError: assert True is F...\n1 failed in 0.03s\n"
+      },
+      "regression_passes": false,
+      "successful_tool_calls": 0,
+      "task_id": "verification-001",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "error",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [
+        "tests/test_regression.py"
+      ],
+      "wall_time_seconds": 3.9471162170229945
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_exponential_delay ____________________________\n\n    def test_exponential_delay() -> None:\n>       assert retry_delay(2, 3) == 16\nE       assert 6 == 16\nE        +  where 6 = retry_delay(2, 3)\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_002/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_002/evaluator/test_task.py::test_exponential_delay\n1 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 3,
+      "changed_files": [],
+      "context_chars": 148,
+      "context_evidence_count": 2,
+      "events": [
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='To fix the incorrect retry delay calculation, we need to ensure that the retry delay is calculated correctly. The current implementation uses a simple multiplication, which may not be suitable for large values of `base` and `attempt`. We can use a more efficient approach by calculating the delay as `base * attempt`.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "canonical",
+          "kind": "model_protocol"
+        },
+        {
+          "detail": "FinalResponse(text='Cannot finish because this task requires verification and no successful verification has been observed.')",
+          "kind": "model_response"
+        },
+        {
+          "detail": "Cannot finish because this task requires verification and no successful verification has been observed.",
+          "kind": "completion_rejected"
+        },
+        {
+          "detail": "3 consecutive non-progressing turns",
+          "kind": "stagnation_detected"
+        }
+      ],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/retry.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "verification_required",
+      "final_text": null,
+      "fixture": "verification_002",
+      "model_calls": 3,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "verification-002",
+      "task_passes": false,
+      "terminal_error": "Agent stagnated after 3 consecutive non-progressing turns",
+      "terminal_status": "stagnation",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 7.836512797017349
+    },
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n______________________________ test_multiple_dots ______________________________\n\n    def test_multiple_dots() -> None:\n>       assert extension(\"archive.tar.gz\") == \"gz\"\nE       AssertionError: assert 'tar' == 'gz'\nE         \nE         - gz\nE         + tar\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_003/evaluator/test_task.py:5: AssertionError\n______________________________ test_no_extension _______________________________\n\n    def test_no_extension() -> None:\n>       assert extension(\"README\") == \"\"\n               ^^^^^^^^^^^^^^^^^^^\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_003/evaluator/test_task.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nfilename = 'README'\n\n    def extension(filename: str) -> str:\n>       return filename.split(\".\")[1]\n               ^^^^^^^^^^^^^^^^^^^^^^\nE       IndexError: list index out of range\n\nsrc/sample/files.py:2: IndexError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_003/evaluator/test_task.py::test_multiple_dots\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/verification_003/evaluator/test_task.py::test_no_extension\n2 failed in 0.06s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 101,
+      "context_evidence_count": 1,
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/files.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "verification_required",
+      "final_text": null,
+      "fixture": "verification_003",
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "successful_tool_calls": 0,
+      "task_id": "verification-003",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "error",
+      "tool_calls": 0,
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 5.1736522059945855
+    }
+  ],
+  "run": {
+    "commit": "67b4d64845b07c1aa022462338517a91e437b055",
+    "completion_requirement": "VERIFIED",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "execution_backend": "bubblewrap",
+    "max_turns": 12,
+    "model_id": "Qwen2.5-Coder-0.5B-Instruct",
+    "temperature": 0.0
+  },
+  "summary": {
+    "behavioral_successes": 0,
+    "canonical_model_responses": 24,
+    "normalized_model_responses": 0,
+    "regression_passes": 8,
+    "runs": 12,
+    "runs_with_edits": 2,
+    "task_passes": 0
+  }
+}

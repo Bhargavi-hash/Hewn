@@ -9,7 +9,13 @@ from hewn.completion import (
     CompletionRequirement,
 )
 from hewn.context.models import ContextBundle
-from hewn.models import FinalResponse, Message, Model
+from hewn.model_protocol import serialize_model_response
+from hewn.models import (
+    DiagnosticModel,
+    FinalResponse,
+    Message,
+    Model,
+)
 from hewn.telemetry import AgentEvent, AgentMetrics
 from hewn.tools import (
     ToolCall,
@@ -27,6 +33,7 @@ CompletionPolicyFactory = Callable[
     CompletionPolicy,
 ]
 
+
 def _default_completion_rejection_formatter(
     response: FinalResponse,
     reason: str,
@@ -39,6 +46,7 @@ def _default_completion_rejection_formatter(
             content=reason,
         )
     ]
+
 
 def _default_completion_policy_factory(
     requirement: CompletionRequirement,
@@ -138,12 +146,6 @@ class Agent:
     ) -> AgentRunResult:
         started_at = perf_counter()
 
-        completion_policy = self.completion_policy_factory(
-            completion_requirement
-        )
-
-        consecutive_stagnant_turns = 0
-
         initial_user_message = _build_initial_user_message(
             user_request=user_request,
             context=context,
@@ -156,6 +158,30 @@ class Agent:
             )
         ]
 
+        return self.run_messages(
+            messages,
+            completion_requirement=completion_requirement,
+            started_at=started_at,
+        )
+
+    def run_messages(
+        self,
+        messages: list[Message],
+        *,
+        completion_requirement: CompletionRequirement = (
+            CompletionRequirement.NONE
+        ),
+        started_at: float | None = None,
+    ) -> AgentRunResult:
+        if started_at is None:
+            started_at = perf_counter()
+
+        completion_policy = self.completion_policy_factory(
+            completion_requirement
+        )
+
+        consecutive_stagnant_turns = 0
+
         tools = self.registry.definitions()
         metrics = AgentMetrics()
 
@@ -166,6 +192,15 @@ class Agent:
                 messages=messages,
                 tools=tools,
             )
+
+            if isinstance(self.model, DiagnosticModel):
+                for diagnostic in self.model.drain_diagnostics():
+                    metrics.events.append(
+                        AgentEvent(
+                            kind=diagnostic.kind,
+                            detail=diagnostic.detail,
+                        )
+                    )
 
             metrics.events.append(
                 AgentEvent(
@@ -276,10 +311,7 @@ class Agent:
                 messages.append(
                     Message(
                         role="assistant",
-                        content=(
-                            f"Tool call: {response.name} "
-                            f"{response.arguments}"
-                        ),
+                        content=serialize_model_response(response),
                     )
                 )
 

@@ -1,0 +1,127 @@
+{
+  "tasks": 12,
+  "valid": 12,
+  "all_valid": true,
+  "records": [
+    {
+      "task_id": "localized-001",
+      "family": "localized_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "localized-002",
+      "family": "localized_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "localized-003",
+      "family": "localized_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-001",
+      "family": "cross_file_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-002",
+      "family": "cross_file_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "cross-file-003",
+      "family": "cross_file_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-001",
+      "family": "test_driven_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": false,
+      "expected_buggy_regression_passes": false,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-002",
+      "family": "test_driven_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": false,
+      "expected_buggy_regression_passes": false,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "test-driven-003",
+      "family": "test_driven_fix",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": false,
+      "expected_buggy_regression_passes": false,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "verification-001",
+      "family": "verification_required",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "verification-002",
+      "family": "verification_required",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    },
+    {
+      "task_id": "verification-003",
+      "family": "verification_required",
+      "buggy_behavior_fails": true,
+      "buggy_regression_passes": true,
+      "expected_buggy_regression_passes": true,
+      "reference_behavior_passes": true,
+      "reference_regression_passes": true,
+      "correct": true
+    }
+  ]
+}
