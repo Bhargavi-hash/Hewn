@@ -14,6 +14,8 @@ from pathlib import Path
 from time import perf_counter
 from typing import Any
 
+from bootstrap import build_repository_map_bootstrap
+
 from hewn.agent import (
     Agent,
     AgentLimitError,
@@ -95,6 +97,11 @@ class TaskResult:
     failed_tool_calls: int
     execution_calls: int
 
+    treatment: str
+    controller_bootstrap_calls: int
+    controller_bootstrap_tool: str | None
+    controller_bootstrap_chars: int
+
     context_chars: int
     context_evidence_count: int
     wall_time_seconds: float
@@ -141,6 +148,16 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Validate benchmark and construction without "
             "calling the coding model."
+        ),
+    )
+
+    parser.add_argument(
+        "--bootstrap-repository-map",
+        action="store_true",
+        help=(
+            "Run one deterministic controller-initiated "
+            "repository_map observation before the model's "
+            "first decision."
         ),
     )
 
@@ -418,6 +435,7 @@ def run_one(
     case: dict[str, Any],
     *,
     base_url: str,
+    bootstrap_repository_map: bool = False,
 ) -> TaskResult:
     task_id = str(case["task_id"])
     family = str(case["family"])
@@ -493,17 +511,45 @@ def run_one(
         final_text: str | None = None
 
         metrics = AgentMetrics()
+        treatment = (
+            "repository_map_bootstrap"
+            if bootstrap_repository_map
+            else "control"
+        )
 
+        controller_bootstrap_calls = 0
+        controller_bootstrap_tool: str | None = None
+        controller_bootstrap_chars = 0
         started = perf_counter()
 
         try:
-            result = session.agent.run(
-                request,
-                completion_requirement=(
-                    CompletionRequirement.VERIFIED
-                ),
-                context=prepared.context,
-            )
+            if bootstrap_repository_map:
+                messages, observation = (
+                    build_repository_map_bootstrap(
+                        session.agent,
+                        request,
+                        context=prepared.context,
+                    )
+                )
+
+                controller_bootstrap_calls = 1
+                controller_bootstrap_tool = "repository_map"
+                controller_bootstrap_chars = len(observation)
+
+                result = session.agent.run_messages(
+                    messages,
+                    completion_requirement=(
+                        CompletionRequirement.VERIFIED
+                    ),
+                )
+            else:
+                result = session.agent.run(
+                    request,
+                    completion_requirement=(
+                        CompletionRequirement.VERIFIED
+                    ),
+                    context=prepared.context,
+                )
 
             final_text = result.text
             metrics = result.metrics
@@ -609,6 +655,16 @@ def run_one(
             execution_calls=(
                 count_execution_calls(metrics)
             ),
+            treatment=treatment,
+            controller_bootstrap_calls=(
+                controller_bootstrap_calls
+            ),
+            controller_bootstrap_tool=(
+                controller_bootstrap_tool
+            ),
+            controller_bootstrap_chars=(
+                controller_bootstrap_chars
+            ),
             context_chars=context_chars,
             context_evidence_count=(
                 context_evidence_count
@@ -706,6 +762,15 @@ def print_task_result(
         f"wall:{result.wall_time_seconds:.2f}s"
     )
 
+    print(
+        "  treatment="
+        f"{result.treatment} "
+        f"controller_bootstrap:"
+        f"{result.controller_bootstrap_calls} "
+        f"bootstrap_chars:"
+        f"{result.controller_bootstrap_chars}"
+    )
+
     if result.terminal_error is not None:
         print(
             f"  error={result.terminal_error}"
@@ -733,10 +798,17 @@ def main() -> None:
             )
 
     if args.dry_run:
+        treatment = (
+            "repository_map_bootstrap"
+            if args.bootstrap_repository_map
+            else "control"
+        )
+
         print(
-            "016C dry run passed: "
+            "016E dry run passed: "
             f"{len(cases)} task(s)"
         )
+        print(f"treatment: {treatment}")
         print(
             "frozen benchmark commit: "
             f"{FROZEN_BENCHMARK_COMMIT}"
@@ -755,8 +827,10 @@ def main() -> None:
         result = run_one(
             case,
             base_url=args.base_url,
+            bootstrap_repository_map=(
+                args.bootstrap_repository_map
+            ),
         )
-
         results.append(result)
         print_task_result(result)
 
