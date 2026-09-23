@@ -295,6 +295,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-A public reuse license has not yet been selected.
-
-Until a license is added, do not assume that public visibility alone grants permission to copy, modify, or redistribute the project.
+Apache-2.0 license
