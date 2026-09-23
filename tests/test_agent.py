@@ -8,6 +8,7 @@ from hewn.agent import (
     AgentLimitError,
     AgentStagnationError,
 )
+from hewn.authority import AuthorityGrant, AuthorityPolicy
 from hewn.builtin_tools import make_builtin_tool_registry
 from hewn.completion import CompletionPolicy, CompletionRequirement
 from hewn.models import (
@@ -21,6 +22,7 @@ from hewn.tools import (
     ToolCall,
     ToolDefinition,
     ToolExecutor,
+    ToolRegistry,
     ToolResult,
 )
 from hewn.workspace import Workspace
@@ -645,4 +647,68 @@ def test_completion_rejection_formatter_is_injectable(
     assert second_messages[-1] == Message(
         role="user",
         content=f"Controller feedback: {reason}",
+    )
+
+def test_run_messages_matches_run_for_same_initial_message() -> None:
+    registry = ToolRegistry()
+
+    executor = ToolExecutor(
+        registry,
+        authority_policy=AuthorityPolicy(
+            AuthorityGrant(
+                repository_read=True,
+                repository_write=True,
+                approved_checks=True,
+            )
+        ),
+    )
+
+    run_model = ScriptedModel(
+        responses=[
+            FinalResponse(text="Done."),
+        ]
+    )
+    messages_model = ScriptedModel(
+        responses=[
+            FinalResponse(text="Done."),
+        ]
+    )
+
+    run_agent = Agent(
+        model=run_model,
+        registry=registry,
+        executor=executor,
+    )
+    messages_agent = Agent(
+        model=messages_model,
+        registry=registry,
+        executor=executor,
+    )
+
+    run_result = run_agent.run("hello")
+
+    messages_result = messages_agent.run_messages(
+        [
+            Message(
+                role="user",
+                content="hello",
+            )
+        ]
+    )
+
+    assert run_result.text == messages_result.text
+    assert run_result.metrics.model_calls == (
+        messages_result.metrics.model_calls
+    )
+    assert run_result.metrics.tool_calls == (
+        messages_result.metrics.tool_calls
+    )
+    assert run_result.metrics.successful_tool_calls == (
+        messages_result.metrics.successful_tool_calls
+    )
+    assert run_result.metrics.failed_tool_calls == (
+        messages_result.metrics.failed_tool_calls
+    )
+    assert run_result.metrics.events == (
+        messages_result.metrics.events
     )

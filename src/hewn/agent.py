@@ -32,6 +32,7 @@ CompletionPolicyFactory = Callable[
     CompletionPolicy,
 ]
 
+
 def _default_completion_rejection_formatter(
     response: FinalResponse,
     reason: str,
@@ -44,6 +45,7 @@ def _default_completion_rejection_formatter(
             content=reason,
         )
     ]
+
 
 def _default_completion_policy_factory(
     requirement: CompletionRequirement,
@@ -143,12 +145,6 @@ class Agent:
     ) -> AgentRunResult:
         started_at = perf_counter()
 
-        completion_policy = self.completion_policy_factory(
-            completion_requirement
-        )
-
-        consecutive_stagnant_turns = 0
-
         initial_user_message = _build_initial_user_message(
             user_request=user_request,
             context=context,
@@ -160,6 +156,30 @@ class Agent:
                 content=initial_user_message,
             )
         ]
+
+        return self.run_messages(
+            messages,
+            completion_requirement=completion_requirement,
+            started_at=started_at,
+        )
+
+    def run_messages(
+        self,
+        messages: list[Message],
+        *,
+        completion_requirement: CompletionRequirement = (
+            CompletionRequirement.NONE
+        ),
+        started_at: float | None = None,
+    ) -> AgentRunResult:
+        if started_at is None:
+            started_at = perf_counter()
+
+        completion_policy = self.completion_policy_factory(
+            completion_requirement
+        )
+
+        consecutive_stagnant_turns = 0
 
         tools = self.registry.definitions()
         metrics = AgentMetrics()
