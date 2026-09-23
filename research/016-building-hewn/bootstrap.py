@@ -10,6 +10,7 @@ from hewn.agent import (
 )
 from hewn.completion import CompletionRequirement
 from hewn.context.models import ContextBundle
+from hewn.model_protocol import serialize_model_response
 from hewn.models import Message
 from hewn.tools import ToolCall
 
@@ -59,10 +60,7 @@ def run_with_repository_map_bootstrap(
         ),
         Message(
             role="assistant",
-            content=(
-                "Controller bootstrap tool call: "
-                f"{call.name} {call.arguments}"
-            ),
+            content=serialize_model_response(call),
         ),
         Message(
             role="tool",

@@ -135,9 +135,8 @@ def test_repository_bootstrap_is_not_model_tool_call(
     assert model.messages[0].role == "user"
 
     assert model.messages[1].role == "assistant"
-    assert (
-        "Controller bootstrap tool call: repository_map"
-        in model.messages[1].content
+    assert model.messages[1].content == (
+        '{"arguments":{},"name":"repository_map","type":"tool_call"}'
     )
 
     assert model.messages[2].role == "tool"
