@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "required_per_run_fields": [
+    "system",
+    "system_version",
+    "task_id",
+    "attempt",
+    "behavioral_success",
+    "task_oracle_success",
+    "regression_success",
+    "changed_files",
+    "unnecessary_changed_files",
+    "patch_added_lines",
+    "patch_removed_lines",
+    "wall_time_seconds",
+    "human_interventions",
+    "terminal_status"
+  ],
+  "optional_observed_fields": [
+    "model",
+    "model_version",
+    "model_turns",
+    "tool_calls",
+    "verification_attempts",
+    "input_tokens",
+    "output_tokens",
+    "context_tokens",
+    "monetary_cost_usd",
+    "peak_memory_mib",
+    "notes"
+  ],
+  "missing_value_policy": "Use null when a metric cannot be directly observed. Do not estimate unavailable values."
+}
