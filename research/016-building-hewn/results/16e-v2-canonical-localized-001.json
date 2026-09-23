@@ -1,0 +1,75 @@
+{
+  "benchmark": {
+    "frozen_commit": "851de9e",
+    "name": "hewn-module-16-end-to-end",
+    "version": "16C-frozen-1"
+  },
+  "results": [
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_________________________ test_surrounding_punctuation _________________________\n\n    def test_surrounding_punctuation() -> None:\n>       assert make_slug(\"  Hello World!!  \") == \"hello-world\"\nE       AssertionError: assert '-hello-world-' == 'hello-world'\nE         \nE         - hello-world\nE         + -hello-world-\nE         ? +           +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py:5: AssertionError\n____________________________ test_only_punctuation _____________________________\n\n    def test_only_punctuation() -> None:\n>       assert make_slug(\"!!!\") == \"\"\nE       AssertionError: assert '-' == ''\nE         \nE         + -\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py::test_surrounding_punctuation\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_001/evaluator/test_task.py::test_only_punctuation\n2 failed in 0.06s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 187,
+      "context_evidence_count": 2,
+      "controller_bootstrap_calls": 1,
+      "controller_bootstrap_chars": 151,
+      "controller_bootstrap_tool": "repository_map",
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/slug.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "localized_fix",
+      "final_text": null,
+      "fixture": "localized_001",
+      "model_attempts": 1,
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "protocol_rejections": 1,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "rejected_generation": "Tool call: repository_map {}",
+      "successful_tool_calls": 0,
+      "task_id": "localized-001",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "protocol_error",
+      "tool_calls": 0,
+      "treatment": "repository_map_bootstrap",
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 1.644891339004971
+    }
+  ],
+  "run": {
+    "commit": "50fae03fef399987008bbd3445d70b799a3f98b3",
+    "completion_requirement": "VERIFIED",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "execution_backend": "bubblewrap",
+    "max_turns": 12,
+    "model_id": "Qwen2.5-Coder-0.5B-Instruct",
+    "temperature": 0.0
+  },
+  "summary": {
+    "behavioral_successes": 0,
+    "canonical_model_responses": 0,
+    "normalized_model_responses": 0,
+    "regression_passes": 1,
+    "runs": 1,
+    "runs_with_edits": 0,
+    "task_passes": 0
+  }
+}

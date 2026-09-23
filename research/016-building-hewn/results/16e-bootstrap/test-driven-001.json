@@ -1,0 +1,75 @@
+{
+  "benchmark": {
+    "frozen_commit": "851de9e",
+    "name": "hewn-module-16-end-to-end",
+    "version": "16C-frozen-1"
+  },
+  "results": [
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_____________________ test_parent_with_trailing_separator ______________________\n\n    def test_parent_with_trailing_separator() -> None:\n>       assert join_path(\"/var/log/\", \"app.log\") == \"/var/log/app.log\"\nE       AssertionError: assert '/var/log//app.log' == '/var/log/app.log'\nE         \nE         - /var/log/app.log\nE         + /var/log//app.log\nE         ?          +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py:5: AssertionError\n______________________ test_child_with_leading_separator _______________________\n\n    def test_child_with_leading_separator() -> None:\n>       assert join_path(\"/var/log\", \"/app.log\") == \"/var/log/app.log\"\nE       AssertionError: assert '/var/log//app.log' == '/var/log/app.log'\nE         \nE         - /var/log/app.log\nE         + /var/log//app.log\nE         ?          +\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py::test_parent_with_trailing_separator\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/test_driven_001/evaluator/test_task.py::test_child_with_leading_separator\n2 failed in 0.05s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 195,
+      "context_evidence_count": 2,
+      "controller_bootstrap_calls": 1,
+      "controller_bootstrap_chars": 174,
+      "controller_bootstrap_tool": "repository_map",
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/paths.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "test_driven_fix",
+      "final_text": null,
+      "fixture": "test_driven_001",
+      "model_attempts": 1,
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "protocol_rejections": 1,
+      "regression_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________ test_join_avoids_duplicate_separator _____________________\n\n    def test_join_avoids_duplicate_separator() -> None:\n>       assert join_path(\"/tmp/\", \"/report.txt\") == \"/tmp/report.txt\"\nE       AssertionError: assert '/tmp///report.txt' == '/tmp/report.txt'\nE         \nE         - /tmp/report.txt\nE         + /tmp///report.txt\nE         ?     ++\n\ntests/test_regression.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_regression.py::test_join_avoids_duplicate_separator - Asser...\n1 failed in 0.03s\n"
+      },
+      "regression_passes": false,
+      "rejected_generation": "Controller bootstrap tool call: repository_map {}",
+      "successful_tool_calls": 0,
+      "task_id": "test-driven-001",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "protocol_error",
+      "tool_calls": 0,
+      "treatment": "repository_map_bootstrap",
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 2.024069714010693
+    }
+  ],
+  "run": {
+    "commit": "94964cf7e2f8209c76e118daf35e401a4f44f02a",
+    "completion_requirement": "VERIFIED",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "execution_backend": "bubblewrap",
+    "max_turns": 12,
+    "model_id": "Qwen2.5-Coder-0.5B-Instruct",
+    "temperature": 0.0
+  },
+  "summary": {
+    "behavioral_successes": 0,
+    "canonical_model_responses": 0,
+    "normalized_model_responses": 0,
+    "regression_passes": 0,
+    "runs": 1,
+    "runs_with_edits": 0,
+    "task_passes": 0
+  }
+}

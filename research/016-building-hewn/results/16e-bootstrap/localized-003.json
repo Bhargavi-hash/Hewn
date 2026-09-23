@@ -1,0 +1,75 @@
+{
+  "benchmark": {
+    "frozen_commit": "851de9e",
+    "name": "hewn-module-16-end-to-end",
+    "version": "16C-frozen-1"
+  },
+  "results": [
+    {
+      "behavioral_oracle": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________________________ test_surrounding_whitespace __________________________\n\n    def test_surrounding_whitespace() -> None:\n>       assert normalize_username(\"  Alice  \") == \"alice\"\nE       AssertionError: assert '  alice  ' == 'alice'\nE         \nE         - alice\nE         +   alice\n\n/home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_003/evaluator/test_task.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED ../../../home/bhargavi/Documents/Hewn/research/016-building-hewn/fixtures/localized_003/evaluator/test_task.py::test_surrounding_whitespace\n1 failed in 0.15s\n"
+      },
+      "behavioral_success": false,
+      "canonical_model_responses": 0,
+      "changed_files": [],
+      "context_chars": 146,
+      "context_evidence_count": 2,
+      "controller_bootstrap_calls": 1,
+      "controller_bootstrap_chars": 161,
+      "controller_bootstrap_tool": "repository_map",
+      "events": [],
+      "execution_calls": 0,
+      "expected_changed_files": [
+        "src/sample/users.py"
+      ],
+      "expected_changes_satisfied": false,
+      "failed_tool_calls": 0,
+      "family": "localized_fix",
+      "final_text": null,
+      "fixture": "localized_003",
+      "model_attempts": 1,
+      "model_calls": 0,
+      "normalization_rules": {},
+      "normalized_model_responses": 0,
+      "protocol_rejections": 1,
+      "regression_oracle": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n"
+      },
+      "regression_passes": true,
+      "rejected_generation": "Controller bootstrap tool call: repository_map {}",
+      "successful_tool_calls": 0,
+      "task_id": "localized-003",
+      "task_passes": false,
+      "terminal_error": "ModelProtocolError: Model response is not valid JSON",
+      "terminal_status": "protocol_error",
+      "tool_calls": 0,
+      "treatment": "repository_map_bootstrap",
+      "unnecessary_changed_files": [],
+      "wall_time_seconds": 2.0517521309957374
+    }
+  ],
+  "run": {
+    "commit": "94964cf7e2f8209c76e118daf35e401a4f44f02a",
+    "completion_requirement": "VERIFIED",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "execution_backend": "bubblewrap",
+    "max_turns": 12,
+    "model_id": "Qwen2.5-Coder-0.5B-Instruct",
+    "temperature": 0.0
+  },
+  "summary": {
+    "behavioral_successes": 0,
+    "canonical_model_responses": 0,
+    "normalized_model_responses": 0,
+    "regression_passes": 1,
+    "runs": 1,
+    "runs_with_edits": 0,
+    "task_passes": 0
+  }
+}
